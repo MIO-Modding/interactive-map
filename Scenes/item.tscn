@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dp7tqmuh1m3ty"]
+
+[ext_resource type="Script" uid="uid://gvrrcv0jl6ex" path="res://Scripts/item.gd" id="1_tnite"]
+
+[node name="Item" type="HBoxContainer" unique_id=1057425690]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_tnite")
+
+[node name="Name" type="Label" parent="." unique_id=1736256725]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Amount" type="SpinBox" parent="." unique_id=852220581]
+layout_mode = 2
+max_value = 1.0

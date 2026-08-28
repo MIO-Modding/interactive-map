@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://bad5qqx16w0w0"]
+
+[ext_resource type="Script" uid="uid://0g130ijs5312" path="res://Scripts/transition_panel.gd" id="1_lcd2r"]
+
+[node name="TransitionPanel" type="PanelContainer" unique_id=1935186179]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_lcd2r")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=942893109]
+layout_mode = 2
+
+[node name="From" type="Label" parent="HBoxContainer" unique_id=1553472197]
+custom_minimum_size = Vector2(215, 0)
+layout_mode = 2
+
+[node name="To" type="Label" parent="HBoxContainer" unique_id=1707286905]
+custom_minimum_size = Vector2(215, 0)
+layout_mode = 2
+
+[node name="FirstPass" type="CheckBox" parent="HBoxContainer" unique_id=1542785258]
+layout_mode = 2
+disabled = true
+text = "First Pass"
+
+[node name="Intended" type="Label" parent="HBoxContainer" unique_id=336085390]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Simple" type="Label" parent="HBoxContainer" unique_id=1889064709]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Advanced" type="Label" parent="HBoxContainer" unique_id=451867515]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Door" type="Label" parent="HBoxContainer" unique_id=514972207]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+
+[node name="Notes" type="Label" parent="HBoxContainer" unique_id=348248659]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+autowrap_mode = 3
