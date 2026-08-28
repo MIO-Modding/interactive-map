@@ -72,6 +72,11 @@ layout_mode = 2
 button_pressed = true
 text = "Highlight rows"
 
+[node name="HighlightReachable" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=937264062]
+layout_mode = 2
+button_pressed = true
+text = "Highlight by reachable"
+
 [node name="ClearButton" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=85385007]
 layout_mode = 2
 text = "Clear all items"
@@ -180,6 +185,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
+[connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable" to="." method="_on_highlight_reachable_toggled"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ClearButton" to="." method="_on_clear_button_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/AllButton" to="." method="_on_all_button_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/GiveStartingButton" to="." method="_on_give_starting_button_pressed"]

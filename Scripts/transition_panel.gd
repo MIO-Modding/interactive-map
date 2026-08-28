@@ -45,6 +45,10 @@ var advanced_logic: Callable
 var door: String:
 	set(v):
 		door = v
+		if v == "Wrong Side":
+			intended_logic = func(): return false
+			simple_logic = intended_logic
+			advanced_logic = simple_logic
 		$HBoxContainer/Door.text = v
 
 var notes: String:
@@ -52,17 +56,29 @@ var notes: String:
 		notes = v
 		$HBoxContainer/Notes.text = v
 
+var tainted_logic: Main.LogicLevels = Main.LogicLevels.INTENDED_LOGIC
+
 
 func update() -> void:
 	if get_node("/root/Main").highlight_rows_in_logic:
-		if get_logic_result(intended_logic):
-			modulate = LOGIC_LEVEL_COLORS["intended"]
-		elif get_logic_result(simple_logic):
-			modulate = LOGIC_LEVEL_COLORS["simple"]
-		elif get_logic_result(advanced_logic):
-			modulate = LOGIC_LEVEL_COLORS["advanced"]
+		if get_node("/root/Main").highlight_reachable_rows:
+			await get_tree().process_frame
+			if get_node("/root/Main").reachable_rooms.has(from) and get_node("/root/Main").in_logic(self):
+				modulate = LOGIC_LEVEL_COLORS["intended"]
+			elif get_node("/root/Main").simple_reachable_rooms.has(from) and get_node("/root/Main").in_logic(self, Main.LogicLevels.SIMPLE_SKIPS):
+				modulate = LOGIC_LEVEL_COLORS["simple"]
+			elif get_node("/root/Main").advanced_reachable_rooms.has(from) and get_node("/root/Main").in_logic(self, Main.LogicLevels.ADVANCED_SKIPS):
+				modulate = LOGIC_LEVEL_COLORS["advanced"]
+			
 		else:
-			modulate = Color.WHITE
+			if get_logic_result(intended_logic):
+				modulate = LOGIC_LEVEL_COLORS["intended"]
+			elif get_logic_result(simple_logic):
+				modulate = LOGIC_LEVEL_COLORS["simple"]
+			elif get_logic_result(advanced_logic):
+				modulate = LOGIC_LEVEL_COLORS["advanced"]
+			else:
+				modulate = Color.WHITE
 
 
 func get_logic_result(logic: Callable) -> bool:

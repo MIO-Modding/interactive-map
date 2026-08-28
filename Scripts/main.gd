@@ -1,5 +1,12 @@
-extends Control
+class_name Main extends Control
 
+
+enum LogicLevels {
+	NONE,
+	INTENDED_LOGIC,
+	SIMPLE_SKIPS,
+	ADVANCED_SKIPS,
+}
 
 const DATA_LINKS: Dictionary[String, String] = {
 	"room requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=2144568902&single=true&output=csv",
@@ -18,13 +25,21 @@ var items_sheet: Array[Array]
 var transition_requirements_sheet: Array[Array]
 
 var highlight_rows_in_logic := true
+var highlight_reachable_rows := true
+var logic_kind: LogicLevels = LogicLevels.INTENDED_LOGIC
 
 var player_state: PlayerState
 signal update_itempool
+signal update_transitions
+var reachable_rooms: Array[String]
+var simple_reachable_rooms: Array[String]
+var advanced_reachable_rooms: Array[String]
 
 
 func _ready() -> void:
 	player_state = PlayerState.new()
+	update_itempool.connect(func(): update_transitions.emit())
+	update_itempool.connect(update_reachable)
 	request_data()
 
 
@@ -98,13 +113,13 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				panel.advanced_string = row[5]
 				panel.door = row[6]
 				panel.notes = row[7]
-				update_itempool.connect(panel.update)
+				update_transitions.connect(panel.update)
 				$TabContainer/TransitionRequirements/VBoxContainer.add_child(panel)
 			
 			for i in range(3):
 				await get_tree().process_frame
 			
-			update_itempool.emit()
+			update_transitions.emit()
 
 
 func fill_sheet(sheet_kind: String, body: PackedByteArray, cap: int = -1) -> void:
@@ -139,14 +154,89 @@ func row_to_list(row: String, cap := -1) -> Array:
 	return result
 
 
+func update_reachable() -> void:
+	logic_kind = LogicLevels.INTENDED_LOGIC
+	reachable_rooms = get_reachable()
+	logic_kind = LogicLevels.SIMPLE_SKIPS
+	simple_reachable_rooms = get_reachable()
+	logic_kind = LogicLevels.ADVANCED_SKIPS
+	advanced_reachable_rooms = get_reachable()
+	logic_kind = LogicLevels.INTENDED_LOGIC
+
+
+func get_reachable() -> Array[String]:
+	var result: Array[String] = []
+	var current_room: String
+	var available: Array[String] = ["ST_security_fall_P1"]
+	
+	while not available.is_empty():
+		current_room = available[-1]
+		result.append(current_room)
+		available.remove_at(-1)
+		available.append_array(get_room_connections(current_room).filter(func(e): return not result.has(e)))
+	
+	return result
+
+
+func get_room_connections(room: String) -> Array[String]:
+	var result: Array[String] = []
+	for i: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
+		if i.from == room:
+			if in_logic(i):
+				if not result.has(i.to):
+					result.append(i.to)
+	return result
+
+
+func get_higher_logic(logic1: LogicLevels, logic2: LogicLevels) -> LogicLevels:
+	return maxi(logic1, logic2) as LogicLevels
+
+
+func get_logic(panel: TransitionPanel) -> LogicLevels:
+	if panel.intended_logic.call():
+		return LogicLevels.INTENDED_LOGIC
+	
+	if panel.simple_string != "-":
+		if panel.simple_logic.call():
+			return LogicLevels.SIMPLE_SKIPS
+		if panel.advanced_logic.call():
+			return LogicLevels.ADVANCED_SKIPS
+	
+	return LogicLevels.NONE
+
+
+func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevels.NONE) -> bool:
+	if panel.intended_logic.call():
+		return true
+	
+	if override_logic_kind == LogicLevels.NONE:
+		override_logic_kind = logic_kind
+	
+	if panel.simple_string != "-":
+		if override_logic_kind != LogicLevels.INTENDED_LOGIC:
+			if panel.simple_logic.call():
+				return true
+	
+	if panel.advanced_string != "-":
+		if override_logic_kind == LogicLevels.ADVANCED_SKIPS:
+			if panel.advanced_logic.call():
+				return true
+	
+	return false
+
+
 func is_empty_string_list(string_list: Array[String]) -> bool:
 	return "".join(string_list).is_empty()
 
 
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
 	highlight_rows_in_logic = toggled_on
-	update_itempool.emit()
+	update_transitions.emit()
 
+
+func _on_highlight_reachable_toggled(toggled_on: bool) -> void:
+	highlight_reachable_rows = toggled_on
+	update_transitions.emit()
 
 func _on_clear_button_pressed() -> void:
 	player_state.prog_items.clear()
