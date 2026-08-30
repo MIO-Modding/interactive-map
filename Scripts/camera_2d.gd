@@ -5,7 +5,7 @@ func _process(_delta: float) -> void:
 	var previous_zoom: Vector2 = zoom
 	
 	if is_visible_in_tree():
-		if get_viewport().get_mouse_position().y < 510:
+		if get_viewport().get_mouse_position().y < get_viewport_rect().size.y - 130:
 			if Input.is_action_just_released("scroll_up"):
 				zoom *= 1.1
 			if Input.is_action_just_released("scroll_down"):

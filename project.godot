@@ -22,7 +22,7 @@ config/icon="uid://crqgldpolgq2c"
 
 [display]
 
-window/stretch/mode="canvas_items"
+window/stretch/aspect="ignore"
 
 [input]
 

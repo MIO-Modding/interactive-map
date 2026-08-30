@@ -99,17 +99,28 @@ position = Vector2(2129, 509.1128)
 texture = ExtResource("13_85gyg")
 
 [node name="Connection" type="Sprite2D" parent="Textures" unique_id=341014041]
-position = Vector2(220, 1108)
+position = Vector2(1661, 905)
 texture = ExtResource("14_c32x4")
 
-[node name="Lab" type="Sprite2D" parent="Textures" unique_id=32387304]
-position = Vector2(246, 1563)
-texture = ExtResource("15_c32x4")
-
 [node name="Crucible" type="Sprite2D" parent="Textures" unique_id=2077070215]
-position = Vector2(-1390, 1606.5)
+position = Vector2(1777, 1637.9951)
 texture = ExtResource("16_fg7i4")
 
 [node name="Vaults" type="Sprite2D" parent="Textures" unique_id=1611622011]
-position = Vector2(1785, 1589)
+position = Vector2(304.813, 1626)
 texture = ExtResource("17_gwne5")
+
+[node name="Lab" type="Sprite2D" parent="Textures" unique_id=32387304]
+position = Vector2(-1342, 1604)
+texture = ExtResource("15_c32x4")
+
+[node name="Lab2" type="Sprite2D" parent="Textures" unique_id=2012033634]
+position = Vector2(3315.508, 1604)
+texture = ExtResource("15_c32x4")
+
+[node name="ColorRect" type="ColorRect" parent="Textures" unique_id=1213749594]
+offset_left = 2951.8716
+offset_top = 1205.5549
+offset_right = 4390.374
+offset_bottom = 2311.1104
+color = Color(0.14901961, 0.15294118, 0.16078432, 1)
