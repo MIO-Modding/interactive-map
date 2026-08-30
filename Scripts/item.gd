@@ -48,3 +48,24 @@ var save_entry: String
 
 func update() -> void:
 	$Amount.value = get_node("/root/Main").player_state.prog_items.count(item_name)
+	
+	$Amount.visible = not max_amount == 1
+	$Toggle.visible = max_amount == 1
+	$Toggle.button_pressed = $Amount.value > 0
+
+
+func _on_amount_value_changed(value: float) -> void:
+	var amount: int = roundi(value)
+	get_node("/root/Main").player_state.prog_items = get_node("/root/Main").player_state.prog_items.filter(func(e): return e != item_name)
+	for i in amount:
+		get_node("/root/Main").player_state.prog_items.append(item_name)
+	get_node("/root/Main").update_itempool.emit()
+
+
+func _on_toggle_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		if not get_node("/root/Main").player_state.prog_items.has(item_name):
+			get_node("/root/Main").player_state.prog_items.append(item_name)
+	else:
+		get_node("/root/Main").player_state.prog_items.erase(item_name)
+	get_node("/root/Main").update_itempool.emit()

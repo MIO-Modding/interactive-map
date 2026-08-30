@@ -69,6 +69,8 @@ func update() -> void:
 				modulate = LOGIC_LEVEL_COLORS["simple"]
 			elif get_node("/root/Main").advanced_reachable_rooms.has(from) and get_node("/root/Main").in_logic(self, Main.LogicLevels.ADVANCED_SKIPS):
 				modulate = LOGIC_LEVEL_COLORS["advanced"]
+			else:
+				modulate = Color.WHITE
 			
 		else:
 			if get_logic_result(intended_logic):
@@ -187,9 +189,6 @@ func parse_logic(logic_string: String) -> Callable:
 		last_logic = state.or_call(hases)
 	else:
 		last_logic = state.has_call(last_converted)
-	
-	#print(logic_string)
-	#print(last_converted)
 	
 	return last_logic
 

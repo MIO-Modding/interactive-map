@@ -14,3 +14,10 @@ size_flags_horizontal = 3
 [node name="Amount" type="SpinBox" parent="." unique_id=852220581]
 layout_mode = 2
 max_value = 1.0
+
+[node name="Toggle" type="CheckButton" parent="." unique_id=1795931332]
+visible = false
+layout_mode = 2
+
+[connection signal="value_changed" from="Amount" to="." method="_on_amount_value_changed"]
+[connection signal="toggled" from="Toggle" to="." method="_on_toggle_toggled"]

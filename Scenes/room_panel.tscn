@@ -3,6 +3,41 @@
 [ext_resource type="Script" uid="uid://rb8a0hic4ju6" path="res://Scripts/room_panel.gd" id="1_w6lau"]
 
 [node name="RoomPanel" type="PanelContainer" unique_id=974636594]
-offset_right = 40.0
+offset_right = 439.0
 offset_bottom = 40.0
 script = ExtResource("1_w6lau")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=980859619]
+layout_mode = 2
+
+[node name="Region" type="Label" parent="HBoxContainer" unique_id=638413075]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+text = "Right Redacted"
+
+[node name="ID" type="Label" parent="HBoxContainer" unique_id=927186410]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Connected" type="PanelContainer" parent="HBoxContainer" unique_id=26667097]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Connected" unique_id=429125582]
+layout_mode = 2
+
+[node name="LogicalCoords" type="Label" parent="HBoxContainer" unique_id=2000795981]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="LogicalCoordsNotes" type="Label" parent="HBoxContainer" unique_id=1078462249]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="Notes" type="Label" parent="HBoxContainer" unique_id=43995988]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Coords" type="Label" parent="HBoxContainer" unique_id=676178498]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2

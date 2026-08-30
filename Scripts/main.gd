@@ -90,9 +90,11 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					panel.notes = row[5]
 					if not row[11].is_empty():
 						panel.coords = str_to_var("Vector2i" + row[11])
+					update_transitions.connect(panel.update)
 					panel.hide()
 					
 					$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.add_child(panel)
+					panel.update()
 				
 				skip_first = false
 				
@@ -111,6 +113,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					update_itempool.connect(item.update)
 					
 					%ItemPool.add_child(item)
+					item.update()
 				else:
 					skip_first = false
 				
@@ -141,10 +144,12 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 			for i in range(3):
 				await get_tree().process_frame
 			
+			update_reachable()
 			update_transitions.emit()
 			for i in range(4):
 				await get_tree().process_frame
 			update_map()
+			update_itempool.connect(update_map)
 
 
 func fill_sheet(sheet_kind: String, body: PackedByteArray, cap: int = -1) -> void:
@@ -175,9 +180,6 @@ func row_to_list(row: String, cap := -1) -> Array:
 				if result.size() >= cap and cap > 0:
 					return result
 				pending = ""
-	
-	print(result)
-	print(row)
 	return result
 
 
@@ -233,6 +235,9 @@ func get_logic(panel: TransitionPanel) -> LogicLevels:
 
 
 func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevels.NONE) -> bool:
+	if panel.door == "Wrong Side":
+		return false
+	
 	if panel.intended_logic.call():
 		return true
 	
@@ -262,8 +267,18 @@ func update_map() -> void:
 		i.queue_free()
 	
 	for room: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.get_children():
-		var point := Node2D.new()
+		var point := Polygon2D.new()
+		point.polygon = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)]
+		point.self_modulate = Color(0, 0, 0)
+		if highlight_reachable_rows:
+			if reachable_rooms.has(room.room_id):
+				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]
+			elif simple_reachable_rooms.has(room.room_id):
+				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["simple"]
+			elif advanced_reachable_rooms.has(room.room_id):
+				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
 		point.name = room.room_id
+		point.set_meta("id", room.room_id)
 		point.position = Vector2(room.coords) / 5 * Vector2(1, -1)
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.add_child(point)
 	
@@ -271,14 +286,48 @@ func update_map() -> void:
 		if ((transition.to == "LQ_vin_intro" and transition.from == "GA_vin_transi_P1") or 
 				(transition.from == "LQ_vin_intro" and transition.to == "GA_vin_transi_P1")):
 			continue
-		var line := Line2D.new()
-		line.name = transition.from + " to " + transition.to
+		var line: TransitionLine = preload("res://Scenes/transition_line.tscn").instantiate()
+		line.name = transition.from + " -> " + transition.to
+		line.default_color = Color(0.7, 0.7, 0.7)
+		
+		line.transition_panel = transition
 		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.from).position)
 		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.to).position)
 		line.width = 1
 		if line.points.has(Vector2(0, 0)):
 			continue
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.add_child(line)
+
+
+func line_clicked(line: TransitionLine) -> void:
+	for i in $TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.get_children():
+		i.queue_free()
+	
+	$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(line.transition_panel.duplicate())
+	var second_panel := get_transition_panel(line.transition_panel.from, line.transition_panel.to)
+	if second_panel != null:
+		$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(second_panel.duplicate())
+
+
+func point_clicked(point: Polygon2D) -> void:
+	if not point.has_meta("id"):
+		return
+	for i in $TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.get_children():
+		i.queue_free()
+	
+	for panel: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.get_children():
+		if panel.room_id == point.get_meta("id", ""):
+			var duplicate_panel = panel.duplicate()
+			duplicate_panel.show()
+			$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(duplicate_panel)
+			break
+
+
+func get_transition_panel(to: String, from: String) -> TransitionPanel:
+	for i: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
+		if i.to == to and i.from == from:
+			return i
+	return null
 
 
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:

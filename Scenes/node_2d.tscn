@@ -21,6 +21,7 @@
 [node name="Node2D" type="Node2D" unique_id=82726750]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=488033964]
+position = Vector2(-324, -353)
 script = ExtResource("1_v1qfn")
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D" unique_id=2147120421]
@@ -45,8 +46,8 @@ metadata/_edit_lock_ = true
 
 [node name="Textures" type="Node2D" parent="." unique_id=1709161364]
 z_index = -10
-position = Vector2(-374, -408.99997)
-scale = Vector2(0.187, 0.188)
+position = Vector2(-374, -404.9999)
+scale = Vector2(0.187, 0.18)
 
 [node name="Dwellings" type="Sprite2D" parent="Textures" unique_id=836453350]
 position = Vector2(-199, 239)
@@ -93,7 +94,7 @@ position = Vector2(-1652, 632.9785)
 texture = ExtResource("12_p20hg")
 
 [node name="RightRedacted" type="Sprite2D" parent="Textures" unique_id=827181850]
-position = Vector2(2129, 448)
+position = Vector2(2129, 509.1128)
 texture = ExtResource("13_85gyg")
 
 [node name="Connection" type="Sprite2D" parent="Textures" unique_id=341014041]

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://crtpl8yqed825"]
+
+[ext_resource type="Script" uid="uid://bn86ki16g20s2" path="res://Scripts/transition_line.gd" id="1_fip5j"]
+
+[node name="TransitionLine" type="Line2D" unique_id=450921226]
+script = ExtResource("1_fip5j")
