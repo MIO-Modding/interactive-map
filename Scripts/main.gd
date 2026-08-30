@@ -20,6 +20,12 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"transition requirements": 8,
 }
 
+const MAP_WRAP_TRANSITIONS: Dictionary[String, String] = {
+	"GA_vin_transi_P1": "LQ_vin_intro",
+	"ST_tube_tech_F1_kassandra": "ST_pearl_halyn_P4",
+	"ST_tube_tech_F1": "ST_pearl_halyn_P2"
+}
+
 var room_requirements_sheet: Array[Array]
 var items_sheet: Array[Array]
 var transition_requirements_sheet: Array[Array]
@@ -262,6 +268,8 @@ func is_empty_string_list(string_list: Array[String]) -> bool:
 
 
 func update_map() -> void:
+	await get_tree().process_frame
+	
 	for i in ($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.get_children() +
 			$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_children()):
 		i.queue_free()
@@ -283,9 +291,6 @@ func update_map() -> void:
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.add_child(point)
 	
 	for transition: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
-		if ((transition.to == "LQ_vin_intro" and transition.from == "GA_vin_transi_P1") or 
-				(transition.from == "LQ_vin_intro" and transition.to == "GA_vin_transi_P1")):
-			continue
 		var line: TransitionLine = preload("res://Scenes/transition_line.tscn").instantiate()
 		line.name = transition.from + " -> " + transition.to
 		line.default_color = Color(0.7, 0.7, 0.7)
@@ -296,10 +301,16 @@ func update_map() -> void:
 				line.z_index = 0
 			else:
 				line.z_index = 3 - transition.LOGIC_LEVEL_COLORS.values().find(transition.modulate)
-		
 		line.transition_panel = transition
 		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.from).position)
-		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.to).position)
+		if MAP_WRAP_TRANSITIONS.keys().has(transition.from) and MAP_WRAP_TRANSITIONS.values().has(transition.to):
+			line.add_point(line.points[0] + Vector2(200, 0))
+			print(line.name)
+		elif MAP_WRAP_TRANSITIONS.values().has(transition.from) and MAP_WRAP_TRANSITIONS.keys().has(transition.to):
+			line.add_point(line.points[0] + Vector2(-200, 0))
+			print(line.name)
+		else:
+			line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.to).position)
 		line.width = 1
 		if line.points.has(Vector2(0, 0)):
 			continue

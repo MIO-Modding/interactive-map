@@ -198,7 +198,6 @@ func convert_item_text(text: String) -> String:
 		if text.contains(i[6]):
 			if text.split(" ").has(i[6]):
 				text = text.replace(i[6], i[0]) 
-				break
 	
 	for i in ["slash", "hairpin", "dodge", "sail", "harvester", "striders", "slingshot", "flowing_steps"]:
 		text = text.replace(i, i.capitalize())

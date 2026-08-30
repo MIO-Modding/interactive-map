@@ -257,15 +257,21 @@ offset_bottom = 40.0
 grow_horizontal = 0
 
 [node name="+" type="Button" parent="TabContainer/Map/ZoomBox" unique_id=1511044056]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 text = "+"
 
 [node name="R" type="Button" parent="TabContainer/Map/ZoomBox" unique_id=1529418794]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 text = "R"
 
 [node name="-" type="Button" parent="TabContainer/Map/ZoomBox" unique_id=1972380209]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 text = "-"
 
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
