@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dnq0nxqfw3n3" path="res://Scripts/main.gd" id="1_bo1nx"]
 [ext_resource type="Script" uid="uid://cgrgrbd0cgj4" path="res://Scripts/items_panel.gd" id="2_8gbba"]
 [ext_resource type="PackedScene" uid="uid://d053j7xxppayl" path="res://Scenes/node_2d.tscn" id="3_8gbba"]
+[ext_resource type="Script" uid="uid://cf0bcw5xtc03o" path="res://Scripts/map_manager.gd" id="3_jjvhh"]
 
 [node name="Main" type="Control" unique_id=717459129]
 layout_mode = 3
@@ -189,6 +190,7 @@ size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
 layout_mode = 2
+script = ExtResource("3_jjvhh")
 metadata/_tab_index = 4
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="TabContainer/Map" unique_id=2056810080]
@@ -226,6 +228,24 @@ mouse_filter = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/ScrollContainer/PanelContainer" unique_id=2038293500]
 layout_mode = 2
 
+[node name="MapSettings" type="FoldableContainer" parent="TabContainer/Map" unique_id=1632666162]
+layout_mode = 0
+offset_right = 187.0
+offset_bottom = 98.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings" unique_id=612524763]
+layout_mode = 2
+
+[node name="RoomPoints" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1981569208]
+layout_mode = 2
+button_pressed = true
+text = "Room Points"
+
+[node name="Transitions" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1123281438]
+layout_mode = 2
+button_pressed = true
+text = "Transitions"
+
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable" to="." method="_on_highlight_reachable_toggled"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ClearButton" to="." method="_on_clear_button_pressed"]
@@ -236,3 +256,5 @@ layout_mode = 2
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/TypeOption" to="TabContainer/PlayerState/ItemsPanel" method="_on_type_option_item_selected"]
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/ClassOption" to="TabContainer/PlayerState/ItemsPanel" method="_on_class_option_item_selected"]
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/HasButton" to="TabContainer/PlayerState/ItemsPanel" method="_on_option_button_item_selected"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/RoomPoints" to="TabContainer/Map" method="_on_room_points_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]
