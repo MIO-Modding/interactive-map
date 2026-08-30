@@ -289,6 +289,13 @@ func update_map() -> void:
 		var line: TransitionLine = preload("res://Scenes/transition_line.tscn").instantiate()
 		line.name = transition.from + " -> " + transition.to
 		line.default_color = Color(0.7, 0.7, 0.7)
+		if highlight_reachable_rows:
+			line.default_color = transition.modulate
+			line.default_color.v -= 0.5
+			if is_equal_approx(line.default_color.s, 0):
+				line.z_index = 0
+			else:
+				line.z_index = 3 - transition.LOGIC_LEVEL_COLORS.values().find(transition.modulate)
 		
 		line.transition_panel = transition
 		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.from).position)

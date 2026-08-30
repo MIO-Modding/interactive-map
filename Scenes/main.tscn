@@ -225,7 +225,6 @@ mouse_filter = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/ScrollContainer/PanelContainer" unique_id=2038293500]
 layout_mode = 2
-alignment = 2
 
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable" to="." method="_on_highlight_reachable_toggled"]

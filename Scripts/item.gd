@@ -51,7 +51,7 @@ func update() -> void:
 	
 	$Amount.visible = not max_amount == 1
 	$Toggle.visible = max_amount == 1
-	$Toggle.button_pressed = $Amount.value > 0
+	$Toggle.set_pressed_no_signal($Amount.value > 0)
 
 
 func _on_amount_value_changed(value: float) -> void:

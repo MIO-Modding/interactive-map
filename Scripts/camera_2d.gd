@@ -5,16 +5,15 @@ func _process(_delta: float) -> void:
 	var previous_zoom: Vector2 = zoom
 	
 	if is_visible_in_tree():
-		if get_viewport().get_mouse_position().y < 566:
+		if get_viewport().get_mouse_position().y < 510:
 			if Input.is_action_just_released("scroll_up"):
 				zoom *= 1.1
 			if Input.is_action_just_released("scroll_down"):
 				zoom /= 1.1
-		
-		position = get_global_mouse_position() - ((get_global_mouse_position() - position) * (previous_zoom / zoom))
-		
-		if Input.is_action_just_pressed("mouse1"):
-			if get_viewport().get_mouse_position().y < 566:
+			
+			position = get_global_mouse_position() - ((get_global_mouse_position() - position) * (previous_zoom / zoom))
+			
+			if Input.is_action_just_pressed("mouse1"):
 				run_click()
 
 
