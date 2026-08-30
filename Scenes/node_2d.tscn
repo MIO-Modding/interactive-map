@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://d053j7xxppayl"]
+
+[ext_resource type="Script" uid="uid://8180katr04wv" path="res://Scripts/camera_2d.gd" id="1_v1qfn"]
+[ext_resource type="Texture2D" uid="uid://duu5kvjb0mgra" path="res://Sprites/map/dwellings.png" id="2_6whob"]
+[ext_resource type="Texture2D" uid="uid://c6iw0bpq6dx8v" path="res://Sprites/map/hub.png" id="2_hh5uf"]
+[ext_resource type="Texture2D" uid="uid://djw3co0cckeuv" path="res://Sprites/map/foundations.png" id="4_6whob"]
+[ext_resource type="Texture2D" uid="uid://fe6dkemuycns" path="res://Sprites/map/city.png" id="4_u7krg"]
+[ext_resource type="Texture2D" uid="uid://5fu6us5op4s" path="res://Sprites/map/embedding.png" id="6_tx0tn"]
+[ext_resource type="Texture2D" uid="uid://c1wtsop5kutbk" path="res://Sprites/map/haven.png" id="7_wjtap"]
+[ext_resource type="Texture2D" uid="uid://chm46vy02nlgc" path="res://Sprites/map/promenade.png" id="8_v7gqg"]
+[ext_resource type="Texture2D" uid="uid://db6pb5qbm3aqp" path="res://Sprites/map/canopy.png" id="9_chwn1"]
+[ext_resource type="Texture2D" uid="uid://cuolklokqll10" path="res://Sprites/map/celestial_bay.png" id="10_hvaui"]
+[ext_resource type="Texture2D" uid="uid://dvsu1qvaxkvv3" path="res://Sprites/map/eye.png" id="11_2ooml"]
+[ext_resource type="Texture2D" uid="uid://bc73tgqey2drh" path="res://Sprites/map/left_redacted.png" id="12_p20hg"]
+[ext_resource type="Texture2D" uid="uid://d0eojsmj5avh" path="res://Sprites/map/right_redacted.png" id="13_85gyg"]
+[ext_resource type="Texture2D" uid="uid://bg882nqbxp53y" path="res://Sprites/map/connection.png" id="14_c32x4"]
+[ext_resource type="Texture2D" uid="uid://blvsn32m3sxl3" path="res://Sprites/map/lab.png" id="15_c32x4"]
+[ext_resource type="Texture2D" uid="uid://deqx6ydngv8c1" path="res://Sprites/map/crucible.png" id="16_fg7i4"]
+[ext_resource type="Texture2D" uid="uid://7duwmjlmmv57" path="res://Sprites/map/vaults.png" id="17_gwne5"]
+
+[node name="Node2D" type="Node2D" unique_id=82726750]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=488033964]
+script = ExtResource("1_v1qfn")
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D" unique_id=2147120421]
+z_index = -100
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -35191.0
+offset_top = -18298.0
+offset_right = 38537.0
+offset_bottom = 23174.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.14901961, 0.15294118, 0.16078432, 1)
+metadata/_edit_lock_ = true
+
+[node name="Panels" type="Node2D" parent="." unique_id=1084478961]
+
+[node name="Lines" type="Node2D" parent="." unique_id=1548995064]
+
+[node name="Points" type="Node2D" parent="." unique_id=1822483193]
+
+[node name="Textures" type="Node2D" parent="." unique_id=1709161364]
+z_index = -10
+position = Vector2(-374, -408.99997)
+scale = Vector2(0.187, 0.188)
+
+[node name="Dwellings" type="Sprite2D" parent="Textures" unique_id=836453350]
+position = Vector2(-199, 239)
+texture = ExtResource("2_6whob")
+
+[node name="Hub" type="Sprite2D" parent="Textures" unique_id=764353492]
+position = Vector2(367, 394)
+texture = ExtResource("2_hh5uf")
+
+[node name="City" type="Sprite2D" parent="Textures" unique_id=1231560583]
+position = Vector2(-1368, 6)
+texture = ExtResource("4_u7krg")
+
+[node name="Foundations" type="Sprite2D" parent="Textures" unique_id=165592403]
+position = Vector2(-938, 545)
+texture = ExtResource("4_6whob")
+
+[node name="Embedding" type="Sprite2D" parent="Textures" unique_id=901791925]
+position = Vector2(-822, -245)
+texture = ExtResource("6_tx0tn")
+
+[node name="Haven" type="Sprite2D" parent="Textures" unique_id=125499002]
+position = Vector2(1026.3193, 184.21057)
+texture = ExtResource("7_wjtap")
+
+[node name="Promenade" type="Sprite2D" parent="Textures" unique_id=1966456368]
+position = Vector2(1884, 143)
+texture = ExtResource("8_v7gqg")
+
+[node name="Canopy" type="Sprite2D" parent="Textures" unique_id=1569622416]
+position = Vector2(1374, -506)
+texture = ExtResource("9_chwn1")
+
+[node name="CelestialBay" type="Sprite2D" parent="Textures" unique_id=87248226]
+position = Vector2(635.5, -272)
+texture = ExtResource("10_hvaui")
+
+[node name="Eye" type="Sprite2D" parent="Textures" unique_id=1331093648]
+position = Vector2(644.5, -1044)
+texture = ExtResource("11_2ooml")
+
+[node name="LeftRedacted" type="Sprite2D" parent="Textures" unique_id=444422641]
+position = Vector2(-1652, 632.9785)
+texture = ExtResource("12_p20hg")
+
+[node name="RightRedacted" type="Sprite2D" parent="Textures" unique_id=827181850]
+position = Vector2(2129, 448)
+texture = ExtResource("13_85gyg")
+
+[node name="Connection" type="Sprite2D" parent="Textures" unique_id=341014041]
+position = Vector2(220, 1108)
+texture = ExtResource("14_c32x4")
+
+[node name="Lab" type="Sprite2D" parent="Textures" unique_id=32387304]
+position = Vector2(246, 1563)
+texture = ExtResource("15_c32x4")
+
+[node name="Crucible" type="Sprite2D" parent="Textures" unique_id=2077070215]
+position = Vector2(-1390, 1606.5)
+texture = ExtResource("16_fg7i4")
+
+[node name="Vaults" type="Sprite2D" parent="Textures" unique_id=1611622011]
+position = Vector2(1785, 1589)
+texture = ExtResource("17_gwne5")

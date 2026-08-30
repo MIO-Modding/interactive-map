@@ -15,7 +15,7 @@ const DATA_LINKS: Dictionary[String, String] = {
 }
 
 const KIND_MAXES: Dictionary[String, int] = {
-	"room requirements": 6,
+	"room requirements": 12,
 	"items": 8,
 	"transition requirements": 8,
 }
@@ -49,6 +49,7 @@ func request_data():
 	
 	requester.request_completed.connect(iterate_requests.bind(["room requirements", "items", "transition requirements"]), CONNECT_ONE_SHOT)
 	requester.request(DATA_LINKS["room requirements"])
+	print("Queued room requirements")
 
 
 func iterate_requests(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, kinds: Array) -> void:
@@ -58,6 +59,7 @@ func iterate_requests(result: int, response_code: int, headers: PackedStringArra
 		return
 	get_child(-1).request_completed.connect(iterate_requests.bind(kinds), CONNECT_ONE_SHOT)
 	get_child(-1).request(DATA_LINKS[kinds[0]])
+	print("Queued " + kinds[0])
 
 
 func on_finished_request(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray, kind: String = "") -> void:
@@ -69,11 +71,31 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 	
 	match kind:
 		"room requirements":
+			room_requirements_sheet = room_requirements_sheet.filter(func(e): return not e[0].is_empty())
+			var skip_first := true
 			for row in room_requirements_sheet:
 				for cell in row:
 					var label = Label.new()
 					label.text = cell
 					$TabContainer/RoomRequirements/GridContainer.add_child(label)
+				
+				if not skip_first:
+					var panel: RoomPanel = preload("res://Scenes/room_panel.tscn").instantiate()
+					panel.region_name = row[0]
+					panel.room_id = row[1]
+					panel.connected_rooms.assign(", ".split(row[2]) as Array)
+					if not row[3].is_empty():
+						panel.logical_coords = str_to_var("Vector2i" + row[3])
+					panel.logical_coords_description = row[4]
+					panel.notes = row[5]
+					if not row[11].is_empty():
+						panel.coords = str_to_var("Vector2i" + row[11])
+					panel.hide()
+					
+					$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.add_child(panel)
+				
+				skip_first = false
+				
 		"items":
 			items_sheet = items_sheet.filter(func(e): return not e[0].is_empty())
 			var skip_first := true
@@ -120,6 +142,9 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				await get_tree().process_frame
 			
 			update_transitions.emit()
+			for i in range(4):
+				await get_tree().process_frame
+			update_map()
 
 
 func fill_sheet(sheet_kind: String, body: PackedByteArray, cap: int = -1) -> void:
@@ -135,7 +160,7 @@ func row_to_list(row: String, cap := -1) -> Array:
 	var pending: String
 	for i in row.split(","):
 		if pending.is_empty():
-			if i.count("\"") == 1:
+			if i.count("\"") % 2 == 1:
 				pending = i
 				pending = pending.trim_prefix("\"")
 			else:
@@ -144,13 +169,15 @@ func row_to_list(row: String, cap := -1) -> Array:
 					return result
 		else:
 			pending += "," + i
-			if i.count("\"") == 1:
+			if i.count("\"") % 2 == 1:
 				pending = pending.trim_suffix("\"")
 				result.append(pending)
 				if result.size() >= cap and cap > 0:
 					return result
 				pending = ""
 	
+	print(result)
+	print(row)
 	return result
 
 
@@ -227,6 +254,31 @@ func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevels.NONE) -
 
 func is_empty_string_list(string_list: Array[String]) -> bool:
 	return "".join(string_list).is_empty()
+
+
+func update_map() -> void:
+	for i in ($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.get_children() +
+			$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_children()):
+		i.queue_free()
+	
+	for room: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.get_children():
+		var point := Node2D.new()
+		point.name = room.room_id
+		point.position = Vector2(room.coords) / 5 * Vector2(1, -1)
+		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.add_child(point)
+	
+	for transition: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
+		if ((transition.to == "LQ_vin_intro" and transition.from == "GA_vin_transi_P1") or 
+				(transition.from == "LQ_vin_intro" and transition.to == "GA_vin_transi_P1")):
+			continue
+		var line := Line2D.new()
+		line.name = transition.from + " to " + transition.to
+		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.from).position)
+		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.to).position)
+		line.width = 1
+		if line.points.has(Vector2(0, 0)):
+			continue
+		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.add_child(line)
 
 
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:

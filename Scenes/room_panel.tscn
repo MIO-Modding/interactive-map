@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dghuq7sqakv0f"]
+
+[ext_resource type="Script" uid="uid://rb8a0hic4ju6" path="res://Scripts/room_panel.gd" id="1_w6lau"]
+
+[node name="RoomPanel" type="PanelContainer" unique_id=974636594]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_w6lau")
