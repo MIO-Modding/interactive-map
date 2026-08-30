@@ -9,4 +9,4 @@ func _on_room_points_toggled(toggled_on: bool) -> void:
 
 
 func _on_transitions_toggled(toggled_on: bool) -> void:
-	pass # Replace with function body.
+	map_node.get_node("Lines").visible = toggled_on

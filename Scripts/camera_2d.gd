@@ -34,6 +34,9 @@ func find_closest_point() -> Polygon2D:
 	var closest_dist: float = -1.0
 	
 	for i: Polygon2D in $"../Points".get_children():
+		if not i.is_visible_in_tree():
+			continue
+		
 		var dist: float = i.position.distance_to(mouse_pos)
 		if dist < 2 and (dist < closest_dist or closest_dist == -1.0):
 			closest_point = i
@@ -48,6 +51,8 @@ func find_closest_line() -> TransitionLine:
 	var closest_dist: float = -1.0
 	
 	for i: TransitionLine in $"../Lines".get_children():
+		if not i.is_visible_in_tree():
+			continue
 		if i.points.size() < 2:
 			continue
 		if i.points[0] == i.points[1]:
