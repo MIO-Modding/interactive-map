@@ -4,6 +4,10 @@ extends Camera2D
 var pos_last_frame: Vector2
 
 
+func _ready() -> void:
+	pos_last_frame = get_viewport().get_mouse_position()
+
+
 func _process(_delta: float) -> void:
 	var previous_zoom: Vector2 = zoom
 	
@@ -15,13 +19,14 @@ func _process(_delta: float) -> void:
 				zoom /= 1.1
 			zoom = zoom.clamp(Vector2(0.5, 0.5), Vector2(20, 20))
 			
-			position = get_global_mouse_position() - ((get_global_mouse_position() - position) * (previous_zoom / zoom))
+			if zoom != previous_zoom:
+				position = get_global_mouse_position() - ((get_global_mouse_position() - position) * (previous_zoom / zoom))
 			
 			if Input.is_action_just_pressed("mouse1"):
 				run_click()
 			if Input.is_action_pressed("mouse1"):
 				position = position + (pos_last_frame - get_viewport().get_mouse_position())
-			
+	
 	pos_last_frame = get_viewport().get_mouse_position()
 
 

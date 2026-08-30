@@ -305,10 +305,8 @@ func update_map() -> void:
 		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.from).position)
 		if MAP_WRAP_TRANSITIONS.keys().has(transition.from) and MAP_WRAP_TRANSITIONS.values().has(transition.to):
 			line.add_point(line.points[0] + Vector2(200, 0))
-			print(line.name)
 		elif MAP_WRAP_TRANSITIONS.values().has(transition.from) and MAP_WRAP_TRANSITIONS.keys().has(transition.to):
 			line.add_point(line.points[0] + Vector2(-200, 0))
-			print(line.name)
 		else:
 			line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.to).position)
 		line.width = 1
