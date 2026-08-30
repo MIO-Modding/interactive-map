@@ -22,7 +22,7 @@ func _process(_delta: float) -> void:
 			if Input.is_action_pressed("mouse1"):
 				position = position + (pos_last_frame - get_viewport().get_mouse_position())
 			
-			pos_last_frame = get_viewport().get_mouse_position()
+	pos_last_frame = get_viewport().get_mouse_position()
 
 
 func run_click() -> void:
