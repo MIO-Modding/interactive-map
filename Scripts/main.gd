@@ -274,7 +274,13 @@ func update_map() -> void:
 			$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_children()):
 		i.queue_free()
 	
+	var all_regions: Array[String]
+	
 	for room: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.get_children():
+		if not room.region_name in all_regions:
+			all_regions.append(room.region_name)
+			$TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.add_item(room.region_name)
+		
 		var point := Polygon2D.new()
 		point.polygon = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)]
 		point.self_modulate = Color(0, 0, 0)
@@ -288,6 +294,7 @@ func update_map() -> void:
 		point.name = room.room_id
 		point.set_meta("id", room.room_id)
 		point.position = Vector2(room.coords) / 5 * Vector2(1, -1)
+		room.point_node = point
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.add_child(point)
 	
 	for transition: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
@@ -342,6 +349,13 @@ func point_clicked(point: Polygon2D) -> void:
 func get_transition_panel(to: String, from: String) -> TransitionPanel:
 	for i: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
 		if i.to == to and i.from == from:
+			return i
+	return null
+
+
+func get_room_panel(id: String) -> RoomPanel:
+	for i: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D.get_node("Panels").get_children():
+		if i.room_id == id:
 			return i
 	return null
 

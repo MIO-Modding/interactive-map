@@ -35,6 +35,8 @@ var coords: Vector2i:
 		coords = v
 		$HBoxContainer/Coords.text = str(v)
 
+var point_node: Polygon2D
+
 
 func update() -> void:
 	var main: Main = get_node("/root/Main")

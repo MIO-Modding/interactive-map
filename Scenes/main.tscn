@@ -247,6 +247,25 @@ layout_mode = 2
 button_pressed = true
 text = "Transitions"
 
+[node name="MapImage" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1721498863]
+layout_mode = 2
+button_pressed = true
+text = "Map Image"
+
+[node name="Filters" type="FoldableContainer" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1891767696]
+layout_mode = 2
+title = "Filter by"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters" unique_id=953395244]
+layout_mode = 2
+
+[node name="AreaFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=447845020]
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "Area..."
+popup/item_0/id = 0
+
 [node name="ZoomBox" type="VBoxContainer" parent="TabContainer/Map" unique_id=1852590896]
 layout_mode = 1
 anchors_preset = 1
@@ -286,6 +305,8 @@ text = "-"
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/HasButton" to="TabContainer/PlayerState/ItemsPanel" method="_on_option_button_item_selected"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/RoomPoints" to="TabContainer/Map" method="_on_room_points_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/MapImage" to="TabContainer/Map" method="_on_map_image_toggled"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/+" to="TabContainer/Map" method="_on_plus_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/R" to="TabContainer/Map" method="_on_reset_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/-" to="TabContainer/Map" method="_on_minus_pressed"]
