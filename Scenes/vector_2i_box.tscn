@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://bo4uwbwik3ujg"]
+
+[node name="Vector2iBox" type="HBoxContainer" unique_id=259257857]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="." unique_id=464297732]
+visible = false
+layout_mode = 2
+
+[node name="OpenParen" type="Label" parent="." unique_id=648719399]
+layout_mode = 2
+text = "("
+
+[node name="XSpin" type="SpinBox" parent="." unique_id=600635703]
+layout_mode = 2
+min_value = -4000.0
+max_value = 1000.0
+
+[node name="Comma" type="Label" parent="." unique_id=825899591]
+layout_mode = 2
+text = ","
+
+[node name="YSpin" type="SpinBox" parent="." unique_id=1433681949]
+layout_mode = 2
+max_value = 3000.0
+
+[node name="CloseParen" type="Label" parent="." unique_id=345756253]
+layout_mode = 2
+text = ")"

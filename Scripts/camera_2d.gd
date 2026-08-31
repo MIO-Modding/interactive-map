@@ -3,16 +3,20 @@ extends Camera2D
 
 var pos_last_frame: Vector2
 
+@onready var map_node: Control = get_parent().get_parent().get_parent().get_parent()
+@onready var draw_node: Node2D = $"../DrawNode"
+
 
 func _ready() -> void:
 	pos_last_frame = get_viewport().get_mouse_position()
+	draw_node.draw.connect(update_shape_visualization)
 
 
 func _process(_delta: float) -> void:
 	var previous_zoom: Vector2 = zoom
 	
 	if is_visible_in_tree():
-		if get_viewport().get_mouse_position().y < get_viewport_rect().size.y - 130:
+		if get_viewport().get_mouse_position().y < get_viewport_rect().size.y - 130 and not Rect2i(map_node.get_node("MapSettings").global_position, map_node.get_node("MapSettings").size).has_point(get_viewport().get_mouse_position()):
 			if Input.is_action_just_released("scroll_up"):
 				zoom *= 1.1
 			if Input.is_action_just_released("scroll_down"):
@@ -28,6 +32,20 @@ func _process(_delta: float) -> void:
 			if Input.is_action_pressed("mouse1"):
 				position = position + (pos_last_frame - get_viewport().get_mouse_position())
 				pos_last_frame = get_viewport().get_mouse_position()
+
+
+func update_shape_visualization() -> void:
+	var shape: String = map_node.shape_option.get_item_text(map_node.shape_option.selected)
+	
+	match shape:
+		"Shape...":
+			pass
+		"Circle":
+			var center = map_node.get_node("MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition").values
+			center = Vector2(center) / 5
+			@warning_ignore("integer_division")
+			draw_node.draw_circle(center * Vector2(1, -1), 
+			map_node.get_node("MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius").value / 5, Color(0.0, 0.795, 1.0, 0.543))
 
 
 func run_click() -> void:

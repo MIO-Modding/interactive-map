@@ -124,3 +124,6 @@ offset_top = 1205.5549
 offset_right = 4390.374
 offset_bottom = 2311.1104
 color = Color(0.14901961, 0.15294118, 0.16078432, 1)
+
+[node name="DrawNode" type="Node2D" parent="." unique_id=698883722]
+z_index = 400
