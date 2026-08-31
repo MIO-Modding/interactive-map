@@ -60,14 +60,14 @@ var tainted_logic: Main.LogicLevels = Main.LogicLevels.INTENDED_LOGIC
 
 
 func update() -> void:
-	if get_node("/root/Main").highlight_rows_in_logic:
-		if get_node("/root/Main").highlight_reachable_rows:
+	if $/root/Main.highlight_rows_in_logic:
+		if $/root/Main.highlight_reachable_rows:
 			await get_tree().process_frame
-			if get_node("/root/Main").reachable_rooms.has(from) and get_node("/root/Main").in_logic(self):
+			if $/root/Main.reachable_rooms.has(from) and $/root/Main.in_logic(self):
 				modulate = LOGIC_LEVEL_COLORS["intended"]
-			elif get_node("/root/Main").simple_reachable_rooms.has(from) and get_node("/root/Main").in_logic(self, Main.LogicLevels.SIMPLE_SKIPS):
+			elif $/root/Main.simple_reachable_rooms.has(from) and $/root/Main.in_logic(self, Main.LogicLevels.SIMPLE_SKIPS):
 				modulate = LOGIC_LEVEL_COLORS["simple"]
-			elif get_node("/root/Main").advanced_reachable_rooms.has(from) and get_node("/root/Main").in_logic(self, Main.LogicLevels.ADVANCED_SKIPS):
+			elif $/root/Main.advanced_reachable_rooms.has(from) and $/root/Main.in_logic(self, Main.LogicLevels.ADVANCED_SKIPS):
 				modulate = LOGIC_LEVEL_COLORS["advanced"]
 			else:
 				modulate = Color.WHITE
@@ -139,7 +139,7 @@ func parse_logic(logic_string: String) -> Callable:
 	
 	if not is_inside_tree():
 		await tree_entered
-	var state = get_node("/root/Main").player_state
+	var state = $/root/Main.player_state
 	
 	while edited_string.contains("{"):
 		var right_brace_pos: int = edited_string.find("}")
@@ -194,7 +194,7 @@ func parse_logic(logic_string: String) -> Callable:
 
 
 func convert_item_text(text: String) -> String:
-	for i in get_node("/root/Main").items_sheet:
+	for i in $/root/Main.items_sheet:
 		if text.contains(i[6]):
 			if text.split(" ").has(i[6]):
 				text = text.replace(i[6], i[0]) 

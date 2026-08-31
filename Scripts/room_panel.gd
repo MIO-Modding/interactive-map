@@ -39,7 +39,7 @@ var point_node: Polygon2D
 
 
 func update() -> void:
-	var main: Main = get_node("/root/Main")
+	var main: Main = $/root/Main
 	if main.highlight_reachable_rows:
 		if main.reachable_rooms.has(room_id):
 			modulate = TransitionPanel.LOGIC_LEVEL_COLORS.intended

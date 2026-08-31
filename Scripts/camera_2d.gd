@@ -32,6 +32,8 @@ func _process(_delta: float) -> void:
 			if Input.is_action_pressed("mouse1"):
 				position = position + (pos_last_frame - get_viewport().get_mouse_position())
 				pos_last_frame = get_viewport().get_mouse_position()
+	
+	map_node.get_node("MousePos").text = str(get_global_mouse_position() * 5)
 
 
 func update_shape_visualization() -> void:
@@ -51,11 +53,11 @@ func update_shape_visualization() -> void:
 func run_click() -> void:
 	var closest_point := find_closest_point()
 	if closest_point != null:
-		get_node("/root/Main").point_clicked(closest_point)
+		$/root/Main.point_clicked(closest_point)
 		return
 	var closest_line := find_closest_line()
 	if closest_line != null:
-		get_node("/root/Main").line_clicked(closest_line)
+		$/root/Main.line_clicked(closest_line)
 		return
 
 

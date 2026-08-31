@@ -320,6 +320,8 @@ func update_map() -> void:
 		if line.points.has(Vector2(0, 0)):
 			continue
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.add_child(line)
+	
+	$TabContainer/Map.update_filter()
 
 
 func line_clicked(line: TransitionLine) -> void:

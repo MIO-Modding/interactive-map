@@ -32,7 +32,7 @@ func update_filter() -> void:
 			if region_text != i.region_name:
 				i.point_node.hide()
 		for i: TransitionLine in transition_lines:
-			if not region_text in [get_node("/root/Main").get_room_panel(i.transition_panel.from).region_name, get_node("/root/Main").get_room_panel(i.transition_panel.to).region_name]:
+			if not region_text in [$/root/Main.get_room_panel(i.transition_panel.from).region_name, $/root/Main.get_room_panel(i.transition_panel.to).region_name]:
 				i.visible = false
 	
 	var selected_text: String = shape_option.get_item_text(shape_option.selected)
@@ -52,8 +52,42 @@ func update_filter() -> void:
 			i.point_node.hide()
 		for i in transition_lines.filter(
 				func(e): return not (
-					filter_logic.call(get_node("/root/Main").get_room_panel(e.transition_panel.from).coords) or filter_logic.call(get_node("/root/Main").get_room_panel(e.transition_panel.to).coords))):
+					filter_logic.call($/root/Main.get_room_panel(e.transition_panel.from).coords) or filter_logic.call($/root/Main.get_room_panel(e.transition_panel.to).coords))):
 			i.hide()
+	
+	match $MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter.selected:
+		0:
+			pass
+		1: # int
+			for i in room_panels:
+				if not i.room_id in $/root/Main.reachable_rooms:
+					i.point_node.hide()
+			for i: TransitionLine in transition_lines:
+				if TransitionPanel.LOGIC_LEVEL_COLORS.values().has(i.transition_panel.modulate):
+					if TransitionPanel.LOGIC_LEVEL_COLORS.find_key(i.transition_panel.modulate) != "intended":
+						i.hide()
+				else:
+					i.hide()
+		2: # sim
+			for i in room_panels:
+				if not i.room_id in $/root/Main.simple_reachable_rooms:
+					i.point_node.hide()
+			for i: TransitionLine in transition_lines:
+				if TransitionPanel.LOGIC_LEVEL_COLORS.values().has(i.transition_panel.modulate):
+					if not TransitionPanel.LOGIC_LEVEL_COLORS.find_key(i.transition_panel.modulate) in ["intended", "simple"]:
+						i.hide()
+				else:
+					i.hide()
+		3: # adv
+			for i in room_panels:
+				if not i.room_id in $/root/Main.advanced_reachable_rooms:
+					i.point_node.hide()
+			for i: TransitionLine in transition_lines:
+				if TransitionPanel.LOGIC_LEVEL_COLORS.values().has(i.transition_panel.modulate):
+					if not TransitionPanel.LOGIC_LEVEL_COLORS.find_key(i.transition_panel.modulate) in ["intended", "simple", "advanced"]:
+						i.hide()
+				else:
+					i.hide()
 	
 
 
@@ -107,3 +141,7 @@ func _on_circle_radius_value_changed(_value: float) -> void:
 	if map_node != null:
 		map_node.get_node("Camera2D").draw_node.queue_redraw()
 		update_filter()
+
+
+func _on_logic_filter_item_selected(_index: int) -> void:
+	update_filter()

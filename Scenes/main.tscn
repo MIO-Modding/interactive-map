@@ -270,9 +270,11 @@ popup/item_0/id = 0
 
 [node name="PositionContainer" type="FoldableContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=2015373869]
 layout_mode = 2
+folded = true
 title = "Position"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer" unique_id=1413058284]
+visible = false
 layout_mode = 2
 
 [node name="ShapeOption" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer" unique_id=1405346067]
@@ -298,6 +300,19 @@ layout_mode = 2
 script = ExtResource("5_kry3j")
 text = "Center:"
 metadata/_custom_type_script = "uid://blhmfcrwuh8kj"
+
+[node name="LogicFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=47395043]
+layout_mode = 2
+selected = 0
+item_count = 4
+popup/item_0/text = "In Logic..."
+popup/item_0/id = 0
+popup/item_1/text = "Intended"
+popup/item_1/id = 1
+popup/item_2/text = "Simple Skips"
+popup/item_2/id = 2
+popup/item_3/text = "Advanced Skips"
+popup/item_3/id = 3
 
 [node name="ZoomBox" type="VBoxContainer" parent="TabContainer/Map" unique_id=1852590896]
 layout_mode = 1
@@ -326,6 +341,20 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "-"
 
+[node name="MousePos" type="Label" parent="TabContainer/Map" unique_id=1221820089]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -44.0
+offset_top = -127.0
+offset_right = -4.0
+offset_bottom = -104.0
+grow_horizontal = 0
+grow_vertical = 0
+
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable" to="." method="_on_highlight_reachable_toggled"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ClearButton" to="." method="_on_clear_button_pressed"]
@@ -343,6 +372,7 @@ text = "-"
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption" to="TabContainer/Map" method="_on_shape_option_item_selected"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius" to="TabContainer/Map" method="_on_circle_radius_value_changed"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition" to="TabContainer/Map" method="_on_circle_position_value_changed"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter" to="TabContainer/Map" method="_on_logic_filter_item_selected"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/+" to="TabContainer/Map" method="_on_plus_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/R" to="TabContainer/Map" method="_on_reset_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/-" to="TabContainer/Map" method="_on_minus_pressed"]

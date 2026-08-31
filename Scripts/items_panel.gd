@@ -51,8 +51,8 @@ func update_search() -> void:
 		
 		match $VBoxContainer/Filters/HasButton.selected:
 			1:
-				if not get_node("/root/Main").player_state.prog_items.has(i.item_name):
+				if not $/root/Main.player_state.prog_items.has(i.item_name):
 					hide()
 			2:
-				if get_node("/root/Main").player_state.prog_items.has(i.item_name):
+				if $/root/Main.player_state.prog_items.has(i.item_name):
 					hide()
