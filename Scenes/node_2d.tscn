@@ -45,6 +45,11 @@ metadata/_edit_lock_ = true
 [node name="Points" type="Node2D" parent="." unique_id=1822483193]
 z_index = 8
 
+[node name="LocPoints" type="Node2D" parent="." unique_id=193233103]
+z_index = 1
+
+[node name="LocLines" type="Node2D" parent="." unique_id=466781403]
+
 [node name="Textures" type="Node2D" parent="." unique_id=1709161364]
 z_index = -10
 position = Vector2(-374, -404.9999)

@@ -44,6 +44,10 @@ var reachable_rooms: Array[String]
 var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
 
+var reachable_locations: Array[LocationPanel]
+var simple_reachable_locations: Array[LocationPanel]
+var advanced_reachable_locations: Array[LocationPanel]
+
 
 func _ready() -> void:
 	player_state = PlayerState.new()
@@ -155,10 +159,6 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 			
 			update_reachable()
 			update_transitions.emit()
-			for i in range(4):
-				await get_tree().process_frame
-			update_map()
-			update_itempool.connect(update_map)
 		"location requirements":
 			location_requirements_sheet = location_requirements_sheet.filter(func(e): return not e[0].is_empty())
 			var skip_first := true
@@ -184,7 +184,11 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				update_transitions.connect(panel.update)
 				$TabContainer/LocationRequirements/VBoxContainer.add_child(panel)
 			
+			update_reachable()
+			for i in range(4):
+				await get_tree().process_frame
 			update_map()
+			update_itempool.connect(update_map)
 
 
 func fill_sheet(sheet_kind: String, body: PackedByteArray, cap: int = -1) -> void:
@@ -221,11 +225,33 @@ func row_to_list(row: String, cap := -1) -> Array:
 func update_reachable() -> void:
 	logic_kind = LogicLevels.INTENDED_LOGIC
 	reachable_rooms = get_reachable()
+	reachable_locations = get_reachable_locations(reachable_rooms)
 	logic_kind = LogicLevels.SIMPLE_SKIPS
 	simple_reachable_rooms = get_reachable()
+	simple_reachable_locations = get_reachable_locations(simple_reachable_rooms)
 	logic_kind = LogicLevels.ADVANCED_SKIPS
 	advanced_reachable_rooms = get_reachable()
+	advanced_reachable_locations = get_reachable_locations(advanced_reachable_rooms)
 	logic_kind = LogicLevels.INTENDED_LOGIC
+
+
+func get_reachable_locations(availible_rooms: Array[String]) -> Array[LocationPanel]:
+	var result: Array[LocationPanel] = []
+	
+	for room in availible_rooms:
+		for loc: LocationPanel in get_locations_for_room(room):
+			if loc_in_logic(loc):
+				result.append(loc)
+	
+	return result
+
+
+func get_locations_for_room(room_id: String) -> Array[LocationPanel]:
+	var result: Array[LocationPanel] = []
+	for i: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
+		if i.room_id == room_id:
+			result.append(i)
+	return result
 
 
 func get_reachable() -> Array[String]:
@@ -292,6 +318,26 @@ func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevels.NONE) -
 	return false
 
 
+func loc_in_logic(loc_panel: LocationPanel, override_logic_kind := LogicLevels.NONE) -> bool:
+	if loc_panel.intended_logic.call():
+		return true
+	
+	if override_logic_kind == LogicLevels.NONE:
+		override_logic_kind = logic_kind
+	
+	if loc_panel.simple_string != "-":
+		if override_logic_kind != LogicLevels.INTENDED_LOGIC:
+			if loc_panel.simple_logic.call():
+				return true
+	
+	if loc_panel.advanced_string != "-":
+		if override_logic_kind == LogicLevels.ADVANCED_SKIPS:
+			if loc_panel.advanced_logic.call():
+				return true
+	
+	return false
+
+
 func is_empty_string_list(string_list: Array[String]) -> bool:
 	return "".join(string_list).is_empty()
 
@@ -350,7 +396,67 @@ func update_map() -> void:
 			continue
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.add_child(line)
 	
+	var taken_positions: Array[Vector2i]
+	for loc_panel: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
+		var point := Polygon2D.new()
+		point.set_meta("panel", loc_panel)
+		point.polygon = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)].map(func(e): return e / 2)
+		point.self_modulate = Color.WHITE
+		if highlight_reachable_rows:
+			if reachable_locations.has(loc_panel):
+				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]
+			elif simple_reachable_locations.has(loc_panel):
+				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["simple"]
+			elif advanced_reachable_locations.has(loc_panel):
+				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
+		loc_panel.modulate = point.self_modulate
+		point.name = loc_panel.room_id + ": " + loc_panel.loc_description
+		if loc_panel.room_id == "ST_security_secret_S1":
+			point.position = get_room_panel(loc_panel.room_id).point_node.position
+			point.position += Vector2(-30, 10)
+		else:
+			var temp_point: Vector2i = loc_panel.coords
+			
+			var iterations: int = 0
+			while taken_positions.has(temp_point):
+				iterations += 1
+				temp_point.x -= 5
+				if iterations % 5 == 0:
+					temp_point.y -= 5
+					temp_point.x += 25
+			taken_positions.append(temp_point)
+			
+			point.position = Vector2(temp_point) / 5 * Vector2(1, -1)
+		
+		loc_panel.point_node = point
+		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocPoints.add_child(point)
+		
+		var line: LocationLine = preload("res://Scenes/location_line.tscn").instantiate()
+		line.loc_panel = loc_panel
+		line.default_color = point.self_modulate
+		line.default_color.v -= 0.5
+		if line.default_color.s != 1.0:
+			line.default_color.s = 0.0
+		line.width = 1
+		if loc_panel.room_id == "N/A":
+			line.add_point(Vector2(100, 100))
+		else:
+			line.add_point(get_room_panel(loc_panel.room_id).point_node.position)
+		line.add_point(point.position)
+		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocLines.add_child(line)
+		
+		point.set_meta("line", line)
+		if is_location_event(loc_panel):
+			point.self_modulate = Color.REBECCA_PURPLE
+	
 	$TabContainer/Map.update_filter()
+
+
+func is_location_event(loc_panel: LocationPanel) -> bool:
+	for i: Item in %ItemPool.get_children():
+		if i.item_name == loc_panel.vanilla_item or i.save_entry == loc_panel.save_flag:
+			return i.type == Item.ItemTypes.EVENT
+	return false
 
 
 func line_clicked(line: TransitionLine) -> void:
@@ -364,10 +470,17 @@ func line_clicked(line: TransitionLine) -> void:
 
 
 func point_clicked(point: Polygon2D) -> void:
-	if not point.has_meta("id"):
-		return
 	for i in $TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.get_children():
 		i.queue_free()
+	
+	if point.has_meta("panel"):
+		var panel: LocationPanel = point.get_meta("panel")
+		var duplicate_panel = panel.duplicate()
+		$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(duplicate_panel)
+		return
+	
+	if not point.has_meta("id"):
+		return
 	
 	for panel: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.get_children():
 		if panel.room_id == point.get_meta("id", ""):

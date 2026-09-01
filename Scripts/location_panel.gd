@@ -51,6 +51,17 @@ var notes: String:
 		notes = v
 		$HBoxContainer/Notes.text = v
 
+var point_node: Polygon2D
+
 
 func update() -> void:
-	pass
+	if $/root/Main.highlight_rows_in_logic:
+		await get_tree().process_frame
+		if $/root/Main.reachable_locations.has(self):
+			modulate = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]
+		elif $/root/Main.simple_reachable_locations.has(self):
+			modulate = TransitionPanel.LOGIC_LEVEL_COLORS["simple"]
+		elif $/root/Main.advanced_reachable_locations.has(self):
+			modulate = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
+		else:
+			modulate = Color.WHITE

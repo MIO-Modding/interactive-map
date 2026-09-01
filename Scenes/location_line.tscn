@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cmkryaj8jsamr"]
+
+[ext_resource type="Texture2D" uid="uid://dl84mcwyyusr7" path="res://Sprites/dotted.png" id="1_27s86"]
+[ext_resource type="Script" uid="uid://dmkpkf4my56h8" path="res://Scripts/location_line.gd" id="2_cmoj0"]
+
+[node name="LocationLine" type="Line2D" unique_id=1183468618]
+texture_filter = 1
+texture_repeat = 2
+width = 1.0
+texture = ExtResource("1_27s86")
+texture_mode = 1
+sharp_limit = 0.0
+script = ExtResource("2_cmoj0")

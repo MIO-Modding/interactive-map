@@ -66,7 +66,7 @@ func find_closest_point() -> Polygon2D:
 	var closest_point: Polygon2D = null
 	var closest_dist: float = -1.0
 	
-	for i: Polygon2D in $"../Points".get_children():
+	for i: Polygon2D in $"../Points".get_children() + $"../LocPoints".get_children():
 		if not i.is_visible_in_tree():
 			continue
 		

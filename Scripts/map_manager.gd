@@ -21,8 +21,9 @@ func update_filter() -> void:
 	var room_points = map_node.get_node("Points").get_children()
 	var room_panels = map_node.get_node("Panels").get_children()
 	var transition_lines = map_node.get_node("Lines").get_children()
+	var location_points = map_node.get_node("LocPoints").get_children()
 	
-	for i in room_points + transition_lines:
+	for i in room_points + transition_lines + location_points + map_node.get_node("LocLines").get_children():
 		i.show()
 	
 	var region_index: int = $MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.selected
@@ -34,6 +35,9 @@ func update_filter() -> void:
 		for i: TransitionLine in transition_lines:
 			if not region_text in [$/root/Main.get_room_panel(i.transition_panel.from).region_name, $/root/Main.get_room_panel(i.transition_panel.to).region_name]:
 				i.visible = false
+		for i: Polygon2D in location_points:
+			if region_text != i.get_meta("panel").region_name:
+				hide_location_point(i) 
 	
 	var selected_text: String = shape_option.get_item_text(shape_option.selected)
 	var filter_logic: Callable = func(_c: Vector2i): return true
@@ -54,6 +58,8 @@ func update_filter() -> void:
 				func(e): return not (
 					filter_logic.call($/root/Main.get_room_panel(e.transition_panel.from).coords) or filter_logic.call($/root/Main.get_room_panel(e.transition_panel.to).coords))):
 			i.hide()
+		for i in location_points.filter(func(e): return not filter_logic.call(e.get_meta("panel").coords)):
+			hide_location_point(i)
 	
 	match $MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter.selected:
 		0:
@@ -68,6 +74,12 @@ func update_filter() -> void:
 						i.hide()
 				else:
 					i.hide()
+			for i in location_points:
+				if TransitionPanel.LOGIC_LEVEL_COLORS.values().has(i.get_meta("panel").modulate):
+					if TransitionPanel.LOGIC_LEVEL_COLORS.find_key(i.get_meta("panel").modulate) != "intended":
+						hide_location_point(i)
+				else:
+					hide_location_point(i)
 		2: # sim
 			for i in room_panels:
 				if not i.room_id in $/root/Main.simple_reachable_rooms:
@@ -78,6 +90,13 @@ func update_filter() -> void:
 						i.hide()
 				else:
 					i.hide()
+			for i in location_points:
+				if TransitionPanel.LOGIC_LEVEL_COLORS.values().has(i.get_meta("panel").modulate):
+					if TransitionPanel.LOGIC_LEVEL_COLORS.find_key(i.get_meta("panel").modulate) in ["intended", "simple"]:
+						hide_location_point(i)
+				else:
+					print(i.get_meta("panel").modulate)
+					hide_location_point(i)
 		3: # adv
 			for i in room_panels:
 				if not i.room_id in $/root/Main.advanced_reachable_rooms:
@@ -88,7 +107,17 @@ func update_filter() -> void:
 						i.hide()
 				else:
 					i.hide()
-	
+			for i in location_points:
+				if TransitionPanel.LOGIC_LEVEL_COLORS.values().has(i.get_meta("panel").modulate):
+					if TransitionPanel.LOGIC_LEVEL_COLORS.find_key(i.get_meta("panel").modulate) in ["intended", "simple", "advanced"]:
+						hide_location_point(i)
+				else:
+					hide_location_point(i)
+
+
+func hide_location_point(loc_point: Polygon2D) -> void:
+	loc_point.hide()
+	loc_point.get_meta("line").hide()
 
 
 func _on_plus_pressed() -> void:
@@ -109,6 +138,11 @@ func _on_room_points_toggled(toggled_on: bool) -> void:
 
 func _on_transitions_toggled(toggled_on: bool) -> void:
 	map_node.get_node("Lines").visible = toggled_on
+
+
+func _on_locations_toggled(toggled_on: bool) -> void:
+	map_node.get_node("LocLines").visible = toggled_on
+	map_node.get_node("LocPoints").visible = toggled_on
 
 
 func _on_map_image_toggled(toggled_on: bool) -> void:

@@ -22,7 +22,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 4
+current_tab = 5
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -61,6 +61,7 @@ layout_mode = 2
 alignment = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
@@ -198,7 +199,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
-visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 5
@@ -215,7 +215,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -256,6 +256,11 @@ text = "Room Points"
 layout_mode = 2
 button_pressed = true
 text = "Transitions"
+
+[node name="Locations" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1020033018]
+layout_mode = 2
+button_pressed = true
+text = "Locations"
 
 [node name="MapImage" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1721498863]
 layout_mode = 2
@@ -308,7 +313,6 @@ prefix = "Radius:"
 layout_mode = 2
 script = ExtResource("5_kry3j")
 text = "Center:"
-editable = null
 metadata/_custom_type_script = "uid://blhmfcrwuh8kj"
 
 [node name="LogicFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=47395043]
@@ -377,6 +381,7 @@ grow_vertical = 0
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/HasButton" to="TabContainer/PlayerState/ItemsPanel" method="_on_option_button_item_selected"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/RoomPoints" to="TabContainer/Map" method="_on_room_points_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Locations" to="TabContainer/Map" method="_on_locations_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/MapImage" to="TabContainer/Map" method="_on_map_image_toggled"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption" to="TabContainer/Map" method="_on_shape_option_item_selected"]
