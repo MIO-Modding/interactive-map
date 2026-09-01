@@ -30,7 +30,7 @@ func _process(_delta: float) -> void:
 				run_click()
 				pos_last_frame = get_viewport().get_mouse_position()
 			if Input.is_action_pressed("mouse1"):
-				position = position + (pos_last_frame - get_viewport().get_mouse_position())
+				position = position + ((pos_last_frame - get_viewport().get_mouse_position()) / zoom.x)
 				pos_last_frame = get_viewport().get_mouse_position()
 	
 	map_node.get_node("MousePos").text = str(get_global_mouse_position() * 5)
