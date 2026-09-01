@@ -440,8 +440,6 @@ func update_map() -> void:
 		line.loc_panel = loc_panel
 		line.default_color = point.self_modulate
 		line.default_color.v -= 0.5
-		if line.default_color.s != 1.0:
-			line.default_color.s = 0.0
 		line.width = 1
 		if loc_panel.room_id == "N/A":
 			line.add_point(Vector2(100, 100))
@@ -483,6 +481,7 @@ func point_clicked(point: Polygon2D) -> void:
 		var duplicate_panel = panel.duplicate()
 		duplicate_panel.room_id = panel.room_id
 		duplicate_panel.loc_description = panel.loc_description
+		duplicate_panel.original_color = panel.modulate
 		
 		$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(duplicate_panel)
 		return

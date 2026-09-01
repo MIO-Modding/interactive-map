@@ -58,6 +58,8 @@ var checked := false:
 
 var point_node: Polygon2D
 
+var original_color: Color
+
 
 func update() -> void:
 	if Main.player_state.checked_locations.has(self):
@@ -79,4 +81,6 @@ func update() -> void:
 
 func _on_checked_toggled(toggled_on: bool) -> void:
 	checked = toggled_on
+	if point_node == null:
+		modulate = Color(0.232, 0.566, 0.61) if toggled_on else original_color
 	Main.player_state.check_location_serialized(Main.PlayerState.serialize_location(self), not toggled_on)
