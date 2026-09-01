@@ -51,11 +51,20 @@ var notes: String:
 		notes = v
 		$HBoxContainer/Notes.text = v
 
+var checked := false:
+	set(v):
+		checked = v
+		$HBoxContainer/Checked.button_pressed = v
+
 var point_node: Polygon2D
 
 
 func update() -> void:
-	if $/root/Main.highlight_rows_in_logic:
+	if Main.player_state.checked_locations.has(self):
+		modulate = Color(0.232, 0.566, 0.61)
+		point_node.color = Color(0.1, 0.1, 0.1)
+	elif $/root/Main.highlight_rows_in_logic:
+		point_node.color = Color.WHITE
 		await get_tree().process_frame
 		if $/root/Main.reachable_locations.has(self):
 			modulate = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]
@@ -65,3 +74,9 @@ func update() -> void:
 			modulate = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
 		else:
 			modulate = Color.WHITE
+	checked = Main.player_state.checked_locations.has(self)
+
+
+func _on_checked_toggled(toggled_on: bool) -> void:
+	checked = toggled_on
+	Main.player_state.check_location_serialized(Main.PlayerState.serialize_location(self), not toggled_on)

@@ -37,7 +37,7 @@ var highlight_rows_in_logic := true
 var highlight_reachable_rows := true
 var logic_kind: LogicLevels = LogicLevels.INTENDED_LOGIC
 
-var player_state: PlayerState
+static var player_state: PlayerState
 signal update_itempool
 signal update_transitions
 var reachable_rooms: Array[String]
@@ -52,6 +52,7 @@ var advanced_reachable_locations: Array[LocationPanel]
 
 func _ready() -> void:
 	player_state = PlayerState.new()
+	player_state.main = self
 	update_itempool.connect(func(): update_transitions.emit())
 	update_itempool.connect(update_reachable)
 	request_data()
@@ -480,6 +481,9 @@ func point_clicked(point: Polygon2D) -> void:
 	if point.has_meta("panel"):
 		var panel: LocationPanel = point.get_meta("panel")
 		var duplicate_panel = panel.duplicate()
+		duplicate_panel.room_id = panel.room_id
+		duplicate_panel.loc_description = panel.loc_description
+		
 		$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(duplicate_panel)
 		return
 	
@@ -508,6 +512,13 @@ func get_room_panel(id: String) -> RoomPanel:
 	return null
 
 
+func get_location_panel(serial: String) -> LocationPanel:
+	for i in $TabContainer/LocationRequirements/VBoxContainer.get_children():
+		if PlayerState.serialize_location(i) == serial:
+			return i
+	return null
+
+
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
 	highlight_rows_in_logic = toggled_on
 	update_transitions.emit()
@@ -516,6 +527,7 @@ func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
 func _on_highlight_reachable_toggled(toggled_on: bool) -> void:
 	highlight_reachable_rows = toggled_on
 	update_transitions.emit()
+
 
 func _on_clear_button_pressed() -> void:
 	player_state.prog_items.clear()
@@ -547,7 +559,11 @@ func _on_starting_location_item_selected(index: int) -> void:
 
 
 class PlayerState:
+	var main: Main
+	
 	var prog_items: Array[String] = []
+	
+	var checked_locations: Array[LocationPanel]
 	
 	
 	func and_call(calls: Array[Callable]) -> Callable:
@@ -573,3 +589,30 @@ class PlayerState:
 			elif item == "True":
 				return true
 			return prog_items.has(item))
+	
+	
+	func checked_locations_serialized() -> Array[String]:
+		var result: Array[String]
+		for i in checked_locations:
+			if i == null:
+				continue
+			result.append(i.room_id + ": " + i.loc_description)
+		return result
+	
+	
+	static func serialize_location(loc: LocationPanel) -> String:
+		return loc.room_id + ": " + loc.loc_description
+	
+	
+	func check_location_serialized(serial: String, uncheck := false) -> void:
+		if not checked_locations_serialized().has(serial):
+			if not uncheck:
+				checked_locations.append(main.get_location_panel(serial))
+				
+				for i in main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
+					i.update()
+		elif uncheck:
+			checked_locations.erase(main.get_location_panel(serial))
+			
+			for i in main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
+				i.update()

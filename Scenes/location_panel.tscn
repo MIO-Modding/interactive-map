@@ -32,7 +32,7 @@ custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
 [node name="Flag" type="Label" parent="HBoxContainer" unique_id=666356424]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 
 [node name="Intended" type="Label" parent="HBoxContainer" unique_id=464031531]
@@ -54,3 +54,9 @@ autowrap_mode = 3
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 autowrap_mode = 3
+
+[node name="Checked" type="CheckBox" parent="HBoxContainer" unique_id=1925872968]
+layout_mode = 2
+text = "Checked"
+
+[connection signal="toggled" from="HBoxContainer/Checked" to="." method="_on_checked_toggled"]
