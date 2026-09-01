@@ -121,12 +121,16 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 		string = string.replace("hazard_striders", "striders").replace("wall_climb", "{ slash && dodge }")
 		string = string.replace("hazard_respawn", "True")
 		string = string.replace("super_spring", "True")
-		string = string.replace("laser_skip", "slash") #hmmm
+		string = string.replace("laser_skip", "True") #hmmm
 		string = string.replace("flower_warp", "slash")
 		string = string.replace("harvester", "{ harvester && slash }").replace("slingshot", "{ slingshot && slash }")
 		string = string.replace("flowing_steps", "{ striders && flowing_steps }").replace("striders", "{ striders || flowing_steps }")
 		string = string.replace("{ striders || flowing_steps } & flowing_steps", "striders & flowing_steps")
 		string = string.replace("CHEST_KEY:0-5", "{ CHEST_KEY:0 && CHEST_KEY:1 && CHEST_KEY:2 && CHEST_KEY:3 && CHEST_KEY:4 && CHEST_KEY:5 }")
+		string = string.replace("Meet Mel && Mel Freed", "Mel Freed").replace("Mel Freed", "Meet Mel && Mel Freed")
+		string = string.replace("1 Scrapling", "{ Find Sin || Find Cos || Find Tan }")
+		string = string.replace("2 Scraplings", "{ { Find Sin && Find Cos } || { Find Sin && Find Tan } || { Find Cos && Find Tan } }")
+		string = string.replace("3 Scraplings", "{ Find Sin && Find Cos && Find Tan }")
 		
 		return await parse_logic(string, node)
 
