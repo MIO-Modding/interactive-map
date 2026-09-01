@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://7af6chw4tlvx"]
+
+[ext_resource type="Script" uid="uid://cb73hlx4t8577" path="res://Scripts/location_panel.gd" id="1_nvll8"]
+
+[node name="LocationPanel" type="PanelContainer" unique_id=204942903]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_nvll8")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=204049030]
+layout_mode = 2
+
+[node name="Region" type="Label" parent="HBoxContainer" unique_id=172969388]
+custom_minimum_size = Vector2(215, 0)
+layout_mode = 2
+text = "The Severed Spinr"
+
+[node name="Room" type="Label" parent="HBoxContainer" unique_id=846726471]
+custom_minimum_size = Vector2(215, 0)
+layout_mode = 2
+
+[node name="LocationDescription" type="Label" parent="HBoxContainer" unique_id=1299146349]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+
+[node name="LocationCoords" type="Label" parent="HBoxContainer" unique_id=271470725]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="Item" type="Label" parent="HBoxContainer" unique_id=1372753002]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Flag" type="Label" parent="HBoxContainer" unique_id=666356424]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Intended" type="Label" parent="HBoxContainer" unique_id=464031531]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Simple" type="Label" parent="HBoxContainer" unique_id=381483300]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Advanced" type="Label" parent="HBoxContainer" unique_id=1442511280]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Notes" type="Label" parent="HBoxContainer" unique_id=816950327]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+autowrap_mode = 3

@@ -1,0 +1,56 @@
+class_name LocationPanel extends PanelContainer
+
+
+var region_name: String:
+	set(v):
+		region_name = v
+		$HBoxContainer/Region.text = v
+var room_id: String:
+	set(v):
+		room_id = v
+		$HBoxContainer/Room.text = v
+var loc_description: String:
+	set(v):
+		loc_description = v
+		$HBoxContainer/LocationDescription.text = v
+var coords: Vector2i:
+	set(v):
+		coords = v
+		$HBoxContainer/LocationCoords.text = str(v)
+var vanilla_item: String:
+	set(v):
+		vanilla_item = v
+		$HBoxContainer/Item.text = v
+var save_flag: String:
+	set(v):
+		save_flag = v
+		$HBoxContainer/Flag.text = v
+
+var intended_string: String:
+	set(v):
+		intended_string = v
+		intended_logic = await TransitionPanel.string_to_logic(v, "intended", self)
+		$HBoxContainer/Intended.text = v
+var simple_string: String:
+	set(v):
+		simple_string = v
+		simple_logic = await TransitionPanel.string_to_logic(v, "simple", self)
+		$HBoxContainer/Simple.text = v
+var advanced_string: String:
+	set(v):
+		advanced_string = v
+		advanced_logic = await TransitionPanel.string_to_logic(v, "advanced", self)
+		$HBoxContainer/Advanced.text = v
+
+var intended_logic: Callable
+var simple_logic: Callable
+var advanced_logic: Callable
+
+var notes: String:
+	set(v):
+		notes = v
+		$HBoxContainer/Notes.text = v
+
+
+func update() -> void:
+	pass

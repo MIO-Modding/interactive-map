@@ -9,6 +9,13 @@ class_name Vector2iBox extends HBoxContainer
 			if get_child_count() > 0:
 				$Label.text = value
 				$Label.visible = not value.is_empty()
+@export var editable := true:
+	set(value):
+		editable = value
+		if is_inside_tree():
+			if get_child_count() > 0:
+				$XSpin.editable = value
+				$YSpin.editable = value
 
 @export var minimums := Vector2i(-4000, 0):
 	set(value):
@@ -46,6 +53,7 @@ func _init() -> void:
 			add_child(child)
 			child.owner = self
 	text = text
+	editable = editable
 	minimums = minimums
 	maximums = maximums
 	values = values

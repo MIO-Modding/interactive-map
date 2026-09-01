@@ -25,17 +25,17 @@ var first_pass: bool:
 var intended_string: String:
 	set(v):
 		intended_string = v
-		intended_logic = await string_to_logic(v, "intended")
+		intended_logic = await string_to_logic(v, "intended", self)
 		$HBoxContainer/Intended.text = v
 var simple_string: String:
 	set(v):
 		simple_string = v
-		simple_logic = await string_to_logic(v, "simple")
+		simple_logic = await string_to_logic(v, "simple", self)
 		$HBoxContainer/Simple.text = v
 var advanced_string: String:
 	set(v):
 		advanced_string = v
-		advanced_logic = await string_to_logic(v, "advanced")
+		advanced_logic = await string_to_logic(v, "advanced", self)
 		$HBoxContainer/Advanced.text = v
 
 var intended_logic: Callable
@@ -90,17 +90,17 @@ func get_logic_result(logic: Callable) -> bool:
 		return logic.call()
 
 
-func string_to_logic(string: String, from_type: String) -> Callable:
+static func string_to_logic(string: String, from_type: String, node: Node) -> Callable:
 	var heirarchy = ["intended", "simple", "advanced"]
 	
 	if string == "-":
 		if from_type == "intended":
 			return func(): return true
 		else:
-			if not is_inside_tree():
-				await tree_entered
-			await get_tree().process_frame
-			return get("%s_logic" % heirarchy[heirarchy.find(from_type) - 1])
+			if not node.is_inside_tree():
+				await node.tree_entered
+			await node.get_tree().process_frame
+			return node.get("%s_logic" % heirarchy[heirarchy.find(from_type) - 1])
 	elif string == "True":
 		return func(): return true
 	elif string == "False":
@@ -128,24 +128,24 @@ func string_to_logic(string: String, from_type: String) -> Callable:
 		string = string.replace("{ striders || flowing_steps } & flowing_steps", "striders & flowing_steps")
 		string = string.replace("CHEST_KEY:0-5", "{ CHEST_KEY:0 && CHEST_KEY:1 && CHEST_KEY:2 && CHEST_KEY:3 && CHEST_KEY:4 && CHEST_KEY:5 }")
 		
-		return await parse_logic(string)
+		return await parse_logic(string, node)
 
 
-func parse_logic(logic_string: String) -> Callable:
+static func parse_logic(logic_string: String, node: Node) -> Callable:
 	var logic_list: Array[Callable]
 	var edited_string: String = logic_string
 	if not edited_string.is_empty():
 		edited_string = trim_redundant_parentheses(edited_string)
 	
-	if not is_inside_tree():
-		await tree_entered
-	var state = $/root/Main.player_state
+	if not node.is_inside_tree():
+		await node.tree_entered
+	var state = node.get_node("/root/Main").player_state
 	
 	while edited_string.contains("{"):
 		var right_brace_pos: int = edited_string.find("}")
 		var left_brace_pos: int = edited_string.left(right_brace_pos + 1).rfind("{")
 		var section = edited_string.substr(left_brace_pos + 2, right_brace_pos - left_brace_pos - 3)
-		var converted = convert_item_text(section)
+		var converted = convert_item_text(section, node)
 		var logic: Callable
 		if converted.contains("&&"):
 			var hases: Array[Callable] = []
@@ -169,7 +169,7 @@ func parse_logic(logic_string: String) -> Callable:
 		edited_string = edited_string.replace("{ " + section + " }", "@" + str(logic_list.size()))
 		logic_list.append(logic)
 	
-	var last_converted = convert_item_text(edited_string)
+	var last_converted = convert_item_text(edited_string, node)
 	var last_logic: Callable
 	if last_converted.contains("&&"):
 		var hases: Array[Callable] = []
@@ -193,8 +193,8 @@ func parse_logic(logic_string: String) -> Callable:
 	return last_logic
 
 
-func convert_item_text(text: String) -> String:
-	for i in $/root/Main.items_sheet:
+static func convert_item_text(text: String, node: Node) -> String:
+	for i in node.get_node("/root/Main").items_sheet:
 		if text.contains(i[6]):
 			if text.split(" ").has(i[6]):
 				text = text.replace(i[6], i[0]) 

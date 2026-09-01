@@ -12,12 +12,14 @@ const DATA_LINKS: Dictionary[String, String] = {
 	"room requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=2144568902&single=true&output=csv",
 	"items": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=972951089&single=true&output=csv",
 	"transition requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=1532215933&single=true&output=csv",
+	"location requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=0&single=true&output=csv",
 }
 
 const KIND_MAXES: Dictionary[String, int] = {
 	"room requirements": 12,
 	"items": 8,
 	"transition requirements": 8,
+	"location requirements": 10,
 }
 
 const MAP_WRAP_TRANSITIONS: Dictionary[String, String] = {
@@ -29,6 +31,7 @@ const MAP_WRAP_TRANSITIONS: Dictionary[String, String] = {
 var room_requirements_sheet: Array[Array]
 var items_sheet: Array[Array]
 var transition_requirements_sheet: Array[Array]
+var location_requirements_sheet: Array[Array]
 
 var highlight_rows_in_logic := true
 var highlight_reachable_rows := true
@@ -53,7 +56,7 @@ func request_data():
 	var requester := HTTPRequest.new()
 	add_child(requester)
 	
-	requester.request_completed.connect(iterate_requests.bind(["room requirements", "items", "transition requirements"]), CONNECT_ONE_SHOT)
+	requester.request_completed.connect(iterate_requests.bind(["room requirements", "items", "transition requirements", "location requirements"]), CONNECT_ONE_SHOT)
 	requester.request(DATA_LINKS["room requirements"])
 	print("Queued room requirements")
 
@@ -156,6 +159,32 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				await get_tree().process_frame
 			update_map()
 			update_itempool.connect(update_map)
+		"location requirements":
+			location_requirements_sheet = location_requirements_sheet.filter(func(e): return not e[0].is_empty())
+			var skip_first := true
+			for row in location_requirements_sheet:
+				if skip_first:
+					skip_first = false
+					continue
+				
+				var panel: LocationPanel = preload("res://Scenes/location_panel.tscn").instantiate()
+				panel.region_name = row[0]
+				panel.room_id = row[1]
+				panel.loc_description = row[2]
+				if row[3] == "N/A":
+					panel.coords = Vector2i.ZERO
+				else:
+					panel.coords = str_to_var("Vector2i" + row[3])
+				panel.vanilla_item = row[4]
+				panel.save_flag = row[5]
+				panel.intended_string = row[6]
+				panel.simple_string = row[7]
+				panel.advanced_string = row[8]
+				panel.notes = row[9]
+				update_transitions.connect(panel.update)
+				$TabContainer/LocationRequirements/VBoxContainer.add_child(panel)
+			
+			update_map()
 
 
 func fill_sheet(sheet_kind: String, body: PackedByteArray, cap: int = -1) -> void:
