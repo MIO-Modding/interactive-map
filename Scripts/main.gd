@@ -43,6 +43,7 @@ signal update_transitions
 var reachable_rooms: Array[String]
 var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
+var starting_room := "ST_security_fall_P1"
 
 var reachable_locations: Array[LocationPanel]
 var simple_reachable_locations: Array[LocationPanel]
@@ -108,6 +109,9 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					
 					$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.add_child(panel)
 					panel.update()
+					
+					if row[1] != "ST_security_fall_P1":
+						$TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.add_item(row[1])
 				
 				skip_first = false
 				
@@ -257,7 +261,7 @@ func get_locations_for_room(room_id: String) -> Array[LocationPanel]:
 func get_reachable() -> Array[String]:
 	var result: Array[String] = []
 	var current_room: String
-	var available: Array[String] = ["ST_security_fall_P1"]
+	var available: Array[String] = [starting_room]
 	
 	while not available.is_empty():
 		current_room = available[-1]
@@ -530,6 +534,16 @@ func _on_give_starting_button_pressed() -> void:
 		if not player_state.prog_items.has(i):
 			player_state.prog_items.append(i)
 	update_itempool.emit()
+
+
+func _on_starting_location_item_selected(index: int) -> void:
+	if index == 0:
+		$TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.selected = (randi_range(1, $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.item_count))
+		index = $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.selected
+	starting_room = $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.get_item_text(index)
+	update_reachable()
+	update_transitions.emit()
+	update_map()
 
 
 class PlayerState:

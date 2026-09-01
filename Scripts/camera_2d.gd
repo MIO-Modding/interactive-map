@@ -3,6 +3,8 @@ extends Camera2D
 
 var pos_last_frame: Vector2
 
+signal zoom_changed(value: float)
+
 @onready var map_node: Control = get_parent().get_parent().get_parent().get_parent()
 @onready var draw_node: Node2D = $"../DrawNode"
 
@@ -22,6 +24,7 @@ func _process(_delta: float) -> void:
 			if Input.is_action_just_released("scroll_down"):
 				zoom /= 1.1
 			zoom = zoom.clamp(Vector2(0.5, 0.5), Vector2(20, 20))
+			zoom_changed.emit(zoom.x)
 			
 			if zoom != previous_zoom:
 				position = get_global_mouse_position() - ((get_global_mouse_position() - position) * (previous_zoom / zoom))

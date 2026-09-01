@@ -6,5 +6,5 @@ class_name TransitionLine extends Line2D
 var transition_panel: TransitionPanel
 
 
-func _process(_delta: float) -> void:
-	width = 1 / ceilf(camera.zoom.x / 10)
+func _ready() -> void:
+	camera.zoom_changed.connect(func(v): width = 1 / ceilf(v / 10))
