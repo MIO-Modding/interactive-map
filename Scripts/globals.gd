@@ -15,7 +15,7 @@ func _ready() -> void:
 	Archipelago.disconnected.connect(disconnect_script)
 	Archipelago.remove_location.connect(remove_location)
 	await main.finished_requesting
-	LOCATION_NAME_TO_ID = get_loc_name_to_id()
+	#LOCATION_NAME_TO_ID = get_loc_name_to_id()
 	ITEM_NAME_TO_ID = get_item_name_to_id()
 
 
@@ -26,6 +26,7 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 		if i.has_node("Checked"):
 			i.get_node("Checked").disabled = true
 	Archipelago.conn.obtained_item.connect(get_item)
+	LOCATION_NAME_TO_ID.assign(Archipelago.conn.get_gamedata_for_player(Archipelago.conn.player_id).location_name_to_id)
 	
 	main.update_itempool.emit()
 
@@ -61,9 +62,9 @@ func check_location(location: LocationPanel, send := true) -> void:
 		return
 	if item.type == Item.ItemTypes.EVENT:
 		if send:
-			main.player_state.ap_prog_items.erase(item.item_name)
-		else:
 			main.player_state.ap_prog_items.append(item.item_name)
+		else:
+			main.player_state.ap_prog_items.erase(item.item_name)
 		main.update_itempool.emit()
 	else:
 		Archipelago.collect_location(LOCATION_NAME_TO_ID[Main.PlayerState.serialize_location(location)])

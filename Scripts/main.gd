@@ -45,6 +45,7 @@ var reachable_rooms: Array[String]
 var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
 var starting_room := "ST_security_fall_P1"
+var double_click_checks_locations := true
 
 var reachable_locations: Array[LocationPanel]
 var simple_reachable_locations: Array[LocationPanel]
@@ -499,12 +500,14 @@ func line_clicked(line: TransitionLine) -> void:
 		$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(second_panel.duplicate())
 
 
-func point_clicked(point: Polygon2D) -> void:
+func point_clicked(point: Polygon2D, double_click := false) -> void:
 	for i in $TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.get_children():
 		i.queue_free()
 	
 	if point.has_meta("panel"):
 		var panel: LocationPanel = point.get_meta("panel")
+		if double_click and double_click_checks_locations:
+			panel.checked = not panel.checked
 		var duplicate_panel = panel.duplicate()
 		duplicate_panel.room_id = panel.room_id
 		duplicate_panel.loc_description = panel.loc_description

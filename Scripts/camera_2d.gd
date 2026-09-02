@@ -3,6 +3,8 @@ extends Camera2D
 
 var pos_last_frame: Vector2
 
+var double_click_timer := Timer.new()
+
 signal zoom_changed(value: float)
 
 @onready var map_node: Control = get_parent().get_parent().get_parent().get_parent()
@@ -10,6 +12,9 @@ signal zoom_changed(value: float)
 
 
 func _ready() -> void:
+	double_click_timer.wait_time = 0.5
+	double_click_timer.one_shot = true
+	add_child(double_click_timer)
 	pos_last_frame = get_viewport().get_mouse_position()
 	draw_node.draw.connect(update_shape_visualization)
 
@@ -32,7 +37,8 @@ func _process(_delta: float) -> void:
 				position = get_global_mouse_position() - ((get_global_mouse_position() - position) * (previous_zoom / zoom))
 			
 			if Input.is_action_just_pressed("mouse1"):
-				run_click()
+				run_click(not double_click_timer.is_stopped())
+				double_click_timer.start(0.5)
 				pos_last_frame = get_viewport().get_mouse_position()
 			if Input.is_action_pressed("mouse1"):
 				position = position + ((pos_last_frame - get_viewport().get_mouse_position()) / zoom.x)
@@ -55,10 +61,10 @@ func update_shape_visualization() -> void:
 			map_node.get_node("MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius").value / 5, Color(0.0, 0.795, 1.0, 0.543))
 
 
-func run_click() -> void:
+func run_click(double := false) -> void:
 	var closest_point := find_closest_point()
 	if closest_point != null:
-		$/root/Main.point_clicked(closest_point)
+		$/root/Main.point_clicked(closest_point, double)
 		return
 	var closest_line := find_closest_line()
 	if closest_line != null:
