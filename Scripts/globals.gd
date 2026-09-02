@@ -67,7 +67,14 @@ func check_location(location: LocationPanel, send := true) -> void:
 			main.player_state.ap_prog_items.erase(item.item_name)
 		main.update_itempool.emit()
 	else:
-		Archipelago.collect_location(LOCATION_NAME_TO_ID[Main.PlayerState.serialize_location(location)])
+		var serialized: String
+		serialized = Main.PlayerState.serialize_location(location)
+		if serialized.contains("Capucine") and not LOCATION_NAME_TO_ID.keys().has(serialized):
+			serialized = "Capucine: " + location.loc_description
+		if not LOCATION_NAME_TO_ID.keys().has(serialized):
+			serialized = serialized.strip_edges()
+			printerr("%s not in ap locations" % serialized)
+		Archipelago.collect_location(LOCATION_NAME_TO_ID[serialized])
 
 
 func get_loc_name_to_id() -> Dictionary[String, int]:

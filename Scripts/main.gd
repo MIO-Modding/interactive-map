@@ -413,7 +413,7 @@ func update_map() -> void:
 			line.add_point(line.points[0] + Vector2(-200, 0))
 		else:
 			line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.to).position)
-		line.width = 1
+		line.width = 1 / ceilf(map_node.get_node("Camera2D").zoom.x / 10)
 		if line.points.has(Vector2(0, 0)):
 			continue
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.add_child(line)
@@ -457,7 +457,7 @@ func update_map() -> void:
 		line.loc_panel = loc_panel
 		line.default_color = point.self_modulate
 		line.default_color.v -= 0.5
-		line.width = 1
+		line.width = 1 / ceilf(map_node.get_node("Camera2D").zoom.x / 10)
 		if loc_panel.room_id == "N/A":
 			line.add_point(Vector2(100, 100))
 		else:
