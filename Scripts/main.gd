@@ -360,12 +360,17 @@ func is_empty_string_list(string_list: Array[String]) -> bool:
 
 func update_map() -> void:
 	await get_tree().process_frame
+	var map_node: Node2D = $TabContainer/Map/SubViewportContainer/SubViewport/Node2D
 	
-	for i in ($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.get_children() +
-			$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_children()):
-		i.queue_free()
+	for i in ["Points", "Lines", "LocPoints", "LocLines"].map(func(e): return map_node.get_node(e).get_children()):
+		for node in i:
+			node.queue_free()
 	
 	var all_regions: Array[String]
+	for i in range($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.item_count):
+		if i == 0:
+			continue
+		all_regions.append($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.get_item_text(i))
 	
 	for room: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.get_children():
 		if not room.region_name in all_regions:
