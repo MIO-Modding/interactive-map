@@ -52,7 +52,7 @@ func get_item(item: NetworkItem) -> void:
 	main.update_itempool.emit()
 
 
-func check_location(location: LocationPanel) -> void:
+func check_location(location: LocationPanel, send := true) -> void:
 	if location == null:
 		return
 	var item: Item = main.get_item_at_location(location)
@@ -60,7 +60,10 @@ func check_location(location: LocationPanel) -> void:
 		printerr(location.vanilla_item)
 		return
 	if item.type == Item.ItemTypes.EVENT:
-		main.player_state.ap_prog_items.append(item.item_name)
+		if send:
+			main.player_state.ap_prog_items.erase(item.item_name)
+		else:
+			main.player_state.ap_prog_items.append(item.item_name)
 		main.update_itempool.emit()
 	else:
 		Archipelago.collect_location(LOCATION_NAME_TO_ID[Main.PlayerState.serialize_location(location)])
