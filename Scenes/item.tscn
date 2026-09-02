@@ -19,5 +19,10 @@ max_value = 1.0
 visible = false
 layout_mode = 2
 
+[node name="ApLabel" type="Label" parent="." unique_id=1806989546]
+visible = false
+layout_mode = 2
+text = "AP: 1/1"
+
 [connection signal="value_changed" from="Amount" to="." method="_on_amount_value_changed"]
 [connection signal="toggled" from="Toggle" to="." method="_on_toggle_toggled"]

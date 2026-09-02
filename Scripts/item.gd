@@ -48,7 +48,9 @@ var save_entry: String
 
 func update() -> void:
 	$Amount.value = $/root/Main.player_state.prog_items.count(item_name)
+	$ApLabel.text = "AP: %d/%d" % [Globals.main.player_state.ap_prog_items.count(item_name), max_amount]
 	
+	$ApLabel.visible = Archipelago.is_ap_connected()
 	$Amount.visible = not max_amount == 1
 	$Toggle.visible = max_amount == 1
 	$Toggle.set_pressed_no_signal($Amount.value > 0)

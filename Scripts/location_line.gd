@@ -6,5 +6,5 @@ class_name LocationLine extends Line2D
 var loc_panel: LocationPanel
 
 
-func _process(_delta: float) -> void:
-	width = 0.6 / ceilf(camera.zoom.x / 10)
+func _ready() -> void:
+	camera.zoom_changed.connect(func(v): width = 1 / ceilf(v / 10))

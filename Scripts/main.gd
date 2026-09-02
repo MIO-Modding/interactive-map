@@ -40,6 +40,7 @@ var logic_kind: LogicLevels = LogicLevels.INTENDED_LOGIC
 static var player_state: PlayerState
 signal update_itempool
 signal update_transitions
+signal finished_requesting
 var reachable_rooms: Array[String]
 var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
@@ -49,12 +50,21 @@ var reachable_locations: Array[LocationPanel]
 var simple_reachable_locations: Array[LocationPanel]
 var advanced_reachable_locations: Array[LocationPanel]
 
+var window_theme := Theme.new()
+
 
 func _ready() -> void:
 	player_state = PlayerState.new()
 	player_state.main = self
 	update_itempool.connect(func(): update_transitions.emit())
 	update_itempool.connect(update_reachable)
+	
+	var client = preload("res://godot_ap/ui/common_client.tscn").instantiate()
+	Archipelago.load_console(client, false)
+	get_window().theme = window_theme
+	get_window().theme_changed.connect(func(): if get_window().theme != window_theme: get_window().theme = window_theme)
+	$TabContainer/ArchipelagoClient.add_child(client)
+	
 	request_data()
 
 
@@ -71,6 +81,7 @@ func iterate_requests(result: int, response_code: int, headers: PackedStringArra
 	on_finished_request(result, response_code, headers, body, kinds[0])
 	kinds.remove_at(0)
 	if kinds.is_empty():
+		finished_requesting.emit()
 		return
 	get_child(-1).request_completed.connect(iterate_requests.bind(kinds), CONNECT_ONE_SHOT)
 	get_child(-1).request(DATA_LINKS[kinds[0]])
@@ -447,6 +458,7 @@ func update_map() -> void:
 			line.add_point(get_room_panel(loc_panel.room_id).point_node.position)
 		line.add_point(point.position)
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocLines.add_child(line)
+		loc_panel.update()
 		
 		point.set_meta("line", line)
 		if is_location_event(loc_panel):
@@ -457,9 +469,19 @@ func update_map() -> void:
 
 func is_location_event(loc_panel: LocationPanel) -> bool:
 	for i: Item in %ItemPool.get_children():
-		if i.item_name == loc_panel.vanilla_item or i.save_entry == loc_panel.save_flag:
+		if i.item_name == loc_panel.vanilla_item or (i.save_entry == loc_panel.save_flag and loc_panel.save_flag != ""):
 			return i.type == Item.ItemTypes.EVENT
 	return false
+
+
+func get_item_at_location(loc_panel: LocationPanel) -> Item:
+	var converted_vanilla: String = loc_panel.vanilla_item
+	if converted_vanilla.contains("Crystallised Nacre - "):
+		converted_vanilla = "Crystallized Nacre"
+	for i: Item in %ItemPool.get_children():
+		if i.item_name == converted_vanilla or (i.save_entry == loc_panel.save_flag and loc_panel.save_flag != ""):
+			return i
+	return null
 
 
 func line_clicked(line: TransitionLine) -> void:
@@ -561,6 +583,7 @@ class PlayerState:
 	var main: Main
 	
 	var prog_items: Array[String] = []
+	var ap_prog_items: Array[String] = []
 	
 	var checked_locations: Array[LocationPanel]
 	
@@ -587,7 +610,7 @@ class PlayerState:
 				return false
 			elif item == "True":
 				return true
-			return prog_items.has(item))
+			return (prog_items + ap_prog_items).has(item))
 	
 	
 	func checked_locations_serialized() -> Array[String]:

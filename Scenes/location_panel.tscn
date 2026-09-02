@@ -10,10 +10,13 @@ script = ExtResource("1_nvll8")
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=204049030]
 layout_mode = 2
 
+[node name="Checked" type="CheckBox" parent="HBoxContainer" unique_id=1925872968]
+layout_mode = 2
+text = "Checked"
+
 [node name="Region" type="Label" parent="HBoxContainer" unique_id=172969388]
 custom_minimum_size = Vector2(215, 0)
 layout_mode = 2
-text = "The Severed Spinr"
 
 [node name="Room" type="Label" parent="HBoxContainer" unique_id=846726471]
 custom_minimum_size = Vector2(215, 0)
@@ -54,9 +57,5 @@ autowrap_mode = 3
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 autowrap_mode = 3
-
-[node name="Checked" type="CheckBox" parent="HBoxContainer" unique_id=1925872968]
-layout_mode = 2
-text = "Checked"
 
 [connection signal="toggled" from="HBoxContainer/Checked" to="." method="_on_checked_toggled"]

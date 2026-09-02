@@ -81,6 +81,8 @@ func update() -> void:
 
 func _on_checked_toggled(toggled_on: bool) -> void:
 	checked = toggled_on
+	if Archipelago.is_ap_connected():
+		Globals.check_location(Globals.main.get_location_panel(Main.PlayerState.serialize_location(self)))
 	if point_node == null:
 		modulate = Color(0.232, 0.566, 0.61) if toggled_on else original_color
 	Main.player_state.check_location_serialized(Main.PlayerState.serialize_location(self), not toggled_on)

@@ -24,7 +24,9 @@ func _process(_delta: float) -> void:
 			if Input.is_action_just_released("scroll_down"):
 				zoom /= 1.1
 			zoom = zoom.clamp(Vector2(0.5, 0.5), Vector2(20, 20))
-			zoom_changed.emit(zoom.x)
+			if Input.is_action_just_pressed("scroll_down") or Input.is_action_just_pressed("scroll_up"):
+				if 1 / ceilf(zoom.x / 10) != 1 / ceilf(previous_zoom.x / 10):
+					zoom_changed.emit(zoom.x)
 			
 			if zoom != previous_zoom:
 				position = get_global_mouse_position() - ((get_global_mouse_position() - position) * (previous_zoom / zoom))

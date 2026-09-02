@@ -113,6 +113,18 @@ func update_filter() -> void:
 						hide_location_point(i)
 				else:
 					hide_location_point(i)
+	
+	match $MapSettings/VBoxContainer/Filters/VBoxContainer/CheckedFilter.selected:
+		0:
+			pass
+		1:
+			for i in location_points:
+				if not i.get_meta("panel").checked:
+					hide_location_point(i)
+		2:
+			for i in location_points:
+				if i.get_meta("panel").checked:
+					hide_location_point(i)
 
 
 func hide_location_point(loc_point: Polygon2D) -> void:
@@ -178,4 +190,8 @@ func _on_circle_radius_value_changed(_value: float) -> void:
 
 
 func _on_logic_filter_item_selected(_index: int) -> void:
+	update_filter()
+
+
+func _on_checked_filter_item_selected(_index: int) -> void:
 	update_filter()
