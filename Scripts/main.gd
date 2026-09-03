@@ -506,6 +506,13 @@ func get_item_at_location(loc_panel: LocationPanel) -> Item:
 	return null
 
 
+func get_event_location(item: Item) -> LocationPanel:
+	for i: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
+		if i.vanilla_item == item.item_name or (item.save_entry == i.save_flag and i.save_flag != ""):
+			return i
+	return null
+
+
 func line_clicked(line: TransitionLine) -> void:
 	for i in $TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.get_children():
 		i.queue_free()
@@ -546,15 +553,16 @@ func point_clicked(point: Polygon2D, double_click := false) -> void:
 func update_go_mode() -> void:
 	var event: String
 	event = $TabContainer/Map/MapSettings/VBoxContainer/GoalOption.get_item_text($TabContainer/Map/MapSettings/VBoxContainer/GoalOption.selected)
+	var panel: LocationPanel = get_event_location(get_item_node(event))
 	if player_state.ap_prog_items.has(event):
 		Archipelago.set_client_status(AP.ClientStatus.CLIENT_GOAL)
 	
 	var level: LogicLevels
-	if reachable_locations.has(event):
+	if reachable_locations.has(panel):
 		level = LogicLevels.INTENDED_LOGIC
-	elif reachable_locations.has(event):
+	elif simple_reachable_locations.has(panel):
 		level = LogicLevels.SIMPLE_SKIPS
-	elif reachable_locations.has(event):
+	elif advanced_reachable_locations.has(panel):
 		level = LogicLevels.ADVANCED_SKIPS
 	else:
 		level = LogicLevels.NONE
