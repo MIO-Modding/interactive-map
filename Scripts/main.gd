@@ -46,6 +46,7 @@ var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
 var starting_room := "ST_security_fall_P1"
 var double_click_checks_locations := true
+var persistant_items := true
 
 var reachable_locations: Array[LocationPanel]
 var simple_reachable_locations: Array[LocationPanel]
@@ -585,6 +586,10 @@ func _on_starting_location_item_selected(index: int) -> void:
 	update_reachable()
 	update_transitions.emit()
 	update_map()
+
+
+func _on_persistant_items_toggled(toggled_on: bool) -> void:
+	persistant_items = toggled_on
 
 
 class PlayerState:

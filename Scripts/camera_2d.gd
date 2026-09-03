@@ -22,7 +22,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var previous_zoom: Vector2 = zoom
 	
-	if is_visible_in_tree():
+	if get_parent().get_parent().get_parent().is_visible_in_tree():
 		if get_viewport().get_mouse_position().y < get_viewport_rect().size.y - 130 and not Rect2i(map_node.get_node("MapSettings").global_position, map_node.get_node("MapSettings").size).has_point(get_viewport().get_mouse_position()):
 			if Input.is_action_just_released("scroll_up"):
 				zoom *= 1.1
@@ -38,7 +38,10 @@ func _process(_delta: float) -> void:
 			
 			if Input.is_action_just_pressed("mouse1"):
 				run_click(not double_click_timer.is_stopped())
-				double_click_timer.start(0.5)
+				if double_click_timer.is_stopped():
+					double_click_timer.start(0.5)
+				else:
+					double_click_timer.stop()
 				pos_last_frame = get_viewport().get_mouse_position()
 			if Input.is_action_pressed("mouse1"):
 				position = position + ((pos_last_frame - get_viewport().get_mouse_position()) / zoom.x)
