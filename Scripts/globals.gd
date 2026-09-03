@@ -15,8 +15,10 @@ func _ready() -> void:
 	Archipelago.connected.connect(connect_script)
 	Archipelago.disconnected.connect(disconnect_script)
 	Archipelago.remove_location.connect(remove_location)
+	
+	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings").hide()
+	
 	await main.finished_requesting
-	#LOCATION_NAME_TO_ID = get_loc_name_to_id()
 	ITEM_NAME_TO_ID = get_item_name_to_id()
 
 
@@ -34,7 +36,7 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 			i.get_node("Checked").disabled = true
 	Archipelago.conn.obtained_item.connect(get_item)
 	LOCATION_NAME_TO_ID.assign(Archipelago.conn.get_gamedata_for_player(Archipelago.conn.player_id).location_name_to_id)
-	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/PersistantItems").show()
+	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings").show()
 	
 	main.update_itempool.emit()
 	
@@ -49,7 +51,7 @@ func disconnect_script() -> void:
 		i.checked = false
 		if i.has_node("Checked"):
 			i.get_node("Checked").disabled = false
-	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/PersistantItems").hide()
+	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings").hide()
 
 
 func remove_location(loc_id: int) -> void:
@@ -115,6 +117,12 @@ func trigger_popup(text: String, color := Color.WHITE, is_item := false) -> void
 	label.label_settings.font_color = color
 	label.label_settings.font_size = 30
 	label.size_flags_horizontal = Control.SIZE_EXPAND
+	if is_item:
+		var node: Item = main.get_item_node(text.get_slice(": ", 1))
+		if node != null:
+			if main.show_item_flags:
+				label.text += " (%s)" % node.save_entry
+			label.label_settings.font_color = Item.COLORS[node.classification]
 	container.add_child(label)
 	if is_item and main.persistant_items:
 		var button := Button.new()
@@ -122,6 +130,8 @@ func trigger_popup(text: String, color := Color.WHITE, is_item := false) -> void
 		button.pressed.connect(func(): popup.queue_free(), CONNECT_ONE_SHOT)
 		container.add_child(button)
 	main.get_node("VBoxContainer").add_child(popup)
+	
+	print_rich("[color=%s]%s[/color]" % [label.label_settings.font_color.to_html(false), text])
 	
 	if is_item and main.persistant_items:
 		return
