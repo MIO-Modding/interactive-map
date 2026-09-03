@@ -108,18 +108,19 @@ position = Vector2(1661, 905)
 texture = ExtResource("14_c32x4")
 
 [node name="Crucible" type="Sprite2D" parent="Textures" unique_id=2077070215]
-position = Vector2(1777, 1637.9951)
+position = Vector2(-1328.095, 1637.995)
 texture = ExtResource("16_fg7i4")
 
 [node name="Vaults" type="Sprite2D" parent="Textures" unique_id=1611622011]
-position = Vector2(304.813, 1626)
+position = Vector2(1857.088, 1626)
 texture = ExtResource("17_gwne5")
 
 [node name="Lab" type="Sprite2D" parent="Textures" unique_id=32387304]
-position = Vector2(-1342, 1604)
+position = Vector2(211.18, 1604)
 texture = ExtResource("15_c32x4")
 
 [node name="Lab2" type="Sprite2D" parent="Textures" unique_id=2012033634]
+visible = false
 position = Vector2(3315.508, 1604)
 texture = ExtResource("15_c32x4")
 

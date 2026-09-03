@@ -24,8 +24,12 @@ const KIND_MAXES: Dictionary[String, int] = {
 
 const MAP_WRAP_TRANSITIONS: Dictionary[String, String] = {
 	"GA_vin_transi_P1": "LQ_vin_intro",
-	"ST_tube_tech_F1_kassandra": "ST_pearl_halyn_P4",
-	"ST_tube_tech_F1": "ST_pearl_halyn_P2"
+	#"ST_tube_tech_F1_kassandra": "ST_pearl_halyn_P4",
+	#"ST_tube_tech_F1": "ST_pearl_halyn_P2",
+	"ST_cuves_goo_P7": "ST_cuves_goo_P8",
+	"ST_cuves_goo_P2": "ST_cuves_goo_P1",
+	"ST_tube_chase_P3": "ST_tube_chase_C2",
+	"ST_pearl_conex_P1": "ST_pearl_lab_P0",
 }
 
 var room_requirements_sheet: Array[Array]
@@ -53,6 +57,43 @@ var advanced_reachable_locations: Array[LocationPanel]
 
 var window_theme := Theme.new()
 
+var wheel_rotation := "240"
+
+const ROTATION_OFFSETS := {
+	"0": {
+		"Lab": 0,
+		"Vaults": 0,
+		"Crucible": 0,
+	},
+	"120": {
+		"Lab": 2904,
+		"Vaults": -1452,
+		"Crucible": -1452,
+	},
+	"240": {
+		"Lab": 1452,
+		"Vaults": 1452,
+		"Crucible": -2904,
+	},
+}
+
+const SHUTTLE_REGIONS := {
+	"Lab": [-3600, -2500],
+	"Vaults": [-2500, -650],
+	"Crucible": [-650, 650],
+}
+
+func get_rotated_position(start_point: Vector2i) -> Vector2i:
+	if start_point.y > 1000:
+		return start_point
+	if wheel_rotation == "0":
+		return start_point
+	var point_region: String = ""
+	for region in SHUTTLE_REGIONS.keys():
+		if SHUTTLE_REGIONS[region][0] < start_point.x and start_point.x < SHUTTLE_REGIONS[region][1]:
+			point_region = region
+	var rotated_point = start_point + Vector2i(ROTATION_OFFSETS.get(wheel_rotation).get(point_region), 0)
+	return rotated_point
 
 func _ready() -> void:
 	player_state = PlayerState.new()
@@ -390,7 +431,7 @@ func update_map() -> void:
 				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
 		point.name = room.room_id
 		point.set_meta("id", room.room_id)
-		point.position = Vector2(room.coords) / 5 * Vector2(1, -1)
+		point.position = Vector2(get_rotated_position(room.coords)) / 5 * Vector2(1, -1)
 		room.point_node = point
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.add_child(point)
 	
@@ -437,7 +478,7 @@ func update_map() -> void:
 			point.position = get_room_panel(loc_panel.room_id).point_node.position
 			point.position += Vector2(-30, 10)
 		else:
-			var temp_point: Vector2i = loc_panel.coords
+			var temp_point: Vector2i = get_rotated_position(loc_panel.coords)
 			
 			var iterations: int = 0
 			while taken_positions.has(temp_point):
