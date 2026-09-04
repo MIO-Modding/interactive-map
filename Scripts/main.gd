@@ -22,21 +22,24 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"location requirements": 10,
 }
 
-const MAP_WRAP_TRANSITIONS: Dictionary[String, String] = {
-	"GA_vin_transi_P1": "LQ_vin_intro",
-	# Rotation 0: 
-	#"ST_tube_tech_F1_kassandra": "ST_pearl_halyn_P4",
-	#"ST_tube_tech_F1": "ST_pearl_halyn_P2",
-	
-	# Rotation 240
-	#"ST_cuves_goo_P7": "ST_cuves_goo_P8",
-	#"ST_cuves_goo_P2": "ST_cuves_goo_P1",
-	#"ST_tube_chase_P3": "ST_tube_chase_C2",
-	#"ST_pearl_conex_P1": "ST_pearl_lab_P0",
-	
-	# Rotation 120
-	"ST_tube_vanilla_S1": "ST_tube_vanilla_C3",
-	"ST_pearl_halyn_P5": "ST_tube_vanilla_C2",
+const MAP_WRAP_TRANSITIONS = {
+	"0": {
+		"GA_vin_transi_P1": "LQ_vin_intro",
+		"ST_tube_tech_F1_kassandra": "ST_pearl_halyn_P4",
+		"ST_tube_tech_F1": "ST_pearl_halyn_P2",
+	},
+	"120": {
+		"GA_vin_transi_P1": "LQ_vin_intro",
+		"ST_tube_vanilla_S1": "ST_tube_vanilla_C3",
+		"ST_pearl_halyn_P5": "ST_tube_vanilla_C2",
+	},
+	"240": {
+		"GA_vin_transi_P1": "LQ_vin_intro",
+		"ST_cuves_goo_P7": "ST_cuves_goo_P8",
+		"ST_cuves_goo_P2": "ST_cuves_goo_P1",
+		"ST_tube_chase_P3": "ST_tube_chase_C2",
+		"ST_pearl_conex_P1": "ST_pearl_lab_P0",
+	},
 }
 
 var room_requirements_sheet: Array[Array]
@@ -52,6 +55,7 @@ static var player_state: PlayerState
 signal update_itempool
 signal update_transitions
 signal finished_requesting
+signal rotation_changed
 var reachable_rooms: Array[String]
 var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
@@ -64,7 +68,7 @@ var advanced_reachable_locations: Array[LocationPanel]
 
 var window_theme := Theme.new()
 
-var wheel_rotation := "120"
+var wheel_rotation := "0"
 
 const ROTATION_OFFSETS := {
 	"0": {
@@ -107,6 +111,7 @@ func _ready() -> void:
 	player_state.main = self
 	update_itempool.connect(func(): update_transitions.emit())
 	update_itempool.connect(update_reachable)
+	rotation_changed.connect(update_map)
 	
 	var client = preload("res://godot_ap/ui/common_client.tscn").instantiate()
 	Archipelago.load_console(client, false)
@@ -455,9 +460,10 @@ func update_map() -> void:
 				line.z_index = 3 - transition.LOGIC_LEVEL_COLORS.values().find(transition.modulate)
 		line.transition_panel = transition
 		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.from).position)
-		if MAP_WRAP_TRANSITIONS.keys().has(transition.from) and MAP_WRAP_TRANSITIONS.values().has(transition.to):
+		var wrap_transitions = MAP_WRAP_TRANSITIONS[wheel_rotation]
+		if wrap_transitions.keys().has(transition.from) and wrap_transitions.values().has(transition.to):
 			line.add_point(line.points[0] + Vector2(200, 0))
-		elif MAP_WRAP_TRANSITIONS.values().has(transition.from) and MAP_WRAP_TRANSITIONS.keys().has(transition.to):
+		elif wrap_transitions.values().has(transition.from) and wrap_transitions.keys().has(transition.to):
 			line.add_point(line.points[0] + Vector2(-200, 0))
 		else:
 			line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.to).position)
