@@ -26,7 +26,7 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"room requirements": 12,
 	"items": 8,
 	"transition requirements": 8,
-	"location requirements": 10,
+	"location requirements": 13,
 }
 
 const MAP_WRAP_TRANSITIONS: Dictionary[String, String] = {
@@ -210,6 +210,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				panel.simple_string = row[7]
 				panel.advanced_string = row[8]
 				panel.notes = row[9]
+				panel.type = row[12]
 				update_transitions.connect(panel.update)
 				$TabContainer/LocationRequirements/VBoxContainer.add_child(panel)
 			
@@ -384,6 +385,11 @@ func update_map() -> void:
 		if i == 0:
 			continue
 		all_regions.append($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.get_item_text(i))
+	var all_location_types: Array[String]
+	for i in range($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.item_count):
+		if i == 0:
+			continue
+		all_location_types.append($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.get_item_text(i))
 	
 	for room: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.get_children():
 		if not room.region_name in all_regions:
@@ -433,6 +439,10 @@ func update_map() -> void:
 	var taken_positions: Array[Vector2i]
 	for loc_panel: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
 		var room_panel: RoomPanel = get_room_panel(loc_panel.room_id)
+		
+		if not all_location_types.has(loc_panel.type):
+			all_location_types.append(loc_panel.type)
+			$TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.add_item(loc_panel.type)
 		
 		var point := Polygon2D.new()
 		point.set_meta("panel", loc_panel)

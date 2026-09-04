@@ -50,6 +50,10 @@ var notes: String:
 	set(v):
 		notes = v
 		$HBoxContainer/Notes.text = v
+var type: String:
+	set(v):
+		type = v
+		$HBoxContainer/Type.text = v
 
 var checked := false:
 	set(v):

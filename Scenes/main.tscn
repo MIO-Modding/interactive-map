@@ -319,6 +319,13 @@ item_count = 1
 popup/item_0/text = "Area..."
 popup/item_0/id = 0
 
+[node name="TypeFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=1187889595]
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "Location Type..."
+popup/item_0/id = 0
+
 [node name="PositionContainer" type="FoldableContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=2015373869]
 layout_mode = 2
 folded = true
@@ -468,6 +475,7 @@ alignment = 2
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Locations" to="TabContainer/Map" method="_on_locations_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/MapImage" to="TabContainer/Map" method="_on_map_image_toggled"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption" to="TabContainer/Map" method="_on_shape_option_item_selected"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius" to="TabContainer/Map" method="_on_circle_radius_value_changed"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition" to="TabContainer/Map" method="_on_circle_position_value_changed"]
