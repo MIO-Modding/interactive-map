@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d053j7xxppayl" path="res://Scenes/node_2d.tscn" id="3_8gbba"]
 [ext_resource type="Script" uid="uid://cf0bcw5xtc03o" path="res://Scripts/map_manager.gd" id="3_jjvhh"]
 [ext_resource type="Script" uid="uid://blhmfcrwuh8kj" path="res://Scripts/vector_2i_box.gd" id="5_kry3j"]
+[ext_resource type="Script" uid="uid://dwe8brs2p3rup" path="res://Scripts/info_page.gd" id="6_21xkr"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
 font_color = Color(1, 0, 0, 1)
@@ -25,7 +26,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 5
+current_tab = 6
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -236,6 +237,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
+visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 5
@@ -252,7 +254,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -439,10 +441,32 @@ offset_bottom = -104.0
 grow_horizontal = 0
 grow_vertical = 0
 
+[node name="Info" type="Control" parent="TabContainer" unique_id=984399248]
+layout_mode = 2
+metadata/_tab_index = 6
+
+[node name="TabContainer" type="TabContainer" parent="TabContainer/Info" unique_id=240282878]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+
+[node name="Main" type="ScrollContainer" parent="TabContainer/Info/TabContainer" unique_id=827501034]
+layout_mode = 2
+script = ExtResource("6_21xkr")
+text = "#### Info Tab
+This is the main page for the Information Tab, a section of this tool that lets you see info about features in a wiki-like way.
+This feature is in no way finished."
+metadata/_custom_type_script = "uid://dwe8brs2p3rup"
+metadata/_tab_index = 0
+
 [node name="ArchipelagoClient" type="Control" parent="TabContainer" unique_id=317490321]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 6
+metadata/_tab_index = 7
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1
