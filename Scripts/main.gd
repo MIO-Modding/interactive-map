@@ -24,12 +24,19 @@ const KIND_MAXES: Dictionary[String, int] = {
 
 const MAP_WRAP_TRANSITIONS: Dictionary[String, String] = {
 	"GA_vin_transi_P1": "LQ_vin_intro",
+	# Rotation 0: 
 	#"ST_tube_tech_F1_kassandra": "ST_pearl_halyn_P4",
 	#"ST_tube_tech_F1": "ST_pearl_halyn_P2",
-	"ST_cuves_goo_P7": "ST_cuves_goo_P8",
-	"ST_cuves_goo_P2": "ST_cuves_goo_P1",
-	"ST_tube_chase_P3": "ST_tube_chase_C2",
-	"ST_pearl_conex_P1": "ST_pearl_lab_P0",
+	
+	# Rotation 240
+	#"ST_cuves_goo_P7": "ST_cuves_goo_P8",
+	#"ST_cuves_goo_P2": "ST_cuves_goo_P1",
+	#"ST_tube_chase_P3": "ST_tube_chase_C2",
+	#"ST_pearl_conex_P1": "ST_pearl_lab_P0",
+	
+	# Rotation 120
+	"ST_tube_vanilla_S1": "ST_tube_vanilla_C3",
+	"ST_pearl_halyn_P5": "ST_tube_vanilla_C2",
 }
 
 var room_requirements_sheet: Array[Array]
@@ -57,7 +64,7 @@ var advanced_reachable_locations: Array[LocationPanel]
 
 var window_theme := Theme.new()
 
-var wheel_rotation := "240"
+var wheel_rotation := "120"
 
 const ROTATION_OFFSETS := {
 	"0": {
