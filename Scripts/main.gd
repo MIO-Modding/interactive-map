@@ -49,6 +49,32 @@ const MAP_WRAP_TRANSITIONS = {
 	},
 }
 
+## X-coordinate ranges for reegions of the lower part of the map around each shuttle
+const SHUTTLE_REGIONS := { 
+	"Lab": [-3600, -2500],
+	"Vaults": [-2500, -650],
+	"Crucible": [-650, 650],
+}
+
+## How much the x-coordinates of points in each region need to be offset by in each wheel rotation
+const ROTATION_OFFSETS := { 
+	"0": {
+		"Lab": 0,
+		"Vaults": 0,
+		"Crucible": 0,
+	},
+	"120": {
+		"Lab": 2904,
+		"Vaults": -1452,
+		"Crucible": -1452,
+	},
+	"240": {
+		"Lab": 1452,
+		"Vaults": 1452,
+		"Crucible": -2904,
+	},
+}
+
 var room_requirements_sheet: Array[Array]
 var items_sheet: Array[Array]
 var transition_requirements_sheet: Array[Array]
@@ -81,44 +107,6 @@ var window_theme := Theme.new()
 
 var wheel_rotation := "0"
 
-const SHUTTLE_REGIONS := { # x-coordinate ranges for reegions of the lower part of the map around each shuttle
-	"Lab": [-3600, -2500],
-	"Vaults": [-2500, -650],
-	"Crucible": [-650, 650],
-}
-
-const ROTATION_OFFSETS := { # how much the x-coordinates of points in each region need to be offset by in each wheel rotation
-	"0": {
-		"Lab": 0,
-		"Vaults": 0,
-		"Crucible": 0,
-	},
-	"120": {
-		"Lab": 2904,
-		"Vaults": -1452,
-		"Crucible": -1452,
-	},
-	"240": {
-		"Lab": 1452,
-		"Vaults": 1452,
-		"Crucible": -2904,
-	},
-}
-
-func get_rotated_position(start_point: Vector2i) -> Vector2i:
-	"""Get the position a point should be drawn on the map in different wheel rotations"""
-	
-	if start_point.y > 1000: # Don't change anything in the top part of the vessel
-		return start_point
-	if wheel_rotation == "0": # Don't change anything in rotation 0
-		return start_point
-	
-	var point_region: String = ""
-	for region in SHUTTLE_REGIONS.keys(): # find which region in the lower part of the ship the point is in
-		if SHUTTLE_REGIONS[region][0] < start_point.x and start_point.x < SHUTTLE_REGIONS[region][1]:
-			point_region = region
-	start_point.x += ROTATION_OFFSETS.get(wheel_rotation).get(point_region) #adjust the x coordinate based on which region it's in
-	return start_point
 
 func _ready() -> void:
 	player_state = PlayerState.new()
@@ -428,6 +416,21 @@ func is_empty_string_list(string_list: Array[String]) -> bool:
 	return "".join(string_list).is_empty()
 
 
+## Get the position a point should be drawn on the map in different wheel rotations
+func get_rotated_position(start_point: Vector2i) -> Vector2i:
+	if start_point.y > 1000: # Don't change anything in the top part of the vessel
+		return start_point
+	if wheel_rotation == "0": # Don't change anything in rotation 0
+		return start_point
+	
+	var point_region: String = ""
+	for region in SHUTTLE_REGIONS.keys(): # find which region in the lower part of the ship the point is in
+		if SHUTTLE_REGIONS[region][0] < start_point.x and start_point.x < SHUTTLE_REGIONS[region][1]:
+			point_region = region
+	start_point.x += ROTATION_OFFSETS.get(wheel_rotation).get(point_region) #adjust the x coordinate based on which region it's in
+	return start_point
+
+
 func update_map() -> void:
 	await get_tree().process_frame
 	var map_node: Node2D = $TabContainer/Map/SubViewportContainer/SubViewport/Node2D
@@ -435,7 +438,8 @@ func update_map() -> void:
 	for i in ["Points", "Lines", "LocPoints", "LocLines"].map(func(e): return map_node.get_node(e).get_children()):
 		for node in i:
 			node.queue_free()
-			node.get_parent().remove_child(node)
+
+	await get_tree().process_frame
 	
 	var all_regions: Array[String]
 	for i in range($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.item_count):
