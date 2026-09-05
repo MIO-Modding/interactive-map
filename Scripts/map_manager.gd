@@ -125,6 +125,12 @@ func update_filter() -> void:
 			for i in location_points:
 				if i.get_meta("panel").checked:
 					hide_location_point(i)
+	
+	var loc_type_selected: String = $MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.get_item_text($MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.selected)
+	if loc_type_selected != "Location Type...":
+		for i in location_points:
+			if i.get_meta("panel").type != loc_type_selected:
+				hide_location_point(i)
 
 
 func hide_location_point(loc_point: Polygon2D) -> void:
@@ -226,3 +232,6 @@ func _on_rotation_item_selected(index: int) -> void:
 	$/root/Main.wheel_rotation = wheel_rotation
 	$/root/Main.rotation_changed.emit()
 	
+
+func _on_type_filter_item_selected(_index: int) -> void:
+	update_filter()

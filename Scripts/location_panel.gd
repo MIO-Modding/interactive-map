@@ -1,4 +1,4 @@
-class_name LocationPanel extends PanelContainer
+class_name LocationPanel extends FeaturePanel
 
 
 var region_name: String:
@@ -50,6 +50,10 @@ var notes: String:
 	set(v):
 		notes = v
 		$HBoxContainer/Notes.text = v
+var type: String:
+	set(v):
+		type = v
+		$HBoxContainer/Type.text = v
 
 var checked := false:
 	set(v):
@@ -86,3 +90,7 @@ func _on_checked_toggled(toggled_on: bool) -> void:
 	if point_node == null:
 		modulate = Color(0.232, 0.566, 0.61) if toggled_on else original_color
 	Main.player_state.check_location_serialized(Main.PlayerState.serialize_location(self), not toggled_on)
+
+
+func _on_link_pressed() -> void:
+	Globals.main.get_node("TabContainer/Info").add_page(self)

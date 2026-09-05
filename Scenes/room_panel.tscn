@@ -10,6 +10,10 @@ script = ExtResource("1_w6lau")
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=980859619]
 layout_mode = 2
 
+[node name="Link" type="Button" parent="HBoxContainer" unique_id=1403212947]
+layout_mode = 2
+text = "Open"
+
 [node name="Region" type="Label" parent="HBoxContainer" unique_id=638413075]
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
@@ -41,3 +45,5 @@ layout_mode = 2
 [node name="Coords" type="Label" parent="HBoxContainer" unique_id=676178498]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
+
+[connection signal="pressed" from="HBoxContainer/Link" to="." method="_on_link_pressed"]

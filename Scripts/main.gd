@@ -8,6 +8,13 @@ enum LogicLevels {
 	ADVANCED_SKIPS,
 }
 
+const LEVEL_COLORS: Dictionary[LogicLevels, Color] = {
+	LogicLevels.NONE: Color.WHITE,
+	LogicLevels.INTENDED_LOGIC: Color.GREEN,
+	LogicLevels.SIMPLE_SKIPS: Color.YELLOW,
+	LogicLevels.ADVANCED_SKIPS: Color(1.0, 0.5, 0.0),
+}
+
 const DATA_LINKS: Dictionary[String, String] = {
 	"room requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=2144568902&single=true&output=csv",
 	"items": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=972951089&single=true&output=csv",
@@ -19,7 +26,7 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"room requirements": 12,
 	"items": 8,
 	"transition requirements": 8,
-	"location requirements": 10,
+	"location requirements": 13,
 }
 
 const MAP_WRAP_TRANSITIONS = {
@@ -59,12 +66,16 @@ signal rotation_changed
 var reachable_rooms: Array[String]
 var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
+
 var starting_room := "ST_security_fall_P1"
 var double_click_checks_locations := true
+var persistant_items := true
+var show_item_flags := false
 
 var reachable_locations: Array[LocationPanel]
 var simple_reachable_locations: Array[LocationPanel]
 var advanced_reachable_locations: Array[LocationPanel]
+var go_mode := false
 
 var window_theme := Theme.new()
 
@@ -115,6 +126,7 @@ func _ready() -> void:
 	update_itempool.connect(func(): update_transitions.emit())
 	update_itempool.connect(update_reachable)
 	rotation_changed.connect(update_map)
+	update_transitions.connect(update_go_mode)
 	
 	var client = preload("res://godot_ap/ui/common_client.tscn").instantiate()
 	Archipelago.load_console(client, false)
@@ -131,7 +143,7 @@ func request_data():
 	
 	requester.request_completed.connect(iterate_requests.bind(["room requirements", "items", "transition requirements", "location requirements"]), CONNECT_ONE_SHOT)
 	requester.request(DATA_LINKS["room requirements"])
-	print("Queued room requirements")
+	Globals.trigger_popup("Queued room requirements")
 
 
 func iterate_requests(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, kinds: Array) -> void:
@@ -142,12 +154,12 @@ func iterate_requests(result: int, response_code: int, headers: PackedStringArra
 		return
 	get_child(-1).request_completed.connect(iterate_requests.bind(kinds), CONNECT_ONE_SHOT)
 	get_child(-1).request(DATA_LINKS[kinds[0]])
-	print("Queued " + kinds[0])
+	Globals.trigger_popup("Queued " + kinds[0])
 
 
 func on_finished_request(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray, kind: String = "") -> void:
 	room_requirements_sheet = []
-	print("Recieved " + kind)
+	Globals.trigger_popup("Recieved " + kind)
 	
 	assert(KIND_MAXES.has(kind))
 	fill_sheet(kind, body, KIND_MAXES[kind])
@@ -166,7 +178,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					var panel: RoomPanel = preload("res://Scenes/room_panel.tscn").instantiate()
 					panel.region_name = row[0]
 					panel.room_id = row[1]
-					panel.connected_rooms.assign(", ".split(row[2]) as Array)
+					panel.connected_rooms.assign(row[2].split(", ") as Array)
 					if not row[3].is_empty():
 						panel.logical_coords = str_to_var("Vector2i" + row[3])
 					panel.logical_coords_description = row[4]
@@ -254,6 +266,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				panel.simple_string = row[7]
 				panel.advanced_string = row[8]
 				panel.notes = row[9]
+				panel.type = row[12]
 				update_transitions.connect(panel.update)
 				$TabContainer/LocationRequirements/VBoxContainer.add_child(panel)
 			
@@ -429,6 +442,11 @@ func update_map() -> void:
 		if i == 0:
 			continue
 		all_regions.append($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.get_item_text(i))
+	var all_location_types: Array[String]
+	for i in range($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.item_count):
+		if i == 0:
+			continue
+		all_location_types.append($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.get_item_text(i))
 	
 	for room: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.get_children():
 		if not room.region_name in all_regions:
@@ -478,6 +496,12 @@ func update_map() -> void:
 	
 	var taken_positions: Array[Vector2i]
 	for loc_panel: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
+		var room_panel: RoomPanel = get_room_panel(loc_panel.room_id)
+		
+		if not all_location_types.has(loc_panel.type):
+			all_location_types.append(loc_panel.type)
+			$TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.add_item(loc_panel.type)
+		
 		var point := Polygon2D.new()
 		point.set_meta("panel", loc_panel)
 		point.polygon = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)].map(func(e): return e / 2)
@@ -492,10 +516,12 @@ func update_map() -> void:
 		loc_panel.modulate = point.self_modulate
 		point.name = loc_panel.room_id + ": " + loc_panel.loc_description
 		if loc_panel.room_id == "ST_security_secret_S1":
-			point.position = get_room_panel(loc_panel.room_id).point_node.position
+			point.position = room_panel.point_node.position
 			point.position += Vector2(-30, 10)
 		else:
 			var temp_point: Vector2i = get_rotated_position(loc_panel.coords)
+			if (Vector2(temp_point) / 5 * Vector2(1, -1)).distance_to(room_panel.point_node.position) <= 0.7:
+				temp_point += Vector2i(10, 10)
 			
 			var iterations: int = 0
 			while taken_positions.has(temp_point):
@@ -522,7 +548,7 @@ func update_map() -> void:
 			# workaround so this location doesn't draw a line across the map in rotatioon 120
 			line.add_point(get_room_panel("ST_tube_vanilla_C3").point_node.position)
 		else:
-			line.add_point(get_room_panel(loc_panel.room_id).point_node.position)
+			line.add_point(room_panel.point_node.position)
 		line.add_point(point.position)
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocLines.add_child(line)
 		loc_panel.update()
@@ -547,6 +573,13 @@ func get_item_at_location(loc_panel: LocationPanel) -> Item:
 		converted_vanilla = "Crystallized Nacre"
 	for i: Item in %ItemPool.get_children():
 		if i.item_name == converted_vanilla or (i.save_entry == loc_panel.save_flag and loc_panel.save_flag != ""):
+			return i
+	return null
+
+
+func get_event_location(item: Item) -> LocationPanel:
+	for i: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
+		if i.vanilla_item == item.item_name or (item.save_entry == i.save_flag and i.save_flag != ""):
 			return i
 	return null
 
@@ -588,6 +621,33 @@ func point_clicked(point: Polygon2D, double_click := false) -> void:
 			break
 
 
+func update_go_mode() -> void:
+	var event: String
+	event = $TabContainer/Map/MapSettings/VBoxContainer/GoalOption.get_item_text($TabContainer/Map/MapSettings/VBoxContainer/GoalOption.selected)
+	var panel: LocationPanel = get_event_location(get_item_node(event))
+	if player_state.ap_prog_items.has(event):
+		Archipelago.set_client_status(AP.ClientStatus.CLIENT_GOAL)
+	
+	var level: LogicLevels
+	if reachable_locations.has(panel):
+		level = LogicLevels.INTENDED_LOGIC
+	elif simple_reachable_locations.has(panel):
+		level = LogicLevels.SIMPLE_SKIPS
+	elif advanced_reachable_locations.has(panel):
+		level = LogicLevels.ADVANCED_SKIPS
+	else:
+		level = LogicLevels.NONE
+	
+	if level == LogicLevels.NONE:
+		go_mode = false
+		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.text = "NO GO MODE"
+		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.label_settings.font_color = Color.RED
+	else:
+		go_mode = true
+		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.text = "GO MODE"
+		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.label_settings.font_color = LEVEL_COLORS[level]
+
+
 func get_transition_panel(to: String, from: String) -> TransitionPanel:
 	for i: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
 		if i.to == to and i.from == from:
@@ -605,6 +665,13 @@ func get_room_panel(id: String) -> RoomPanel:
 func get_location_panel(serial: String) -> LocationPanel:
 	for i in $TabContainer/LocationRequirements/VBoxContainer.get_children():
 		if PlayerState.serialize_location(i) == serial:
+			return i
+	return null
+
+
+func get_item_node(item_name: String) -> Item:
+	for i: Item in %ItemPool.get_children():
+		if i.item_name == item_name:
 			return i
 	return null
 
@@ -646,6 +713,18 @@ func _on_starting_location_item_selected(index: int) -> void:
 	update_reachable()
 	update_transitions.emit()
 	update_map()
+
+
+func _on_persistant_items_toggled(toggled_on: bool) -> void:
+	persistant_items = toggled_on
+
+
+func _on_item_flags_toggled(toggled_on: bool) -> void:
+	show_item_flags = toggled_on
+
+
+func _on_goal_option_item_selected(_index: int) -> void:
+	update_go_mode()
 
 
 class PlayerState:

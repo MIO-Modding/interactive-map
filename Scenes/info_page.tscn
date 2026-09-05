@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://bjrqoolraymem"]
+
+[ext_resource type="Script" uid="uid://bnts1wk6bsry0" path="res://Scripts/info_text.gd" id="1_jhmf5"]
+[ext_resource type="Script" uid="uid://dcx7crs23nf4" path="res://addons/markdownlabel/header_formats/h1_format.gd" id="2_o88k8"]
+[ext_resource type="Script" uid="uid://d0sin64i4v3op" path="res://addons/markdownlabel/header_formats/h2_format.gd" id="3_7eglo"]
+[ext_resource type="Script" uid="uid://dlok0dv1tq2bf" path="res://addons/markdownlabel/header_formats/h3_format.gd" id="4_dgyvm"]
+[ext_resource type="Script" uid="uid://bayuh2vafablg" path="res://addons/markdownlabel/header_formats/h4_format.gd" id="5_3nss1"]
+[ext_resource type="Script" uid="uid://dfr1w7u3jgni3" path="res://addons/markdownlabel/header_formats/h5_format.gd" id="6_8r862"]
+[ext_resource type="Script" uid="uid://bsi6dexoofpe6" path="res://addons/markdownlabel/header_formats/h6_format.gd" id="7_munbs"]
+
+[sub_resource type="Resource" id="Resource_88tgh"]
+resource_local_to_scene = true
+script = ExtResource("2_o88k8")
+
+[sub_resource type="Resource" id="Resource_mmlyl"]
+resource_local_to_scene = true
+script = ExtResource("3_7eglo")
+
+[sub_resource type="Resource" id="Resource_dmu5a"]
+resource_local_to_scene = true
+script = ExtResource("4_dgyvm")
+
+[sub_resource type="Resource" id="Resource_boa08"]
+resource_local_to_scene = true
+script = ExtResource("5_3nss1")
+
+[sub_resource type="Resource" id="Resource_c8wfh"]
+resource_local_to_scene = true
+script = ExtResource("6_8r862")
+
+[sub_resource type="Resource" id="Resource_2usti"]
+resource_local_to_scene = true
+script = ExtResource("7_munbs")
+
+[node name="InfoPage" type="ScrollContainer" unique_id=1929165546]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Text" type="RichTextLabel" parent="." unique_id=1987087734]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("1_jhmf5")
+h1 = SubResource("Resource_88tgh")
+h2 = SubResource("Resource_mmlyl")
+h3 = SubResource("Resource_dmu5a")
+h4 = SubResource("Resource_boa08")
+h5 = SubResource("Resource_c8wfh")
+h6 = SubResource("Resource_2usti")

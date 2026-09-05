@@ -5,6 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://d053j7xxppayl" path="res://Scenes/node_2d.tscn" id="3_8gbba"]
 [ext_resource type="Script" uid="uid://cf0bcw5xtc03o" path="res://Scripts/map_manager.gd" id="3_jjvhh"]
 [ext_resource type="Script" uid="uid://blhmfcrwuh8kj" path="res://Scripts/vector_2i_box.gd" id="5_kry3j"]
+[ext_resource type="Script" uid="uid://cccbr4ew5h430" path="res://Scripts/info_manager.gd" id="6_6bp64"]
+[ext_resource type="Script" uid="uid://dwe8brs2p3rup" path="res://Scripts/info_page.gd" id="6_21xkr"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
+font_color = Color(1, 0, 0, 1)
 
 [node name="Main" type="Control" unique_id=717459129]
 layout_mode = 3
@@ -22,7 +27,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 5
+current_tab = 6
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -90,6 +95,22 @@ text = "Highlight rows"
 layout_mode = 2
 button_pressed = true
 text = "Highlight by reachable"
+
+[node name="ArchipelagoSettings" type="FoldableContainer" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=575212038]
+layout_mode = 2
+title = "Archipelago Settings"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings" unique_id=573604645]
+layout_mode = 2
+
+[node name="PersistantItems" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer" unique_id=788291338]
+layout_mode = 2
+button_pressed = true
+text = "Persistant item popups"
+
+[node name="ItemFlags" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer" unique_id=315952180]
+layout_mode = 2
+text = "Show item save flags in popups"
 
 [node name="ClearButton" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=85385007]
 layout_mode = 2
@@ -217,6 +238,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
+visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 5
@@ -233,7 +255,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -311,6 +333,13 @@ item_count = 1
 popup/item_0/text = "Area..."
 popup/item_0/id = 0
 
+[node name="TypeFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=1187889595]
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "Location Type..."
+popup/item_0/id = 0
+
 [node name="PositionContainer" type="FoldableContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=2015373869]
 layout_mode = 2
 folded = true
@@ -368,6 +397,21 @@ popup/item_1/id = 1
 popup/item_2/text = "Not Found Locs"
 popup/item_2/id = 2
 
+[node name="GoalOption" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1195380631]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Ati Defeated"
+popup/item_0/id = 0
+popup/item_1/text = "Shii Defeated"
+popup/item_1/id = 1
+
+[node name="GoModeLabel" type="Label" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1230226265]
+layout_mode = 2
+text = "NO GO MODE"
+label_settings = SubResource("LabelSettings_1dvcg")
+horizontal_alignment = 1
+
 [node name="ZoomBox" type="VBoxContainer" parent="TabContainer/Map" unique_id=1852590896]
 layout_mode = 1
 anchors_preset = 1
@@ -409,13 +453,68 @@ offset_bottom = -104.0
 grow_horizontal = 0
 grow_vertical = 0
 
+[node name="Info" type="Control" parent="TabContainer" unique_id=984399248]
+layout_mode = 2
+script = ExtResource("6_6bp64")
+metadata/_tab_index = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Info" unique_id=338533212]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabBar" type="TabBar" parent="TabContainer/Info/VBoxContainer" unique_id=1615785033]
+layout_mode = 2
+current_tab = 0
+tab_close_display_policy = 2
+tab_count = 1
+tab_0/title = "Main"
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Info/VBoxContainer" unique_id=2010344121]
+layout_mode = 2
+
+[node name="Tabs" type="Control" parent="TabContainer/Info/VBoxContainer" unique_id=2013463766]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Main" type="ScrollContainer" parent="TabContainer/Info/VBoxContainer/Tabs" unique_id=827501034]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_21xkr")
+text = "# Info Tab
+This is the main page for the Information Tab, a section of this tool that lets you see info about features in a wiki-like way.
+This feature is in no way finished."
+metadata/_custom_type_script = "uid://dwe8brs2p3rup"
+
 [node name="ArchipelagoClient" type="Control" parent="TabContainer" unique_id=317490321]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 6
+metadata/_tab_index = 7
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319909072]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+alignment = 2
 
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable" to="." method="_on_highlight_reachable_toggled"]
+[connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems" to="." method="_on_persistant_items_toggled"]
+[connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags" to="." method="_on_item_flags_toggled"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ClearButton" to="." method="_on_clear_button_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/AllButton" to="." method="_on_all_button_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/GiveStartingButton" to="." method="_on_give_starting_button_pressed"]
@@ -431,11 +530,15 @@ metadata/_tab_index = 6
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/MapImage" to="TabContainer/Map" method="_on_map_image_toggled"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Rotation" to="TabContainer/Map" method="_on_rotation_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption" to="TabContainer/Map" method="_on_shape_option_item_selected"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius" to="TabContainer/Map" method="_on_circle_radius_value_changed"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition" to="TabContainer/Map" method="_on_circle_position_value_changed"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter" to="TabContainer/Map" method="_on_logic_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/CheckedFilter" to="TabContainer/Map" method="_on_checked_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/GoalOption" to="." method="_on_goal_option_item_selected"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/+" to="TabContainer/Map" method="_on_plus_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/R" to="TabContainer/Map" method="_on_reset_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/-" to="TabContainer/Map" method="_on_minus_pressed"]
+[connection signal="tab_close_pressed" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="close_tab"]
+[connection signal="tab_selected" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="select_tab"]

@@ -1,4 +1,4 @@
-class_name TransitionPanel extends PanelContainer
+class_name TransitionPanel extends FeaturePanel
 
 
 const LOGIC_LEVEL_COLORS = {
