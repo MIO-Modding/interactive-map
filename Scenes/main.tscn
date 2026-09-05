@@ -27,7 +27,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 7
+current_tab = 5
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -238,7 +238,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
-visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 5
@@ -255,7 +254,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -484,6 +483,7 @@ This feature is in no way finished."
 metadata/_custom_type_script = "uid://dwe8brs2p3rup"
 
 [node name="ArchipelagoClient" type="Control" parent="TabContainer" unique_id=317490321]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 7
 

@@ -20,6 +20,7 @@ const DATA_LINKS: Dictionary[String, String] = {
 	"items": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=972951089&single=true&output=csv",
 	"transition requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=1532215933&single=true&output=csv",
 	"location requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=0&single=true&output=csv",
+	"combat requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=760960441&single=true&output=csv",
 }
 
 const KIND_MAXES: Dictionary[String, int] = {
@@ -27,6 +28,7 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"items": 8,
 	"transition requirements": 8,
 	"location requirements": 13,
+	"combat requirements": 5,
 }
 
 const MAP_WRAP_TRANSITIONS: Dictionary[String, String] = {
@@ -39,6 +41,7 @@ var room_requirements_sheet: Array[Array]
 var items_sheet: Array[Array]
 var transition_requirements_sheet: Array[Array]
 var location_requirements_sheet: Array[Array]
+var combat_requirements_sheet: Array[Array]
 
 var highlight_rows_in_logic := true
 var highlight_reachable_rows := true
@@ -98,7 +101,7 @@ func request_data():
 	var requester := HTTPRequest.new()
 	add_child(requester)
 	
-	requester.request_completed.connect(iterate_requests.bind(["room requirements", "items", "transition requirements", "location requirements"]), CONNECT_ONE_SHOT)
+	requester.request_completed.connect(iterate_requests.bind(DATA_LINKS.keys()), CONNECT_ONE_SHOT)
 	requester.request(DATA_LINKS["room requirements"])
 	Globals.trigger_popup("Queued room requirements")
 
@@ -226,6 +229,29 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				panel.type = row[12]
 				update_transitions.connect(panel.update)
 				$TabContainer/LocationRequirements/VBoxContainer.add_child(panel)
+		"combat requirements":
+			var boss_locations: Array[LocationPanel]
+			for location: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
+				if location.save_flag.contains("BOSS"):
+					boss_locations.append(location)
+			
+			combat_requirements_sheet = combat_requirements_sheet.filter(func(e): return not e[0].is_empty())
+			var skip_first := true
+			for row in combat_requirements_sheet:
+				if skip_first:
+					skip_first = false
+					continue
+				
+				var loc_panel: LocationPanel
+				for loc: LocationPanel in boss_locations:
+					if loc.save_flag == row[1]:
+						loc_panel = loc
+				if loc_panel == null:
+					continue
+				
+				loc_panel.intended_string = row[2]
+				loc_panel.simple_string = row[3]
+				loc_panel.advanced_string = row[4]
 			
 			update_reachable()
 			for i in range(4):
@@ -740,7 +766,7 @@ class PlayerState:
 		if loc.vanilla_item.contains("Capucined"):
 			room = "Capucine"
 		if loc.vanilla_item.contains("Crystallized Nacre") or loc.vanilla_item.contains("Crystallised Nacre"):
-			item = "Crystallized Nacre"
+			item = "Crystallized Nacre" #TODO fix when manual changes spelling
 		
 		result = "%s--(%s)" % [room, item]
 		return result
