@@ -48,6 +48,6 @@ func create_page(feature_info: FeaturePanel) -> InfoPage:
 
 
 func add_page_node(page: InfoPage) -> void:
-	$VBoxContainer/TabBar.add_tab(str(page.name))
+	$VBoxContainer/TabBar.add_tab(page.feature_panel.get_pagename())
 	$VBoxContainer/Tabs.add_child(page)
 	page.update()

@@ -1,6 +1,33 @@
 class_name LocationPanel extends FeaturePanel
 
 
+const BASE_WIKITEXT: String = """
+# Location: %s: %s (%s)
+
+This location is in %s (%s), found %s.
+Its type is %s, and it usually has %s.
+
+### Vanilla Item
+Item Name: %s
+Save Flag: %s
+Type: %s
+
+### Logic
+Intended: %s
+Simple Skips: %s
+Advanced Skips: %s
+
+### Collected
+%s
+
+### Coordinates
+Position: %s
+
+### Notes
+%s
+"""
+
+
 var region_name: String:
 	set(v):
 		region_name = v
@@ -83,14 +110,41 @@ func update() -> void:
 	checked = Main.player_state.checked_locations.has(self)
 
 
+func serialize() -> String:
+	return Main.PlayerState.serialize_location(self)
+
+
+func get_wikitext() -> String:
+	return BASE_WIKITEXT % [
+		Globals.fix_underscores(room_id), loc_description, region_name,
+		Globals.fix_underscores(room_id), region_name, decapitalize(loc_description),
+		type, vanilla_item,
+		vanilla_item, Globals.fix_underscores(save_flag), type,
+		Globals.fix_underscores(intended_string), Globals.fix_underscores(simple_string), Globals.fix_underscores(advanced_string),
+		("Yes" if checked else "No"),
+		str(coords),
+		notes
+	]
+
+
+func get_pagename() -> String:
+	print(serialize())
+	return serialize()
+
+
+func decapitalize(string: String) -> String:
+	string[0] = string[0].to_lower()
+	return string
+
+
 func _on_checked_toggled(toggled_on: bool) -> void:
 	checked = toggled_on
 	if Archipelago.is_ap_connected():
-		Globals.check_location(Globals.main.get_location_panel(Main.PlayerState.serialize_location(self)), toggled_on)
+		Globals.check_location(Globals.main.get_location_panel(serialize()), toggled_on)
 	if point_node == null:
 		modulate = Color(0.232, 0.566, 0.61) if toggled_on else original_color
-	Main.player_state.check_location_serialized(Main.PlayerState.serialize_location(self), not toggled_on)
+	Main.player_state.check_location_serialized(serialize(), not toggled_on)
 
 
 func _on_link_pressed() -> void:
-	Globals.main.get_node("TabContainer/Info").add_page(self)
+	Globals.main.get_node("TabContainer/Info").add_page(Globals.main.get_location_panel(serialize()))
