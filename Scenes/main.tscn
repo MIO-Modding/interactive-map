@@ -27,7 +27,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 6
+current_tab = 7
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -443,6 +443,7 @@ grow_horizontal = 0
 grow_vertical = 0
 
 [node name="Info" type="Control" parent="TabContainer" unique_id=984399248]
+visible = false
 layout_mode = 2
 script = ExtResource("6_6bp64")
 metadata/_tab_index = 6
@@ -483,7 +484,6 @@ This feature is in no way finished."
 metadata/_custom_type_script = "uid://dwe8brs2p3rup"
 
 [node name="ArchipelagoClient" type="Control" parent="TabContainer" unique_id=317490321]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 7
 

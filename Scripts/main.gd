@@ -77,6 +77,19 @@ func _ready() -> void:
 	get_window().theme = window_theme
 	get_window().theme_changed.connect(func(): if get_window().theme != window_theme: get_window().theme = window_theme)
 	$TabContainer/ArchipelagoClient.add_child(client)
+	var label := Label.new()
+	var checkbox := CheckBox.new()
+	var content_box: GridContainer = get_node("TabContainer/ArchipelagoClient/CommonClient/Tabs/Console/ConnectBox/Row/Box/Margins/VBox/Content")
+	label.text = "Manual?"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	checkbox.size_flags_horizontal = Control.SIZE_EXPAND
+	checkbox.toggled.connect(set_manual)
+	Archipelago.connected.connect(func(_e, _f): checkbox.disabled = true)
+	Archipelago.disconnected.connect(func(): checkbox.disabled = false)
+	content_box.add_child(label)
+	content_box.move_child(label, 8)
+	content_box.add_child(checkbox)
+	content_box.move_child(checkbox, 9)
 	
 	request_data()
 
@@ -508,8 +521,9 @@ func is_location_event(loc_panel: LocationPanel) -> bool:
 
 func get_item_at_location(loc_panel: LocationPanel) -> Item:
 	var converted_vanilla: String = loc_panel.vanilla_item
-	if converted_vanilla.contains("Crystallised Nacre - "):
-		converted_vanilla = "Crystallized Nacre"
+	for i in ["z", "s"]:
+		if converted_vanilla.contains("Crystalli%sed Nacre - " % i):
+			converted_vanilla = "Crystallized Nacre" # TODO sheet misspells
 	for i: Item in %ItemPool.get_children():
 		if i.item_name == converted_vanilla or (i.save_entry == loc_panel.save_flag and loc_panel.save_flag != ""):
 			return i
@@ -615,6 +629,12 @@ func get_item_node(item_name: String) -> Item:
 	return null
 
 
+func set_manual(is_manual: bool) -> void:
+	Globals.is_manual = is_manual
+	if not Archipelago.is_ap_connected():
+		Archipelago.AP_GAME_NAME = "Manual_MIO_Samwell" if is_manual else "Memories in Orbit"
+
+
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
 	highlight_rows_in_logic = toggled_on
 	update_transitions.emit()
@@ -711,6 +731,47 @@ class PlayerState:
 	
 	static func serialize_location(loc: LocationPanel) -> String:
 		return loc.room_id + ": " + loc.loc_description
+	
+	
+	static func get_manual_serialized(loc: LocationPanel) -> String:
+		var result: String
+		var room: String = loc.room_id
+		var item: String = loc.vanilla_item
+		if loc.vanilla_item.contains("Capucined"):
+			room = "Capucine"
+		if loc.vanilla_item.contains("Crystallized Nacre") or loc.vanilla_item.contains("Crystallised Nacre"):
+			item = "Crystallized Nacre"
+		
+		result = "%s--(%s)" % [room, item]
+		return result
+	
+	
+	static func get_manual_item_name(item: Item) -> String:
+		var result: String
+		result = "%s (%s)" % [item.save_entry.replace(":", ">"), item.item_name]
+		return result
+	
+	
+	static func get_manual_loc_node(loc_name: String) -> LocationPanel:
+		var room: String = loc_name.get_slice("--(", 0)
+		var item: String = loc_name.get_slice("--(", 1).trim_suffix(")")
+		if room == "Capucine":
+			room = "LQ_ruins_hall_C1"
+		for i: LocationPanel in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
+			if i.room_id == room and i.vanilla_item.containsn(item):
+				return i
+		return null
+	
+	
+	static func convert_from_manual_item(item: String) -> String:
+		var save_entry: String = item.get_slice(" (", 0).replace(">", ":")
+		if save_entry == "Crystallized Nacre":
+			return save_entry
+		for i: Item in Globals.main.get_node("%ItemPool").get_children():
+			if i.save_entry == save_entry:
+				return i.item_name
+		printerr("Item with save entry %s not found" % save_entry)
+		return ""
 	
 	
 	func check_location_serialized(serial: String, uncheck := false) -> void:

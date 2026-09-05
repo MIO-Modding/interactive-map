@@ -9,6 +9,8 @@ var ITEM_NAME_TO_ID: Dictionary[String, int]
 
 var queued_refresh := false
 
+var is_manual := false
+
 
 func _ready() -> void:
 	main = get_node("/root/Main")
@@ -57,14 +59,23 @@ func disconnect_script() -> void:
 func remove_location(loc_id: int) -> void:
 	await get_tree().process_frame
 	var loc_name: String = LOCATION_NAME_TO_ID.find_key(loc_id)
-	var loc_panel: LocationPanel = main.get_location_panel(loc_name)
+	var loc_panel: LocationPanel
+	if is_manual:
+		loc_panel = Main.PlayerState.get_manual_loc_node(loc_name)
+	else:
+		loc_panel = main.get_location_panel(loc_name)
 	if loc_panel != null:
 		loc_panel.checked = true
 
 
 func get_item(item: NetworkItem) -> void:
-	main.player_state.ap_prog_items.append(item.get_name())
-	trigger_popup("Received item: %s" % item.get_name(), Color.GREEN, true)
+	var item_name: String
+	if is_manual:
+		item_name = Main.PlayerState.convert_from_manual_item(item.get_name())
+	else:
+		item_name = item.get_name()
+	main.player_state.ap_prog_items.append(item_name)
+	trigger_popup("Received item: %s" % item_name, Color.GREEN, true)
 	
 	queued_refresh = true
 
@@ -84,9 +95,14 @@ func check_location(location: LocationPanel, send := true) -> void:
 		main.update_itempool.emit()
 	else:
 		var serialized: String
-		serialized = Main.PlayerState.serialize_location(location)
-		if serialized.contains("Capucine") and not LOCATION_NAME_TO_ID.keys().has(serialized):
-			serialized = "Capucine: " + location.loc_description
+		
+		if is_manual:
+			serialized = Main.PlayerState.get_manual_serialized(location)
+		else:
+			serialized = Main.PlayerState.serialize_location(location)
+			if serialized.contains("Capucine") and not LOCATION_NAME_TO_ID.keys().has(serialized):
+				serialized = "Capucine: " + location.loc_description
+		
 		if not LOCATION_NAME_TO_ID.keys().has(serialized):
 			serialized = serialized.strip_edges()
 			printerr("%s not in ap locations" % serialized)
