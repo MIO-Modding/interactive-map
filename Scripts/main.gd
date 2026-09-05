@@ -105,7 +105,10 @@ var go_mode := false
 
 var window_theme := Theme.new()
 
-var wheel_rotation := "0"
+var wheel_rotation := "0":
+	set(v):
+		wheel_rotation = v
+		rotation_changed.emit()
 
 
 func _ready() -> void:
