@@ -426,11 +426,11 @@ func get_rotated_position(start_point: Vector2i) -> Vector2i:
 	if wheel_rotation == "0": # Don't change anything in rotation 0
 		return start_point
 	
-	var point_region: String = ""
-	for region in SHUTTLE_REGIONS.keys(): # find which region in the lower part of the ship the point is in
+	var point_region := ""
+	for region in SHUTTLE_REGIONS: # find which region in the lower part of the ship the point is in
 		if SHUTTLE_REGIONS[region][0] < start_point.x and start_point.x < SHUTTLE_REGIONS[region][1]:
 			point_region = region
-	start_point.x += ROTATION_OFFSETS.get(wheel_rotation).get(point_region) #adjust the x coordinate based on which region it's in
+	start_point.x += ROTATION_OFFSETS[wheel_rotation][point_region] #adjust the x coordinate based on which region it's in
 	return start_point
 
 
