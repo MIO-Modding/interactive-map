@@ -198,7 +198,7 @@ func _on_checked_filter_item_selected(_index: int) -> void:
 
 const WHEEL_ROTATIONS = ["0", "120", "240"]
 
-const MAP_IMAGE_X_POSITIONS: Dictionary[String, Dictionary] = {
+const MAP_IMAGE_X_POSITIONS: Dictionary[String, Dictionary] = { # where the map images need to be moved to in each rotation
 	"0": {
 		"Crucible": 1777.0,
 		"Vaults": 304.813,

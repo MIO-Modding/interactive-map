@@ -70,7 +70,13 @@ var window_theme := Theme.new()
 
 var wheel_rotation := "0"
 
-const ROTATION_OFFSETS := {
+const SHUTTLE_REGIONS := { # x-coordinate ranges for reegions of the lower part of the map around each shuttle
+	"Lab": [-3600, -2500],
+	"Vaults": [-2500, -650],
+	"Crucible": [-650, 650],
+}
+
+const ROTATION_OFFSETS := { # how much the x-coordinates of points in each region need to be offset by in each wheel rotation
 	"0": {
 		"Lab": 0,
 		"Vaults": 0,
@@ -88,23 +94,20 @@ const ROTATION_OFFSETS := {
 	},
 }
 
-const SHUTTLE_REGIONS := {
-	"Lab": [-3600, -2500],
-	"Vaults": [-2500, -650],
-	"Crucible": [-650, 650],
-}
-
 func get_rotated_position(start_point: Vector2i) -> Vector2i:
-	if start_point.y > 1000:
+	"""Get the position a point should be drawn on the map in different wheel rotations"""
+	
+	if start_point.y > 1000: # Don't change anything in the top part of the vessel
 		return start_point
-	if wheel_rotation == "0":
+	if wheel_rotation == "0": # Don't change anything in rotation 0
 		return start_point
+	
 	var point_region: String = ""
-	for region in SHUTTLE_REGIONS.keys():
+	for region in SHUTTLE_REGIONS.keys(): # find which region in the lower part of the ship the point is in
 		if SHUTTLE_REGIONS[region][0] < start_point.x and start_point.x < SHUTTLE_REGIONS[region][1]:
 			point_region = region
-	var rotated_point = start_point + Vector2i(ROTATION_OFFSETS.get(wheel_rotation).get(point_region), 0)
-	return rotated_point
+	start_point.x += ROTATION_OFFSETS.get(wheel_rotation).get(point_region) #adjust the x coordinate based on which region it's in
+	return start_point
 
 func _ready() -> void:
 	player_state = PlayerState.new()
@@ -419,6 +422,7 @@ func update_map() -> void:
 	for i in ["Points", "Lines", "LocPoints", "LocLines"].map(func(e): return map_node.get_node(e).get_children()):
 		for node in i:
 			node.queue_free()
+			node.get_parent().remove_child(node)
 	
 	var all_regions: Array[String]
 	for i in range($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.item_count):
@@ -514,6 +518,9 @@ func update_map() -> void:
 		line.width = 1 / ceilf(map_node.get_node("Camera2D").zoom.x / 10)
 		if loc_panel.room_id == "N/A":
 			line.add_point(Vector2(100, 100))
+		elif wheel_rotation == "120" and loc_panel.room_id == "ST_tube_vanilla_S1" and loc_panel.save_flag == "SHIELD_FRAGMENT:15":
+			# workaround so this location doesn't draw a line across the map in rotatioon 120
+			line.add_point(get_room_panel("ST_tube_vanilla_C3").point_node.position)
 		else:
 			line.add_point(get_room_panel(loc_panel.room_id).point_node.position)
 		line.add_point(point.position)
