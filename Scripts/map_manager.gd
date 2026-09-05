@@ -1,6 +1,27 @@
 extends Control
 
 
+const WHEEL_ROTATIONS = ["0", "120", "240"]
+
+## where the map images need to be moved to in each rotation
+const MAP_IMAGE_X_POSITIONS: Dictionary[String, Dictionary] = { 
+	"0": {
+		"Crucible": 1777.0,
+		"Vaults": 304.813,
+		"Lab": -1342.0,
+	},
+	"120": {
+		"Crucible": 226.885,
+		"Vaults": -1245.375,
+		"Lab": 1766.035,
+	},
+	"240": {
+		"Crucible": -1328.095,
+		"Vaults": 1857.088,
+		"Lab": 211.18,
+	},
+}
+
 @onready var shape_option: OptionButton = $MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption
 
 @onready var map_node: Node2D = $SubViewportContainer/SubViewport/Node2D
@@ -202,6 +223,16 @@ func _on_logic_filter_item_selected(_index: int) -> void:
 func _on_checked_filter_item_selected(_index: int) -> void:
 	update_filter()
 
+
+func _on_rotation_item_selected(index: int) -> void:
+	var wheel_rotation: String = WHEEL_ROTATIONS[index]
+	var positions = MAP_IMAGE_X_POSITIONS[wheel_rotation]
+	for region in positions.keys():
+		var map_image: Node2D = map_node.get_node("Textures").get_node(region)
+		map_image.position.x = positions[region]
+	map_node.get_node("Textures").get_node("Lab2").visible = (wheel_rotation == "0")
+	Globals.main.wheel_rotation = wheel_rotation
+	
 
 func _on_type_filter_item_selected(_index: int) -> void:
 	update_filter()

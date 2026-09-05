@@ -29,10 +29,50 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"location requirements": 13,
 }
 
-const MAP_WRAP_TRANSITIONS: Dictionary[String, String] = {
-	"GA_vin_transi_P1": "LQ_vin_intro",
-	"ST_tube_tech_F1_kassandra": "ST_pearl_halyn_P4",
-	"ST_tube_tech_F1": "ST_pearl_halyn_P2"
+const MAP_WRAP_TRANSITIONS = {
+	"0": {
+		"GA_vin_transi_P1": "LQ_vin_intro",
+		"ST_tube_tech_F1_kassandra": "ST_pearl_halyn_P4",
+		"ST_tube_tech_F1": "ST_pearl_halyn_P2",
+	},
+	"120": {
+		"GA_vin_transi_P1": "LQ_vin_intro",
+		"ST_tube_vanilla_S1": "ST_tube_vanilla_C3",
+		"ST_pearl_halyn_P5": "ST_tube_vanilla_C2",
+	},
+	"240": {
+		"GA_vin_transi_P1": "LQ_vin_intro",
+		"ST_cuves_goo_P7": "ST_cuves_goo_P8",
+		"ST_cuves_goo_P2": "ST_cuves_goo_P1",
+		"ST_tube_chase_P3": "ST_tube_chase_C2",
+		"ST_pearl_conex_P1": "ST_pearl_lab_P0",
+	},
+}
+
+## X-coordinate ranges for reegions of the lower part of the map around each shuttle
+const SHUTTLE_REGIONS := { 
+	"Lab": [-3600, -2500],
+	"Vaults": [-2500, -650],
+	"Crucible": [-650, 650],
+}
+
+## How much the x-coordinates of points in each region need to be offset by in each wheel rotation
+const ROTATION_OFFSETS := { 
+	"0": {
+		"Lab": 0,
+		"Vaults": 0,
+		"Crucible": 0,
+	},
+	"120": {
+		"Lab": 2904,
+		"Vaults": -1452,
+		"Crucible": -1452,
+	},
+	"240": {
+		"Lab": 1452,
+		"Vaults": 1452,
+		"Crucible": -2904,
+	},
 }
 
 var room_requirements_sheet: Array[Array]
@@ -48,6 +88,7 @@ static var player_state: PlayerState
 signal update_itempool
 signal update_transitions
 signal finished_requesting
+signal rotation_changed
 var reachable_rooms: Array[String]
 var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
@@ -64,12 +105,18 @@ var go_mode := false
 
 var window_theme := Theme.new()
 
+var wheel_rotation := "0":
+	set(v):
+		wheel_rotation = v
+		rotation_changed.emit()
+
 
 func _ready() -> void:
 	player_state = PlayerState.new()
 	player_state.main = self
 	update_itempool.connect(func(): update_transitions.emit())
 	update_itempool.connect(update_reachable)
+	rotation_changed.connect(update_map)
 	update_transitions.connect(update_go_mode)
 	
 	var client = preload("res://godot_ap/ui/common_client.tscn").instantiate()
@@ -372,6 +419,21 @@ func is_empty_string_list(string_list: Array[String]) -> bool:
 	return "".join(string_list).is_empty()
 
 
+## Get the position a point should be drawn on the map in different wheel rotations
+func get_rotated_position(start_point: Vector2i) -> Vector2i:
+	if start_point.y > 1000: # Don't change anything in the top part of the vessel
+		return start_point
+	if wheel_rotation == "0": # Don't change anything in rotation 0
+		return start_point
+	
+	var point_region := ""
+	for region in SHUTTLE_REGIONS: # find which region in the lower part of the ship the point is in
+		if SHUTTLE_REGIONS[region][0] < start_point.x and start_point.x < SHUTTLE_REGIONS[region][1]:
+			point_region = region
+	start_point.x += ROTATION_OFFSETS[wheel_rotation][point_region] #adjust the x coordinate based on which region it's in
+	return start_point
+
+
 func update_map() -> void:
 	await get_tree().process_frame
 	var map_node: Node2D = $TabContainer/Map/SubViewportContainer/SubViewport/Node2D
@@ -379,6 +441,8 @@ func update_map() -> void:
 	for i in ["Points", "Lines", "LocPoints", "LocLines"].map(func(e): return map_node.get_node(e).get_children()):
 		for node in i:
 			node.queue_free()
+
+	await get_tree().process_frame
 	
 	var all_regions: Array[String]
 	for i in range($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.item_count):
@@ -408,7 +472,7 @@ func update_map() -> void:
 				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
 		point.name = room.room_id
 		point.set_meta("id", room.room_id)
-		point.position = Vector2(room.coords) / 5 * Vector2(1, -1)
+		point.position = Vector2(get_rotated_position(room.coords)) / 5 * Vector2(1, -1)
 		room.point_node = point
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.add_child(point)
 	
@@ -425,9 +489,10 @@ func update_map() -> void:
 				line.z_index = 3 - transition.LOGIC_LEVEL_COLORS.values().find(transition.modulate)
 		line.transition_panel = transition
 		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.from).position)
-		if MAP_WRAP_TRANSITIONS.keys().has(transition.from) and MAP_WRAP_TRANSITIONS.values().has(transition.to):
+		var wrap_transitions = MAP_WRAP_TRANSITIONS[wheel_rotation]
+		if wrap_transitions.keys().has(transition.from) and wrap_transitions.values().has(transition.to):
 			line.add_point(line.points[0] + Vector2(200, 0))
-		elif MAP_WRAP_TRANSITIONS.values().has(transition.from) and MAP_WRAP_TRANSITIONS.keys().has(transition.to):
+		elif wrap_transitions.values().has(transition.from) and wrap_transitions.keys().has(transition.to):
 			line.add_point(line.points[0] + Vector2(-200, 0))
 		else:
 			line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.to).position)
@@ -461,7 +526,7 @@ func update_map() -> void:
 			point.position = room_panel.point_node.position
 			point.position += Vector2(-30, 10)
 		else:
-			var temp_point: Vector2i = loc_panel.coords
+			var temp_point: Vector2i = get_rotated_position(loc_panel.coords)
 			if (Vector2(temp_point) / 5 * Vector2(1, -1)).distance_to(room_panel.point_node.position) <= 0.7:
 				temp_point += Vector2i(10, 10)
 			
@@ -486,6 +551,9 @@ func update_map() -> void:
 		line.width = 1 / ceilf(map_node.get_node("Camera2D").zoom.x / 10)
 		if loc_panel.room_id == "N/A":
 			line.add_point(Vector2(100, 100))
+		elif wheel_rotation == "120" and loc_panel.room_id == "ST_tube_vanilla_S1" and loc_panel.save_flag == "SHIELD_FRAGMENT:15":
+			# workaround so this location doesn't draw a line across the map in rotatioon 120
+			line.add_point(get_room_panel("ST_tube_vanilla_C3").point_node.position)
 		else:
 			line.add_point(room_panel.point_node.position)
 		line.add_point(point.position)
