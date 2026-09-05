@@ -10,6 +10,10 @@ script = ExtResource("1_nvll8")
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=204049030]
 layout_mode = 2
 
+[node name="Link" type="Button" parent="HBoxContainer" unique_id=642974916]
+layout_mode = 2
+text = "Open"
+
 [node name="Checked" type="CheckBox" parent="HBoxContainer" unique_id=1925872968]
 layout_mode = 2
 text = "Checked"
@@ -62,4 +66,5 @@ autowrap_mode = 3
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 
+[connection signal="pressed" from="HBoxContainer/Link" to="." method="_on_link_pressed"]
 [connection signal="toggled" from="HBoxContainer/Checked" to="." method="_on_checked_toggled"]

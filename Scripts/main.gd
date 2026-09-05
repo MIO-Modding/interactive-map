@@ -122,7 +122,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					var panel: RoomPanel = preload("res://Scenes/room_panel.tscn").instantiate()
 					panel.region_name = row[0]
 					panel.room_id = row[1]
-					panel.connected_rooms.assign(", ".split(row[2]) as Array)
+					panel.connected_rooms.assign(row[2].split(", ") as Array)
 					if not row[3].is_empty():
 						panel.logical_coords = str_to_var("Vector2i" + row[3])
 					panel.logical_coords_description = row[4]

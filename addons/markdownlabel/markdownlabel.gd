@@ -236,6 +236,7 @@ func _update() -> void:
 	super.clear()
 	var bbcode_text: String = _convert_markdown(TranslationServer.translate(markdown_text) as String if _can_auto_translate() else markdown_text)
 	super.parse_bbcode(bbcode_text)
+	text = bbcode_text
 
 func _can_auto_translate() -> bool:
 	var version := Engine.get_version_info()

@@ -138,3 +138,7 @@ func trigger_popup(text: String, color := Color.WHITE, is_item := false) -> void
 	await get_tree().create_timer(3).timeout
 	if is_instance_valid(popup):
 		popup.queue_free()
+
+
+func fix_underscores(input: String) -> String:
+	return input.replace("_", "\\_")

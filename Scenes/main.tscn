@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d053j7xxppayl" path="res://Scenes/node_2d.tscn" id="3_8gbba"]
 [ext_resource type="Script" uid="uid://cf0bcw5xtc03o" path="res://Scripts/map_manager.gd" id="3_jjvhh"]
 [ext_resource type="Script" uid="uid://blhmfcrwuh8kj" path="res://Scripts/vector_2i_box.gd" id="5_kry3j"]
+[ext_resource type="Script" uid="uid://cccbr4ew5h430" path="res://Scripts/info_manager.gd" id="6_6bp64"]
 [ext_resource type="Script" uid="uid://dwe8brs2p3rup" path="res://Scripts/info_page.gd" id="6_21xkr"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
@@ -443,25 +444,43 @@ grow_vertical = 0
 
 [node name="Info" type="Control" parent="TabContainer" unique_id=984399248]
 layout_mode = 2
+script = ExtResource("6_6bp64")
 metadata/_tab_index = 6
 
-[node name="TabContainer" type="TabContainer" parent="TabContainer/Info" unique_id=240282878]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Info" unique_id=338533212]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 0
 
-[node name="Main" type="ScrollContainer" parent="TabContainer/Info/TabContainer" unique_id=827501034]
+[node name="TabBar" type="TabBar" parent="TabContainer/Info/VBoxContainer" unique_id=1615785033]
 layout_mode = 2
+current_tab = 0
+tab_close_display_policy = 2
+tab_count = 1
+tab_0/title = "Main"
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Info/VBoxContainer" unique_id=2010344121]
+layout_mode = 2
+
+[node name="Tabs" type="Control" parent="TabContainer/Info/VBoxContainer" unique_id=2013463766]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Main" type="ScrollContainer" parent="TabContainer/Info/VBoxContainer/Tabs" unique_id=827501034]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("6_21xkr")
-text = "#### Info Tab
+text = "# Info Tab
 This is the main page for the Information Tab, a section of this tool that lets you see info about features in a wiki-like way.
 This feature is in no way finished."
 metadata/_custom_type_script = "uid://dwe8brs2p3rup"
-metadata/_tab_index = 0
 
 [node name="ArchipelagoClient" type="Control" parent="TabContainer" unique_id=317490321]
 visible = false
@@ -509,3 +528,5 @@ alignment = 2
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/+" to="TabContainer/Map" method="_on_plus_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/R" to="TabContainer/Map" method="_on_reset_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/-" to="TabContainer/Map" method="_on_minus_pressed"]
+[connection signal="tab_close_pressed" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="close_tab"]
+[connection signal="tab_selected" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="select_tab"]
