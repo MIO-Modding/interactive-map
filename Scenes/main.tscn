@@ -112,6 +112,18 @@ text = "Persistant item popups"
 layout_mode = 2
 text = "Show item save flags in popups"
 
+[node name="DeathLink" type="HBoxContainer" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer" unique_id=68985040]
+layout_mode = 2
+
+[node name="Cause" type="LineEdit" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink" unique_id=703976409]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Deathlink Cause..."
+
+[node name="Send" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink" unique_id=194666923]
+layout_mode = 2
+text = "Send"
+
 [node name="ClearButton" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=85385007]
 layout_mode = 2
 text = "Clear all items"
@@ -580,6 +592,7 @@ text = "Skip (I know what I'm doing)"
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable" to="." method="_on_highlight_reachable_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems" to="." method="_on_persistant_items_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags" to="." method="_on_item_flags_toggled"]
+[connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink/Send" to="." method="_on_deathlink_send_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ClearButton" to="." method="_on_clear_button_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/AllButton" to="." method="_on_all_button_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/GiveStartingButton" to="." method="_on_give_starting_button_pressed"]

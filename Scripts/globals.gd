@@ -37,6 +37,9 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 		if i.has_node("Checked"):
 			i.get_node("Checked").disabled = true
 	Archipelago.conn.obtained_item.connect(get_item)
+	if is_manual:
+		Archipelago.set_deathlink(Archipelago.conn.slot_data["death_link"])
+	Archipelago.conn.deathlink.connect(receive_deathlink)
 	LOCATION_NAME_TO_ID.assign(Archipelago.conn.get_gamedata_for_player(Archipelago.conn.player_id).location_name_to_id)
 	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings").show()
 	
@@ -77,7 +80,7 @@ func get_item(item: NetworkItem) -> void:
 	else:
 		item_name = item.get_name()
 	main.player_state.ap_prog_items.append(item_name)
-	trigger_popup("Received item: %s" % item_name, Color.GREEN, true)
+	trigger_popup("Received item: %s" % item_name, Color.GREEN, false, true)
 	
 	queued_refresh = true
 
@@ -133,7 +136,19 @@ func get_item_name_to_id() -> Dictionary[String, int]:
 	return {}
 
 
-func trigger_popup(text: String, color := Color.WHITE, is_item := false) -> void:
+func receive_deathlink(source: String, cause: String, _json: Dictionary) -> void:
+	if Archipelago.is_ap_connected():
+		if Archipelago.is_deathlink():
+			trigger_popup("DeathLink from %s: %s" % [source, cause], Color.MAROON, true)
+
+
+func send_deathlink(cause: String) -> void:
+	if Archipelago.is_ap_connected():
+		if Archipelago.is_deathlink():
+			Archipelago.conn.send_deathlink(cause)
+
+
+func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_item := false) -> void:
 	var popup := PanelContainer.new()
 	var container := HBoxContainer.new()
 	popup.add_child(container)
@@ -144,15 +159,16 @@ func trigger_popup(text: String, color := Color.WHITE, is_item := false) -> void
 	label.label_settings.font_size = 30
 	label.size_flags_horizontal = Control.SIZE_EXPAND
 	if is_item:
+		text = text.replace("Crystallised", "Crystallized")
 		var node: Item = main.get_item_node(text.get_slice(": ", 1))
 		if node != null:
 			if main.show_item_flags:
 				label.text += " (%s)" % node.save_entry
 			label.label_settings.font_color = Item.COLORS[node.classification]
 	container.add_child(label)
-	if is_item and main.persistant_items:
+	if (is_item and main.persistant_items) or persistant:
 		var button := Button.new()
-		button.text = "Added?"
+		button.text = "Dismiss" if persistant else "Added?"
 		button.pressed.connect(func(): popup.queue_free(), CONNECT_ONE_SHOT)
 		container.add_child(button)
 	main.get_node("VBoxContainer").add_child(popup)

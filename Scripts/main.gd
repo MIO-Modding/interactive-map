@@ -832,6 +832,10 @@ func _on_double_checker_toggled(toggled_on: bool) -> void:
 	double_click_checks_locations = toggled_on
 
 
+func _on_deathlink_send_pressed() -> void:
+	Globals.send_deathlink($TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink/Cause.text)
+
+
 class PlayerState:
 	var main: Main
 	
@@ -904,8 +908,12 @@ class PlayerState:
 		if room == "Capucine":
 			room = "LQ_ruins_hall_C1"
 		for i: LocationPanel in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
-			if i.room_id == room and i.vanilla_item.containsn(item):
-				return i
+			if i.room_id == room:
+				if loc_name.contains("Crystalli"):
+					if i.vanilla_item.contains("Crystallised Nacre") or i.vanilla_item.contains("Crystallized Nacre"):
+						return i
+				elif i.vanilla_item.containsn(item):
+					return i
 		return null
 	
 	
