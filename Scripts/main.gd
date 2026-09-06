@@ -366,9 +366,9 @@ func row_to_list(row: String, cap := -1) -> Array:
 
 
 func combine_logic_strings(string1: String, string2: String) -> String:
-	if string1 == "-":
+	if string1 == "":
 		return string2
-	elif string2 == "-":
+	elif string2 == "":
 		return string1
 	elif string1 == "False":
 		return string1
