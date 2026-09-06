@@ -49,7 +49,7 @@ const MAP_WRAP_TRANSITIONS = {
 	},
 }
 
-## X-coordinate ranges for reegions of the lower part of the map around each shuttle
+## X-coordinate ranges for regions of the lower part of the map around each shuttle
 const SHUTTLE_REGIONS := { 
 	"Lab": [-3600, -2500],
 	"Vaults": [-2500, -650],
@@ -527,6 +527,11 @@ func update_map() -> void:
 			point.position += Vector2(-30, 10)
 		else:
 			var temp_point: Vector2i = get_rotated_position(loc_panel.coords)
+			if wheel_rotation == "120" and loc_panel.room_id == "ST_tube_vanilla_S1" and loc_panel.save_flag == "SHIELD_FRAGMENT:15":
+				# workaround so this location doesn't draw a line across the map in rotation 120
+				temp_point = loc_panel.coords
+				temp_point.x += ROTATION_OFFSETS["120"]["Lab"]
+			
 			if (Vector2(temp_point) / 5 * Vector2(1, -1)).distance_to(room_panel.point_node.position) <= 0.7:
 				temp_point += Vector2i(10, 10)
 			
@@ -551,9 +556,6 @@ func update_map() -> void:
 		line.width = 1 / ceilf(map_node.get_node("Camera2D").zoom.x / 10)
 		if loc_panel.room_id == "N/A":
 			line.add_point(Vector2(100, 100))
-		elif wheel_rotation == "120" and loc_panel.room_id == "ST_tube_vanilla_S1" and loc_panel.save_flag == "SHIELD_FRAGMENT:15":
-			# workaround so this location doesn't draw a line across the map in rotatioon 120
-			line.add_point(get_room_panel("ST_tube_vanilla_C3").point_node.position)
 		else:
 			line.add_point(room_panel.point_node.position)
 		line.add_point(point.position)
