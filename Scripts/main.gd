@@ -102,24 +102,36 @@ func request_data():
 	add_child(requester)
 	
 	requester.request_completed.connect(iterate_requests.bind(DATA_LINKS.keys()), CONNECT_ONE_SHOT)
+	$LoadingScreen/VBoxContainer/ProgressBar.value += 1
+	$LoadingScreen/VBoxContainer/Label.text = "Requesting room requirements"
 	requester.request(DATA_LINKS["room requirements"])
 	Globals.trigger_popup("Queued room requirements")
 
 
 func iterate_requests(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, kinds: Array) -> void:
-	on_finished_request(result, response_code, headers, body, kinds[0])
+	await on_finished_request(result, response_code, headers, body, kinds[0])
 	kinds.remove_at(0)
 	if kinds.is_empty():
+		for i in $VBoxContainer.get_children():
+			i.queue_free()
+		$LoadingScreen.visible = false
 		finished_requesting.emit()
 		return
 	get_child(-1).request_completed.connect(iterate_requests.bind(kinds), CONNECT_ONE_SHOT)
+	$LoadingScreen/VBoxContainer/ProgressBar.value += 1
+	$LoadingScreen/VBoxContainer/Label.text = "Requesting " + kinds[0]
 	get_child(-1).request(DATA_LINKS[kinds[0]])
 	Globals.trigger_popup("Queued " + kinds[0])
 
 
 func on_finished_request(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray, kind: String = "") -> void:
-	room_requirements_sheet = []
+	$LoadingScreen/VBoxContainer/ProgressBar.value += 1
+	$LoadingScreen/VBoxContainer/Label.text = "Loading " + kind
+	
+	await get_tree().process_frame
+	
 	Globals.trigger_popup("Recieved " + kind)
+	room_requirements_sheet = []
 	
 	assert(KIND_MAXES.has(kind))
 	fill_sheet(kind, body, KIND_MAXES[kind])
@@ -710,6 +722,10 @@ func _on_item_flags_toggled(toggled_on: bool) -> void:
 
 func _on_goal_option_item_selected(_index: int) -> void:
 	update_go_mode()
+
+
+func _on_skip_button_pressed() -> void:
+	$LoadingScreen.visible = false
 
 
 class PlayerState:

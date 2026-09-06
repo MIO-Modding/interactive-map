@@ -500,6 +500,63 @@ grow_horizontal = 0
 grow_vertical = 0
 alignment = 2
 
+[node name="LoadingScreen" type="Control" parent="." unique_id=1823765848]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="LoadingScreen" unique_id=41646263]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LoadingScreen" unique_id=525723614]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="LoadingScreen/VBoxContainer" unique_id=1661773489]
+layout_mode = 2
+text = "Initializing"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="LoadingScreen/VBoxContainer" unique_id=1061443994]
+layout_mode = 2
+max_value = 12.0
+step = 1.0
+show_percentage = false
+
+[node name="SkipButton" type="Button" parent="LoadingScreen" unique_id=1664225467]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -8.0
+offset_right = 150.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Skip (I know what I'm doing)"
+
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable" to="." method="_on_highlight_reachable_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems" to="." method="_on_persistant_items_toggled"]
@@ -530,3 +587,4 @@ alignment = 2
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/-" to="TabContainer/Map" method="_on_minus_pressed"]
 [connection signal="tab_close_pressed" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="close_tab"]
 [connection signal="tab_selected" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="select_tab"]
+[connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]
