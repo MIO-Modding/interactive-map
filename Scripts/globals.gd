@@ -98,6 +98,7 @@ func check_location(location: LocationPanel, send := true) -> void:
 		else:
 			main.player_state.ap_prog_items.erase(item.item_name)
 		main.update_itempool.emit()
+		main.update_go_mode()
 	else:
 		Archipelago.collect_location(get_location_id(location))
 
