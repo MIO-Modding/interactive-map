@@ -110,6 +110,9 @@ func get_location_id(location: LocationPanel) -> int:
 			serialized = "Capucine: " + location.loc_description
 	
 	if not LOCATION_NAME_TO_ID.keys().has(serialized):
+		serialized = serialized.replace("Crystallised", "Crystallized")
+	
+	if not LOCATION_NAME_TO_ID.keys().has(serialized):
 		serialized = serialized.strip_edges()
 		printerr("%s not in ap locations" % serialized)
 	
