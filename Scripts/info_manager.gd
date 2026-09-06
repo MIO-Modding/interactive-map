@@ -41,6 +41,8 @@ func add_page(feature_info: FeaturePanel) -> void:
 
 
 func create_page(feature_info: FeaturePanel) -> InfoPage:
+	if feature_info == null:
+		return null
 	var result = InfoPage.new()
 	@warning_ignore("redundant_await")
 	result.text = await feature_info.get_wikitext()

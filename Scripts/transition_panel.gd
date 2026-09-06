@@ -16,11 +16,8 @@ Intended: %s
 Simple Skips: %s
 Advanced Skips: %s
 
-### Collected
-%s
-
-### Coordinates
-Position: %s
+### Door
+State: %s
 
 ### Notes
 %s
@@ -74,8 +71,6 @@ var notes: String:
 	set(v):
 		notes = v
 		$HBoxContainer/Notes.text = v
-
-var tainted_logic: Main.LogicLevels = Main.LogicLevels.INTENDED_LOGIC
 
 
 func update() -> void:
@@ -250,8 +245,19 @@ static func trim_redundant_parentheses(text: String) -> String:
 
 
 func get_pagename() -> String:
-	return to + " -> " + from
+	return from + " -> " + to
 
 
 func get_wikitext() -> String:
-	return ""
+	return BASE_WIKITEXT % [
+		Globals.fix_underscores(from), Globals.fix_underscores(to),
+		Globals.fix_underscores(from), Globals.main.get_room_panel(from).region_name, 
+		Globals.fix_underscores(to), Globals.main.get_room_panel(to).region_name,
+		intended_string, simple_string, advanced_string,
+		door,
+		notes
+	]
+
+
+func _on_link_pressed() -> void:
+	Globals.main.get_node("TabContainer/Info").add_page(Globals.main.get_transition_panel($HBoxContainer/To.text, $HBoxContainer/From.text))
