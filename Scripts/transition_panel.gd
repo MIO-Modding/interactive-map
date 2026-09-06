@@ -6,6 +6,25 @@ const LOGIC_LEVEL_COLORS = {
 	"simple": Color(1.0, 1.0, 0.0, 1.0),
 	"advanced": Color(1.0, 0.5, 0.0, 1.0)
 }
+const BASE_WIKITEXT = """
+# Location: %s -> %s
+
+This transition goes from %s (%s) to %s (%s).
+
+### Logic
+Intended: %s
+Simple Skips: %s
+Advanced Skips: %s
+
+### Collected
+%s
+
+### Coordinates
+Position: %s
+
+### Notes
+%s
+"""
 
 
 var from: String:
@@ -228,3 +247,11 @@ static func trim_redundant_parentheses(text: String) -> String:
 				return text
 	
 	return text.trim_prefix("{ ")
+
+
+func get_pagename() -> String:
+	return to + " -> " + from
+
+
+func get_wikitext() -> String:
+	return ""

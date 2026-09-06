@@ -69,6 +69,7 @@ var window_theme := Theme.new()
 
 
 func _ready() -> void:
+	$LoadingScreen.show()
 	player_state = PlayerState.new()
 	player_state.main = self
 	update_itempool.connect(func(): update_transitions.emit())
@@ -87,6 +88,10 @@ func _ready() -> void:
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	checkbox.size_flags_horizontal = Control.SIZE_EXPAND
 	checkbox.toggled.connect(set_manual)
+	var stylebox := StyleBoxFlat.new()
+	stylebox.bg_color = Color(0.3, 0.3, 0.3)
+	checkbox.add_theme_stylebox_override("normal", stylebox)
+	checkbox.add_theme_stylebox_override("hover", stylebox)
 	Archipelago.connected.connect(func(_e, _f): checkbox.disabled = true)
 	Archipelago.disconnected.connect(func(): checkbox.disabled = false)
 	content_box.add_child(label)
