@@ -121,7 +121,6 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 		return func(): return false
 	else:
 		string = string.replace("(", "{ ").replace(")", " }").replace(" and ", " && ").replace(" or ", " || ").replace("glide", "sail")
-		string = string.replace("attack", "slash") # TODO
 		for i in ["airstall", "crystal_stall", "ground_pogo", "enemy_pogo", "pogo_jump", "enemy_pogos"]:
 			string = string.replace(i, "slash")
 		string = string.replace("hairpin_launch", "hairpin").replace("slope_boost", "True")
@@ -145,6 +144,7 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 		string = string.replace("1 Scrapling", "{ Find Sin || Find Cos || Find Tan }")
 		string = string.replace("2 Scraplings", "{ { Find Sin && Find Cos } || { Find Sin && Find Tan } || { Find Cos && Find Tan } }")
 		string = string.replace("3 Scraplings", "{ Find Sin && Find Cos && Find Tan }")
+		string = string.replace("attack", "{ slash || { hairpin && TRINKET:CARLO_HOOK } || { hairpin && TRINKET:DECOY } || { glide && TRINKET:GLIDE_STATIC } }") # TODO
 		
 		return await parse_logic(string, node)
 
