@@ -97,7 +97,7 @@ var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
 
 var starting_room := "ST_security_fall_P1"
-var double_click_checks_locations := true
+var double_click_checks_locations := false
 var persistant_items := true
 var show_item_flags := false
 
@@ -314,9 +314,9 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				if loc_panel == null:
 					continue
 				
-				loc_panel.intended_string = row[2]
-				loc_panel.simple_string = row[3]
-				loc_panel.advanced_string = row[4]
+				loc_panel.intended_string = combine_logic_strings(loc_panel.intended_string, row[2])
+				loc_panel.simple_string = combine_logic_strings(loc_panel.simple_string, row[3])
+				loc_panel.advanced_string = combine_logic_strings(loc_panel.advanced_string, row[4])
 			
 			update_reachable()
 			for i in range(4):
@@ -354,6 +354,22 @@ func row_to_list(row: String, cap := -1) -> Array:
 					return result
 				pending = ""
 	return result
+
+
+func combine_logic_strings(string1: String, string2: String) -> String:
+	if string1 == "-":
+		return string2
+	elif string2 == "-":
+		return string1
+	elif string1 == "False":
+		return string1
+	elif string2 == "False":
+		return string2
+	elif string1 == "True":
+		return string2
+	elif string2 == "True":
+		return string1
+	return "(%s) and (%s)" % [string1, string2]
 
 
 func update_reachable() -> void:
@@ -749,6 +765,14 @@ func set_manual(is_manual: bool) -> void:
 		Archipelago.AP_GAME_NAME = "Manual_MIO_Samwell" if is_manual else "Memories in Orbit"
 
 
+func save_preferences() -> void:
+	pass #TODO
+
+
+func load_preferences() -> void:
+	pass
+
+
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
 	highlight_rows_in_logic = toggled_on
 	update_transitions.emit()
@@ -802,6 +826,10 @@ func _on_goal_option_item_selected(_index: int) -> void:
 
 func _on_skip_button_pressed() -> void:
 	$LoadingScreen.visible = false
+
+
+func _on_double_checker_toggled(toggled_on: bool) -> void:
+	double_click_checks_locations = toggled_on
 
 
 class PlayerState:
