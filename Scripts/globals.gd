@@ -107,11 +107,15 @@ func get_location_id(location: LocationPanel) -> int:
 	
 	if is_manual:
 		serialized = Main.PlayerState.get_manual_serialized(location)
-		if location.room_id == "LQ_under_mast_C1":
+		if location.room_id in ["LQ_under_mast_C1", "GA_bou_up_F1"]:
 			if location.loc_description.contains("Left"):
 				serialized = serialized.replace("Nacre", "Nacre_left")
 			elif location.loc_description.contains("Right"):
 				serialized = serialized.replace("Nacre", "Nacre_right")
+			elif location.loc_description == "Above a Door":
+				serialized = serialized.replace("Nacre", "Nacre_lower")
+			elif location.loc_description == "In the Middle of the Room":
+				serialized = serialized.replace("Nacre", "Nacre_upper")
 	else:
 		serialized = Main.PlayerState.serialize_location(location)
 		if serialized.contains("Capucine") and not LOCATION_NAME_TO_ID.keys().has(serialized):
