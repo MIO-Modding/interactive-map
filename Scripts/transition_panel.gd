@@ -122,7 +122,7 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 	else:
 		string = string.replace("(", "{ ").replace(")", " }").replace(" and ", " && ").replace(" or ", " || ").replace("glide", "sail")
 		string = string.replace("attack", "slash") # TODO
-		for i in ["airstall", "crystal_stall", "ground_pogo", "enemy_pogo", "pogo_jump"]:
+		for i in ["airstall", "crystal_stall", "ground_pogo", "enemy_pogo", "pogo_jump", "enemy_pogos"]:
 			string = string.replace(i, "slash")
 		string = string.replace("hairpin_launch", "hairpin").replace("slope_boost", "True")
 		string = string.replace("e_dodge", "{ dodge && TRINKET:BETTER_DODGE }")

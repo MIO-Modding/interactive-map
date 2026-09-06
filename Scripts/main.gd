@@ -314,9 +314,18 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				if loc_panel == null:
 					continue
 				
+				if loc_panel.advanced_string == "-":
+					if loc_panel.simple_string == "-":
+						loc_panel.advanced_string = combine_logic_strings(loc_panel.intended_string, row[4])
+					else:
+						loc_panel.advanced_string = combine_logic_strings(loc_panel.simple_string, row[4])
+				else:
+					loc_panel.advanced_string = combine_logic_strings(loc_panel.advanced_string, row[4])
+				if loc_panel.simple_string == "-":
+					loc_panel.simple_string = combine_logic_strings(loc_panel.intended_string, row[3])
+				else:
+					loc_panel.simple_string = combine_logic_strings(loc_panel.simple_string, row[3])
 				loc_panel.intended_string = combine_logic_strings(loc_panel.intended_string, row[2])
-				loc_panel.simple_string = combine_logic_strings(loc_panel.simple_string, row[3])
-				loc_panel.advanced_string = combine_logic_strings(loc_panel.advanced_string, row[4])
 			
 			update_reachable()
 			for i in range(4):
@@ -514,8 +523,8 @@ func update_map() -> void:
 	for i in ["Points", "Lines", "LocPoints", "LocLines"].map(func(e): return map_node.get_node(e).get_children()):
 		for node in i:
 			node.queue_free()
-
-	await get_tree().process_frame
+	
+	#await get_tree().process_frame
 	
 	var all_regions: Array[String]
 	for i in range($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.item_count):
