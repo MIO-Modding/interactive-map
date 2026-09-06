@@ -30,24 +30,28 @@ This feature is in no way finished."""
 		add_page_node(page)
 	
 	select_tab(tab - 1)
-	
+
 
 func add_page(feature_info: FeaturePanel) -> void:
-	add_page_node(create_page(feature_info))
+	await add_page_node(await create_page(feature_info))
 	var index: int = $VBoxContainer/Tabs.get_child_count() - 1
 	$VBoxContainer/TabBar.current_tab = index
 	select_tab(index)
+	get_parent().current_tab = get_index()
 
 
 func create_page(feature_info: FeaturePanel) -> InfoPage:
 	var result = InfoPage.new()
-	result.text = feature_info.get_wikitext()
-	result.name = feature_info.get_pagename()
+	@warning_ignore("redundant_await")
+	result.text = await feature_info.get_wikitext()
+	@warning_ignore("redundant_await")
+	result.name = await feature_info.get_pagename()
 	result.feature_panel = feature_info
 	return result
 
 
 func add_page_node(page: InfoPage) -> void:
-	$VBoxContainer/TabBar.add_tab(page.feature_panel.get_pagename())
+	@warning_ignore("redundant_await")
+	$VBoxContainer/TabBar.add_tab(await page.feature_panel.get_pagename())
 	$VBoxContainer/Tabs.add_child(page)
 	page.update()

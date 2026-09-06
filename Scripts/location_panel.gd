@@ -128,7 +128,6 @@ func get_wikitext() -> String:
 
 
 func get_pagename() -> String:
-	print(serialize())
 	return serialize()
 
 

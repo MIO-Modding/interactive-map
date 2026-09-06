@@ -180,6 +180,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					item.type = Item.ItemTypes[row[4].to_upper()]
 					item.classification = Item.ItemClassifications[row[5].to_upper()]
 					item.save_entry = row[6]
+					item.notes = row[7]
 					update_itempool.connect(item.update)
 					
 					%ItemPool.add_child(item)

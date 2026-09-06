@@ -7,6 +7,10 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_tnite")
 
+[node name="Link" type="Button" parent="." unique_id=1009767357]
+layout_mode = 2
+text = "I"
+
 [node name="Name" type="Label" parent="." unique_id=1736256725]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -24,5 +28,6 @@ visible = false
 layout_mode = 2
 text = "AP: 1/1"
 
+[connection signal="pressed" from="Link" to="." method="_on_link_pressed"]
 [connection signal="value_changed" from="Amount" to="." method="_on_amount_value_changed"]
 [connection signal="toggled" from="Toggle" to="." method="_on_toggle_toggled"]
