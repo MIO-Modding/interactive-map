@@ -886,7 +886,7 @@ class PlayerState:
 		if loc.vanilla_item.contains("Capucined"):
 			room = "Capucine"
 		if loc.vanilla_item.contains("Crystallized Nacre") or loc.vanilla_item.contains("Crystallised Nacre"):
-			item = "Crystallized Nacre" #TODO fix when manual changes spelling
+			item = "Crystallised Nacre"
 		
 		result = "%s--(%s)" % [room, item]
 		return result
@@ -911,7 +911,7 @@ class PlayerState:
 	
 	static func convert_from_manual_item(item: String) -> String:
 		var save_entry: String = item.get_slice(" (", 0).replace(">", ":")
-		if save_entry == "Crystallized Nacre":
+		if save_entry == "Crystallised Nacre":
 			return save_entry
 		for i: Item in Globals.main.get_node("%ItemPool").get_children():
 			if i.save_entry == save_entry:
