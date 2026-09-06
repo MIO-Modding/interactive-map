@@ -27,6 +27,14 @@ Position: %s
 %s
 """
 
+const SCOUTABLE_LOCS: Array[String] = [
+	"HUB_hub_central: Acquired from Shii after donating enough Nacre",
+	"GA_bou_center_F1: Buy from Xelato for 10k Nacre",
+	"ST_cuves_goo_P9: Left Crucible",
+	"ST_cuves_hook_P9: Right Crucible",
+	"ST_cuves_main_P1: Talk to samsk in the Tube after both Data Reports"
+]
+
 
 var region_name: String:
 	set(v):
@@ -108,6 +116,8 @@ func update() -> void:
 		else:
 			modulate = Color.WHITE
 	checked = Main.player_state.checked_locations.has(self)
+	$HBoxContainer/Scout.visible = Archipelago.is_ap_connected() and (
+		loc_description.contains("Buy from Mel's Shop") or SCOUTABLE_LOCS.has(serialize()))
 
 
 func serialize() -> String:
@@ -136,6 +146,15 @@ func decapitalize(string: String) -> String:
 	return string
 
 
+func hint_popup(item: NetworkItem) -> void:
+	var player_name = Archipelago.conn.get_player_name(item.dest_player_id)
+	var item_name = item.get_name()
+	var full_text = "Archipelago Item: " + player_name + "'s " + item_name
+	if player_name == Archipelago.conn.get_player_name():
+		full_text = "Your " + item_name
+	Globals.trigger_popup(full_text, Color.MEDIUM_PURPLE)
+
+
 func _on_checked_toggled(toggled_on: bool) -> void:
 	checked = toggled_on
 	if Archipelago.is_ap_connected():
@@ -147,3 +166,7 @@ func _on_checked_toggled(toggled_on: bool) -> void:
 
 func _on_link_pressed() -> void:
 	Globals.main.get_node("TabContainer/Info").add_page(Globals.main.get_location_panel(serialize()))
+
+
+func _on_scout_pressed() -> void:
+	Archipelago.conn.scout(Globals.get_location_id(Globals.main.get_location_panel(serialize())), 2, hint_popup)

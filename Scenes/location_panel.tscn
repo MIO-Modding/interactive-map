@@ -18,6 +18,11 @@ text = "Open"
 layout_mode = 2
 text = "Checked"
 
+[node name="Scout" type="Button" parent="HBoxContainer" unique_id=1369028031]
+visible = false
+layout_mode = 2
+text = "Scout"
+
 [node name="Region" type="Label" parent="HBoxContainer" unique_id=172969388]
 custom_minimum_size = Vector2(215, 0)
 layout_mode = 2
@@ -68,3 +73,4 @@ layout_mode = 2
 
 [connection signal="pressed" from="HBoxContainer/Link" to="." method="_on_link_pressed"]
 [connection signal="toggled" from="HBoxContainer/Checked" to="." method="_on_checked_toggled"]
+[connection signal="pressed" from="HBoxContainer/Scout" to="." method="_on_scout_pressed"]

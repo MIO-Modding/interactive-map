@@ -28,7 +28,7 @@ func _process(_delta: float) -> void:
 				zoom *= 1.1
 			if Input.is_action_just_released("scroll_down"):
 				zoom /= 1.1
-			zoom = zoom.clamp(Vector2(0.5, 0.5), Vector2(20, 20))
+			clamp_zoom()
 			if Input.is_action_just_pressed("scroll_down") or Input.is_action_just_pressed("scroll_up"):
 				if 1 / ceilf(zoom.x / 10) != 1 / ceilf(previous_zoom.x / 10):
 					zoom_changed.emit(zoom.x)
@@ -48,6 +48,10 @@ func _process(_delta: float) -> void:
 				pos_last_frame = get_viewport().get_mouse_position()
 	
 	map_node.get_node("MousePos").text = str(get_global_mouse_position() * 5)
+
+
+func clamp_zoom() -> void:
+	zoom = zoom.clamp(Vector2(0.5, 0.5), Vector2(30, 30))
 
 
 func update_shape_visualization() -> void:

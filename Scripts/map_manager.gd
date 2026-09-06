@@ -33,7 +33,7 @@ func _process(_delta: float) -> void:
 	$ScrollContainer.size.x = viewport_size.x
 	$ScrollContainer/PanelContainer.custom_minimum_size.x = viewport_size.x
 	
-	map_node.get_node("Camera2D").zoom = map_node.get_node("Camera2D").zoom.clamp(Vector2(0.5, 0.5), Vector2(20, 20))
+	map_node.get_node("Camera2D").clamp_zoom()
 	$"ZoomBox/+".disabled = map_node.get_node("Camera2D").zoom >= Vector2(20, 20)
 	$"ZoomBox/-".disabled = map_node.get_node("Camera2D").zoom <= Vector2(0.5, 0.5)
 

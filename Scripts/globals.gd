@@ -58,6 +58,8 @@ func disconnect_script() -> void:
 
 func remove_location(loc_id: int) -> void:
 	await get_tree().process_frame
+	if loc_id <= 0:
+		return
 	var loc_name: String = LOCATION_NAME_TO_ID.find_key(loc_id)
 	var loc_panel: LocationPanel
 	if is_manual:
@@ -94,19 +96,24 @@ func check_location(location: LocationPanel, send := true) -> void:
 			main.player_state.ap_prog_items.erase(item.item_name)
 		main.update_itempool.emit()
 	else:
-		var serialized: String
-		
-		if is_manual:
-			serialized = Main.PlayerState.get_manual_serialized(location)
-		else:
-			serialized = Main.PlayerState.serialize_location(location)
-			if serialized.contains("Capucine") and not LOCATION_NAME_TO_ID.keys().has(serialized):
-				serialized = "Capucine: " + location.loc_description
-		
-		if not LOCATION_NAME_TO_ID.keys().has(serialized):
-			serialized = serialized.strip_edges()
-			printerr("%s not in ap locations" % serialized)
-		Archipelago.collect_location(LOCATION_NAME_TO_ID[serialized])
+		Archipelago.collect_location(get_location_id(location))
+
+
+func get_location_id(location: LocationPanel) -> int:
+	var serialized: String
+	
+	if is_manual:
+		serialized = Main.PlayerState.get_manual_serialized(location)
+	else:
+		serialized = Main.PlayerState.serialize_location(location)
+		if serialized.contains("Capucine") and not LOCATION_NAME_TO_ID.keys().has(serialized):
+			serialized = "Capucine: " + location.loc_description
+	
+	if not LOCATION_NAME_TO_ID.keys().has(serialized):
+		serialized = serialized.strip_edges()
+		printerr("%s not in ap locations" % serialized)
+	
+	return LOCATION_NAME_TO_ID[serialized]
 
 
 func get_loc_name_to_id() -> Dictionary[String, int]:
