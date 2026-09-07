@@ -318,10 +318,20 @@ layout_mode = 2
 button_pressed = true
 text = "Locations"
 
-[node name="MapImage" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1721498863]
+[node name="Label" type="Label" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1245158274]
 layout_mode = 2
-button_pressed = true
-text = "Map Image"
+text = "Map Type:"
+
+[node name="MapImageType" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1335651842]
+layout_mode = 2
+selected = 2
+item_count = 3
+popup/item_0/text = "No Map"
+popup/item_0/id = 0
+popup/item_1/text = "Skeleton"
+popup/item_1/id = 1
+popup/item_2/text = "In-Game"
+popup/item_2/id = 2
 
 [node name="Rotation" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1365527500]
 layout_mode = 2
@@ -607,7 +617,7 @@ text = "Skip (I know what I'm doing)"
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/RoomPoints" to="TabContainer/Map" method="_on_room_points_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Locations" to="TabContainer/Map" method="_on_locations_toggled"]
-[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/MapImage" to="TabContainer/Map" method="_on_map_image_toggled"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/MapImageType" to="TabContainer/Map" method="_on_map_image_type_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Rotation" to="TabContainer/Map" method="_on_rotation_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]

@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://blvsn32m3sxl3" path="res://Sprites/map/lab.png" id="15_c32x4"]
 [ext_resource type="Texture2D" uid="uid://deqx6ydngv8c1" path="res://Sprites/map/crucible.png" id="16_fg7i4"]
 [ext_resource type="Texture2D" uid="uid://7duwmjlmmv57" path="res://Sprites/map/vaults.png" id="17_gwne5"]
+[ext_resource type="Texture2D" uid="uid://bmmnifjqnx16x" path="res://Sprites/MapMesh.png" id="18_hpu6p"]
 
 [node name="Node2D" type="Node2D" unique_id=82726750]
 
@@ -132,3 +133,11 @@ color = Color(0.14901961, 0.15294118, 0.16078432, 1)
 
 [node name="DrawNode" type="Node2D" parent="." unique_id=698883722]
 z_index = 400
+
+[node name="Skeleton" type="Node2D" parent="." unique_id=1162090445]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton" unique_id=1030492204]
+position = Vector2(-292.00003, -277.00003)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("18_hpu6p")
