@@ -147,6 +147,9 @@ func _ready() -> void:
 	content_box.move_child(checkbox, 9)
 	
 	request_data()
+	
+	await get_tree().process_frame
+	get_node("TabContainer").get_child(0).get_child(0).focus_mode = Control.FOCUS_CLICK
 
 
 func request_data():
