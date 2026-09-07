@@ -48,13 +48,20 @@ func _process(_delta: float) -> void:
 				pos_last_frame = get_viewport().get_mouse_position()
 			
 			if Input.is_action_just_pressed("copy"):
-				DisplayServer.clipboard_set(str(Vector2i(get_global_mouse_position()) * 5))
+				DisplayServer.clipboard_set(get_mouse_pos_string())
 	
-	map_node.get_node("MousePos").text = str(Vector2i(get_global_mouse_position()) * 5) + "\nCtrl+Shift+C to copy"
+	map_node.get_node("MousePos").text = get_mouse_pos_string() + "\nCtrl+Shift+C to copy"
 
 
 func clamp_zoom() -> void:
 	zoom = zoom.clamp(Vector2(0.5, 0.5), Vector2(30, 30))
+
+
+func get_mouse_pos_string() -> String:
+	if Input.is_action_pressed("f"):
+		return str(get_global_mouse_position() * 5)
+	else:
+		return str(Vector2i(get_global_mouse_position() * 5))
 
 
 func update_shape_visualization() -> void:
