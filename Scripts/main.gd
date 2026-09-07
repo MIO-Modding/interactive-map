@@ -175,13 +175,6 @@ func iterate_requests(result: int, response_code: int, headers: PackedStringArra
 	get_child(-1).request(DATA_LINKS[kinds[0]])
 	Globals.trigger_popup("Queued " + kinds[0])
 
-func parse_header_row(row: Array[String]) -> Dictionary[String, int]:
-	var columns: Dictionary[String, int] = {}
-	for index in range(len(row)):
-		var heading = row[index]
-		if heading != "":
-			columns[heading] = index
-	return columns
 
 func on_finished_request(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray, kind: String = "") -> void:
 	$LoadingScreen/VBoxContainer/ProgressBar.value += 1
@@ -375,6 +368,15 @@ func row_to_list(row: String, cap := -1) -> Array:
 					return result
 				pending = ""
 	return result
+
+
+func parse_header_row(row: Array[String]) -> Dictionary[String, int]:
+	var columns: Dictionary[String, int] = {}
+	for index in range(len(row)):
+		var heading = row[index]
+		if heading != "":
+			columns[heading] = index
+	return columns
 
 
 func combine_logic_strings(string1: String, string2: String) -> String:
