@@ -135,6 +135,7 @@ color = Color(0.14901961, 0.15294118, 0.16078432, 1)
 z_index = 400
 
 [node name="Skeleton" type="Node2D" parent="." unique_id=1162090445]
+z_index = -10
 visible = false
 
 [node name="Sprite2D" type="Sprite2D" parent="Skeleton" unique_id=1030492204]
