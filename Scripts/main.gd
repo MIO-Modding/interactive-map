@@ -192,6 +192,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 		"room requirements":
 			room_requirements_sheet = room_requirements_sheet.filter(func(e): return not e[0].is_empty())
 			var skip_first := true
+			var columns := parse_header_row(room_requirements_sheet[0])
 			for row in room_requirements_sheet:
 				for cell in row:
 					var label = Label.new()
@@ -200,39 +201,40 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				
 				if not skip_first:
 					var panel: RoomPanel = preload("res://Scenes/room_panel.tscn").instantiate()
-					panel.region_name = row[0]
-					panel.room_id = row[1]
-					panel.connected_rooms.assign(row[2].split(", ") as Array)
-					if not row[3].is_empty():
-						panel.logical_coords = str_to_var("Vector2i" + row[3])
-					panel.logical_coords_description = row[4]
-					panel.notes = row[5]
-					if not row[11].is_empty():
-						panel.coords = str_to_var("Vector2i" + row[11])
+					panel.region_name = row[columns["Region Name"]]
+					panel.room_id = row[columns["Room ID"]]
+					panel.connected_rooms.assign(row[columns["Connected Rooms"]].split(", ") as Array)
+					if not row[columns["Room Coordinates (logical center)"]].is_empty():
+						panel.logical_coords = str_to_var("Vector2i" + row[columns["Room Coordinates (logical center)"]])
+					panel.logical_coords_description = row[columns["Center Description"]]
+					panel.notes = row[columns["Remarks"]]
+					if not row[columns["Room Text Position"]].is_empty():
+						panel.coords = str_to_var("Vector2i" + row[columns["Room Text Position"]])
 					update_transitions.connect(panel.update)
 					panel.hide()
 					
 					$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.add_child(panel)
 					panel.update()
 					
-					if row[1] != "ST_security_fall_P1":
-						$TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.add_item(row[1])
+					if row[columns["Room ID"]] != "ST_security_fall_P1":
+						$TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.add_item(row[columns["Room ID"]])
 				
 				skip_first = false
 				
 		"items":
 			items_sheet = items_sheet.filter(func(e): return not e[0].is_empty())
 			var skip_first := true
+			var columns := parse_header_row(items_sheet[0])
 			for row in items_sheet:
 				if not skip_first:
 					var item: Item = preload("res://Scenes/item.tscn").instantiate()
-					item.item_name = row[0]
-					item.max_amount = row[1].to_int()
-					item.room = row[2]
-					item.type = Item.ItemTypes[row[4].to_upper()]
-					item.classification = Item.ItemClassifications[row[5].to_upper()]
-					item.save_entry = row[6]
-					item.notes = row[7]
+					item.item_name = row[columns["Item Name"]]
+					item.max_amount = row[columns["Amount"]].to_int()
+					item.room = row[columns["Room ID"]]
+					item.type = Item.ItemTypes[row[columns["Type"]].to_upper()]
+					item.classification = Item.ItemClassifications[row[columns["AP Classification"]].to_upper()]
+					item.save_entry = row[columns["Save Entry Key"]]
+					item.notes = row[columns["Remarks"]]
 					update_itempool.connect(item.update)
 					
 					%ItemPool.add_child(item)
@@ -246,6 +248,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					$TabContainer/Items/GridContainer.add_child(label)
 		"transition requirements":
 			transition_requirements_sheet = transition_requirements_sheet.filter(func(e): return not e[0].is_empty())
+			var columns := parse_header_row(transition_requirements_sheet[0])
 			var skip_first := true
 			for row in transition_requirements_sheet:
 				if skip_first:
@@ -253,14 +256,14 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					continue
 				
 				var panel: TransitionPanel = preload("res://Scenes/transition_panel.tscn").instantiate()
-				panel.from = row[0]
-				panel.to = row[1]
-				panel.first_pass = row[2] == "TRUE"
-				panel.intended_string = row[3]
-				panel.simple_string = row[4]
-				panel.advanced_string = row[5]
-				panel.door = row[6]
-				panel.notes = row[7]
+				panel.from = row[columns["From"]]
+				panel.to = row[columns["To"]]
+				panel.first_pass = row[columns["First Pass"]] == "TRUE"
+				panel.intended_string = row[columns["Intended Logic"]]
+				panel.simple_string = row[columns["Simple Skips"]]
+				panel.advanced_string = row[columns["Advanced Skips"]]
+				panel.door = row[columns["Door?"]]
+				panel.notes = row[columns["Remarks"]]
 				update_transitions.connect(panel.update)
 				$TabContainer/TransitionRequirements/VBoxContainer.add_child(panel)
 			
@@ -272,26 +275,27 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 		"location requirements":
 			location_requirements_sheet = location_requirements_sheet.filter(func(e): return not e[0].is_empty())
 			var skip_first := true
+			var columns := parse_header_row(location_requirements_sheet[0])
 			for row in location_requirements_sheet:
 				if skip_first:
 					skip_first = false
 					continue
 				
 				var panel: LocationPanel = preload("res://Scenes/location_panel.tscn").instantiate()
-				panel.region_name = row[0]
-				panel.room_id = row[1]
-				panel.loc_description = row[2]
-				if row[3] == "N/A":
+				panel.region_name = row[columns["Region Name"]]
+				panel.room_id = row[columns["Room ID"]]
+				panel.loc_description = row[columns["Description of Location"]]
+				if row[columns["Location Coordinates"]] == "N/A":
 					panel.coords = Vector2i.ZERO
 				else:
-					panel.coords = str_to_var("Vector2i" + row[3])
-				panel.vanilla_item = row[4]
-				panel.save_flag = row[5]
-				panel.intended_string = row[6]
-				panel.simple_string = row[7]
-				panel.advanced_string = row[8]
-				panel.notes = row[9]
-				panel.type = row[12]
+					panel.coords = str_to_var("Vector2i" + row[columns["Location Coordinates"]])
+				panel.vanilla_item = row[columns["Vanilla Location Reward"]]
+				panel.save_flag = row[columns["Flag"]]
+				panel.intended_string = row[columns["Intended Logic"]]
+				panel.simple_string = row[columns["Simple Skips"]]
+				panel.advanced_string = row[columns["Advanced Skips"]]
+				panel.notes = row[columns["Remarks"]]
+				panel.type = row[columns["Location Category"]]
 				update_transitions.connect(panel.update)
 				$TabContainer/LocationRequirements/VBoxContainer.add_child(panel)
 		"combat requirements":
@@ -302,6 +306,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 			
 			combat_requirements_sheet = combat_requirements_sheet.filter(func(e): return not e[0].is_empty())
 			var skip_first := true
+			var columns := parse_header_row(combat_requirements_sheet[0])
 			for row in combat_requirements_sheet:
 				if skip_first:
 					skip_first = false
@@ -309,23 +314,23 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				
 				var loc_panel: LocationPanel
 				for loc: LocationPanel in boss_locations:
-					if loc.save_flag == row[1]:
+					if loc.save_flag == row[columns["Save Flag"]]:
 						loc_panel = loc
 				if loc_panel == null:
 					continue
 				
 				if loc_panel.advanced_string == "-":
 					if loc_panel.simple_string == "-":
-						loc_panel.advanced_string = combine_logic_strings(loc_panel.intended_string, row[4])
+						loc_panel.advanced_string = combine_logic_strings(loc_panel.intended_string, row[columns["Requirements (Hard)"]])
 					else:
-						loc_panel.advanced_string = combine_logic_strings(loc_panel.simple_string, row[4])
+						loc_panel.advanced_string = combine_logic_strings(loc_panel.simple_string, row[columns["Requirements (Hard)"]])
 				else:
-					loc_panel.advanced_string = combine_logic_strings(loc_panel.advanced_string, row[4])
+					loc_panel.advanced_string = combine_logic_strings(loc_panel.advanced_string, row[columns["Requirements (Hard)"]])
 				if loc_panel.simple_string == "-":
-					loc_panel.simple_string = combine_logic_strings(loc_panel.intended_string, row[3])
+					loc_panel.simple_string = combine_logic_strings(loc_panel.intended_string, row[columns["Requirements (Medium)"]])
 				else:
-					loc_panel.simple_string = combine_logic_strings(loc_panel.simple_string, row[3])
-				loc_panel.intended_string = combine_logic_strings(loc_panel.intended_string, row[2])
+					loc_panel.simple_string = combine_logic_strings(loc_panel.simple_string, row[columns["Requirements (Medium)"]])
+				loc_panel.intended_string = combine_logic_strings(loc_panel.intended_string, row[columns["Requirements (Easy/Intended)"]])
 			
 			update_reachable()
 			for i in range(4):
@@ -363,6 +368,15 @@ func row_to_list(row: String, cap := -1) -> Array:
 					return result
 				pending = ""
 	return result
+
+
+func parse_header_row(row: Array[String]) -> Dictionary[String, int]:
+	var columns: Dictionary[String, int] = {}
+	for index in range(len(row)):
+		var heading = row[index]
+		if heading != "":
+			columns[heading] = index
+	return columns
 
 
 func combine_logic_strings(string1: String, string2: String) -> String:
