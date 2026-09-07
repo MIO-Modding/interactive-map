@@ -32,7 +32,8 @@ const SCOUTABLE_LOCS: Array[String] = [
 	"GA_bou_center_F1: Buy from Xelato for 10k Nacre",
 	"ST_cuves_goo_P9: Left Crucible",
 	"ST_cuves_hook_P9: Right Crucible",
-	"ST_cuves_main_P1: Talk to samsk in the Tube after both Data Reports"
+	"ST_cuves_main_P1: Talk to samsk in the Tube after both Data Reports",
+	"HUB_hub_asma_P1: Talk to the Eye after 12 Candles",
 ]
 
 

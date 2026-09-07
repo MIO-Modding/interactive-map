@@ -280,6 +280,8 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				if skip_first:
 					skip_first = false
 					continue
+				if row[columns["Location Category"]] == "Junk Pile":
+					continue
 				
 				var panel: LocationPanel = preload("res://Scenes/location_panel.tscn").instantiate()
 				panel.region_name = row[columns["Region Name"]]
