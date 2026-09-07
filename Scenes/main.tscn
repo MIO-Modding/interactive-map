@@ -526,6 +526,7 @@ grow_vertical = 2
 
 [node name="TabBar" type="TabBar" parent="TabContainer/Info/VBoxContainer" unique_id=1615785033]
 layout_mode = 2
+focus_mode = 1
 current_tab = 0
 tab_close_display_policy = 2
 tab_count = 1
