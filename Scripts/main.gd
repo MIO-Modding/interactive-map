@@ -678,7 +678,7 @@ func get_item_at_location(loc_panel: LocationPanel) -> Item:
 	var converted_vanilla: String = loc_panel.vanilla_item
 	for i in ["z", "s"]:
 		if converted_vanilla.contains("Crystalli%sed Nacre - " % i):
-			converted_vanilla = "Crystallized Nacre" # TODO sheet misspells
+			converted_vanilla = "Crystallised Nacre"
 	for i: Item in %ItemPool.get_children():
 		if i.item_name == converted_vanilla or (i.save_entry == loc_panel.save_flag and loc_panel.save_flag != ""):
 			return i
