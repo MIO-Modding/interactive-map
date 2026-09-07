@@ -88,11 +88,13 @@ horizontal_alignment = 1
 
 [node name="HighlightToggle" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=1989730007]
 layout_mode = 2
+focus_mode = 1
 button_pressed = true
 text = "Highlight rows"
 
 [node name="HighlightReachable" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=937264062]
 layout_mode = 2
+focus_mode = 1
 button_pressed = true
 text = "Highlight by reachable"
 
@@ -105,11 +107,13 @@ layout_mode = 2
 
 [node name="PersistantItems" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer" unique_id=788291338]
 layout_mode = 2
+focus_mode = 1
 button_pressed = true
 text = "Persistant item popups"
 
 [node name="ItemFlags" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer" unique_id=315952180]
 layout_mode = 2
+focus_mode = 1
 text = "Show item save flags in popups"
 
 [node name="DeathLink" type="HBoxContainer" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer" unique_id=68985040]
@@ -122,18 +126,22 @@ placeholder_text = "Deathlink Cause..."
 
 [node name="Send" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink" unique_id=194666923]
 layout_mode = 2
+focus_mode = 1
 text = "Send"
 
 [node name="ClearButton" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=85385007]
 layout_mode = 2
+focus_mode = 1
 text = "Clear all items"
 
 [node name="AllButton" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=887498232]
 layout_mode = 2
+focus_mode = 1
 text = "Give all items"
 
 [node name="GiveStartingButton" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=2027578491]
 layout_mode = 2
+focus_mode = 1
 text = "Give starting items"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=136131736]
@@ -146,6 +154,7 @@ text = "Starting location:"
 [node name="StartingLocation" type="OptionButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer" unique_id=1868628637]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 1
 selected = 1
 search_bar_enabled = true
 item_count = 2
@@ -183,6 +192,7 @@ placeholder_text = "Search..."
 
 [node name="EntryOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=950999774]
 layout_mode = 2
+focus_mode = 1
 selected = 0
 item_count = 3
 popup/item_0/text = "Search by name"
@@ -203,6 +213,7 @@ layout_mode = 2
 [node name="TypeOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=230667800]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 1
 selected = 0
 item_count = 3
 popup/item_0/text = "Type..."
@@ -215,6 +226,7 @@ popup/item_2/id = 2
 [node name="ClassOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=935053527]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 1
 selected = 0
 item_count = 5
 popup/item_0/text = "Class..."
@@ -231,6 +243,7 @@ popup/item_4/id = 4
 [node name="HasButton" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=286759415]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 1
 selected = 0
 item_count = 3
 popup/item_0/text = "Has..."
@@ -300,21 +313,25 @@ layout_mode = 2
 
 [node name="DoubleChecker" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=866439109]
 layout_mode = 2
+focus_mode = 1
 text = "Double Click
 Checks Locations"
 
 [node name="RoomPoints" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1981569208]
 layout_mode = 2
+focus_mode = 1
 button_pressed = true
 text = "Room Points"
 
 [node name="Transitions" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1123281438]
 layout_mode = 2
+focus_mode = 1
 button_pressed = true
 text = "Transitions"
 
 [node name="Locations" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1020033018]
 layout_mode = 2
+focus_mode = 1
 button_pressed = true
 text = "Locations"
 
@@ -324,6 +341,7 @@ text = "Map Type:"
 
 [node name="MapImageType" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1335651842]
 layout_mode = 2
+focus_mode = 1
 selected = 2
 item_count = 3
 popup/item_0/text = "No Map"
@@ -335,6 +353,7 @@ popup/item_2/id = 2
 
 [node name="Rotation" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1365527500]
 layout_mode = 2
+focus_mode = 1
 selected = 0
 item_count = 3
 popup/item_0/text = "Rotation: 0"
@@ -355,6 +374,7 @@ layout_mode = 2
 
 [node name="AreaFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=447845020]
 layout_mode = 2
+focus_mode = 1
 selected = 0
 search_bar_enabled = true
 item_count = 1
@@ -363,6 +383,7 @@ popup/item_0/id = 0
 
 [node name="TypeFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=1187889595]
 layout_mode = 2
+focus_mode = 1
 selected = 0
 item_count = 1
 popup/item_0/text = "Location Type..."
@@ -379,6 +400,7 @@ layout_mode = 2
 
 [node name="ShapeOption" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer" unique_id=1405346067]
 layout_mode = 2
+focus_mode = 1
 selected = 0
 item_count = 2
 popup/item_0/text = "Shape..."
@@ -403,6 +425,7 @@ metadata/_custom_type_script = "uid://blhmfcrwuh8kj"
 
 [node name="LogicFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=47395043]
 layout_mode = 2
+focus_mode = 1
 selected = 0
 item_count = 4
 popup/item_0/text = "In Logic..."
@@ -416,6 +439,7 @@ popup/item_3/id = 3
 
 [node name="CheckedFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=769730396]
 layout_mode = 2
+focus_mode = 1
 selected = 0
 item_count = 3
 popup/item_0/text = "Checked..."
@@ -427,6 +451,7 @@ popup/item_2/id = 2
 
 [node name="GoalOption" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1195380631]
 layout_mode = 2
+focus_mode = 1
 selected = 0
 item_count = 2
 popup/item_0/text = "Ati Defeated"
@@ -452,18 +477,21 @@ grow_horizontal = 0
 [node name="+" type="Button" parent="TabContainer/Map/ZoomBox" unique_id=1511044056]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+focus_mode = 1
 theme_override_font_sizes/font_size = 30
 text = "+"
 
 [node name="R" type="Button" parent="TabContainer/Map/ZoomBox" unique_id=1529418794]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+focus_mode = 1
 theme_override_font_sizes/font_size = 30
 text = "R"
 
 [node name="-" type="Button" parent="TabContainer/Map/ZoomBox" unique_id=1972380209]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+focus_mode = 1
 theme_override_font_sizes/font_size = 30
 text = "-"
 
@@ -597,6 +625,7 @@ offset_top = -8.0
 offset_right = 150.0
 grow_horizontal = 2
 grow_vertical = 0
+focus_mode = 1
 text = "Skip (I know what I'm doing)"
 
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
