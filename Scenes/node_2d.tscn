@@ -138,6 +138,6 @@ z_index = 400
 visible = false
 
 [node name="Sprite2D" type="Sprite2D" parent="Skeleton" unique_id=1030492204]
-position = Vector2(-292.00003, -277.00003)
+position = Vector2(-293.00003, -276.00003)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("18_hpu6p")
