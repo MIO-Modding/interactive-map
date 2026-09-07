@@ -470,6 +470,7 @@ offset_right = -4.0
 offset_bottom = -104.0
 grow_horizontal = 0
 grow_vertical = 0
+horizontal_alignment = 2
 
 [node name="Info" type="Control" parent="TabContainer" unique_id=984399248]
 visible = false

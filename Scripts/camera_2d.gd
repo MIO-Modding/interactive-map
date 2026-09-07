@@ -46,8 +46,11 @@ func _process(_delta: float) -> void:
 			if Input.is_action_pressed("mouse1"):
 				position = position + ((pos_last_frame - get_viewport().get_mouse_position()) / zoom.x)
 				pos_last_frame = get_viewport().get_mouse_position()
+			
+			if Input.is_action_just_pressed("copy"):
+				DisplayServer.clipboard_set(str(Vector2i(get_global_mouse_position()) * 5))
 	
-	map_node.get_node("MousePos").text = str(get_global_mouse_position() * 5)
+	map_node.get_node("MousePos").text = str(Vector2i(get_global_mouse_position()) * 5) + "\nCtrl+Shift+C to copy"
 
 
 func clamp_zoom() -> void:
