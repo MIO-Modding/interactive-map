@@ -136,6 +136,7 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 		string = string.replace("super_spring", "True")
 		string = string.replace("laser_skip", "slash")
 		string = string.replace("flower_warp", "slash")
+		string = string.replace("enemy_lure", "True")
 		string = string.replace("harvester", "{ harvester && slash }").replace("slingshot", "{ slingshot && slash }")
 		string = string.replace("flowing_steps", "{ striders && flowing_steps }").replace("striders", "{ striders || flowing_steps }")
 		string = string.replace("{ striders || flowing_steps } & flowing_steps", "striders & flowing_steps")
@@ -165,6 +166,13 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 		var section = edited_string.substr(left_brace_pos + 2, right_brace_pos - left_brace_pos - 3)
 		var converted = convert_item_text(section, node)
 		var logic: Callable
+		if converted.contains("&&") and converted.contains("||"):
+			var at: String
+			if node is LocationPanel:
+				at = Main.PlayerState.serialize_location(node)
+			elif node is TransitionPanel:
+				at = node.from + " -> " + node.to
+			printerr("Invalid logic: %s @ %s" % [logic_string, at])
 		if converted.contains("&&"):
 			var hases: Array[Callable] = []
 			for i in converted.split(" && "):
@@ -189,6 +197,13 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 	
 	var last_converted = convert_item_text(edited_string, node)
 	var last_logic: Callable
+	if last_converted.contains("&&") and last_converted.contains("||"):
+		var at: String
+		if node is LocationPanel:
+			at = Main.PlayerState.serialize_location(node)
+		elif node is TransitionPanel:
+			at = node.from + " -> " + node.to
+		printerr("Invalid logic: %s @ %s" % [logic_string, at])
 	if last_converted.contains("&&"):
 		var hases: Array[Callable] = []
 		for i in last_converted.split(" && "):
