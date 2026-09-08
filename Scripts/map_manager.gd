@@ -152,6 +152,18 @@ func update_filter() -> void:
 		for i in location_points:
 			if i.get_meta("panel").type != loc_type_selected:
 				hide_location_point(i)
+	
+	match $MapSettings/VBoxContainer/Filters/VBoxContainer/ScoutableFilter.selected:
+		0:
+			pass
+		1:
+			for i in location_points:
+				if not (i.get_meta("panel").serialize() in LocationPanel.SCOUTABLE_LOCS or i.get_meta("panel").loc_description.contains("Mel's Shop")):
+					hide_location_point(i)
+		2:
+			for i in location_points:
+				if i.get_meta("panel").serialize() in LocationPanel.SCOUTABLE_LOCS or i.get_meta("panel").loc_description.contains("Mel's Shop"):
+					hide_location_point(i)
 
 
 func hide_location_point(loc_point: Polygon2D) -> void:
@@ -250,3 +262,7 @@ func _on_map_image_type_item_selected(index: int) -> void:
 		2:
 			map_node.get_node("Textures").show()
 			map_node.get_node("Skeleton").hide()
+
+
+func _on_scoutable_filter_item_selected(_index: int) -> void:
+	update_filter()

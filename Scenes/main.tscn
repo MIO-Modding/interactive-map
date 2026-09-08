@@ -381,14 +381,6 @@ item_count = 1
 popup/item_0/text = "Area..."
 popup/item_0/id = 0
 
-[node name="TypeFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=1187889595]
-layout_mode = 2
-focus_mode = 1
-selected = 0
-item_count = 1
-popup/item_0/text = "Location Type..."
-popup/item_0/id = 0
-
 [node name="PositionContainer" type="FoldableContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=2015373869]
 layout_mode = 2
 folded = true
@@ -423,6 +415,14 @@ script = ExtResource("5_kry3j")
 text = "Center:"
 metadata/_custom_type_script = "uid://blhmfcrwuh8kj"
 
+[node name="TypeFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=1187889595]
+layout_mode = 2
+focus_mode = 1
+selected = 0
+item_count = 1
+popup/item_0/text = "Location Type..."
+popup/item_0/id = 0
+
 [node name="LogicFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=47395043]
 layout_mode = 2
 focus_mode = 1
@@ -447,6 +447,17 @@ popup/item_0/id = 0
 popup/item_1/text = "Found Locs"
 popup/item_1/id = 1
 popup/item_2/text = "Not Found Locs"
+popup/item_2/id = 2
+
+[node name="ScoutableFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=887430335]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Scoutable..."
+popup/item_0/id = 0
+popup/item_1/text = "Can Scout"
+popup/item_1/id = 1
+popup/item_2/text = "Cannot Scout"
 popup/item_2/id = 2
 
 [node name="GoalOption" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1195380631]
@@ -650,12 +661,13 @@ text = "Skip (I know what I'm doing)"
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/MapImageType" to="TabContainer/Map" method="_on_map_image_type_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Rotation" to="TabContainer/Map" method="_on_rotation_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption" to="TabContainer/Map" method="_on_shape_option_item_selected"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius" to="TabContainer/Map" method="_on_circle_radius_value_changed"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition" to="TabContainer/Map" method="_on_circle_position_value_changed"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter" to="TabContainer/Map" method="_on_logic_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/CheckedFilter" to="TabContainer/Map" method="_on_checked_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/ScoutableFilter" to="TabContainer/Map" method="_on_scoutable_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/GoalOption" to="." method="_on_goal_option_item_selected"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/+" to="TabContainer/Map" method="_on_plus_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/R" to="TabContainer/Map" method="_on_reset_pressed"]
