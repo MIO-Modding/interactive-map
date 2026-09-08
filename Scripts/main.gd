@@ -1,13 +1,25 @@
 class_name Main extends Control
 
 
+## Emited whenever the itempool is added to or taken away from
+signal update_itempool
+## Emitted whenever transitions should update (is connected to each individual 
+##[TransitionPanel], [RoomPanel], and [LocationPanel]) (all [FeaturePanel]s [i]except[/i] for [Item.ItemPanel]s)
+signal update_transitions
+## Emitted when the [HttpRequest] for the sheet finishes requesting and loading all data
+signal finished_requesting
+## Emitted when [member wheel_rotation] is set
+signal rotation_changed
+
+## The levels of logic used
 enum LogicLevels {
-	NONE,
-	INTENDED_LOGIC,
-	SIMPLE_SKIPS,
-	ADVANCED_SKIPS,
+	NONE, ## Out of logic (ool)
+	INTENDED_LOGIC, ## The player is intended in the game to be able to reach this room/location.
+	SIMPLE_SKIPS, ## The player can preform simple skips to be able to reach this room/location.
+	ADVANCED_SKIPS, ## The player can preform advanced skips to be able to reach this room/location.
 }
 
+## The associated colors for [enum LogicLevels]
 const LEVEL_COLORS: Dictionary[LogicLevels, Color] = {
 	LogicLevels.NONE: Color.WHITE,
 	LogicLevels.INTENDED_LOGIC: Color.GREEN,
@@ -15,6 +27,7 @@ const LEVEL_COLORS: Dictionary[LogicLevels, Color] = {
 	LogicLevels.ADVANCED_SKIPS: Color(1.0, 0.5, 0.0),
 }
 
+## The links to the csv exports for the sheets
 const DATA_LINKS: Dictionary[String, String] = {
 	"room requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=2144568902&single=true&output=csv",
 	"items": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=972951089&single=true&output=csv",
@@ -23,6 +36,7 @@ const DATA_LINKS: Dictionary[String, String] = {
 	"combat requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=760960441&single=true&output=csv",
 }
 
+## The columns used for each data set
 const KIND_MAXES: Dictionary[String, int] = {
 	"room requirements": 12,
 	"items": 8,
@@ -31,6 +45,7 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"combat requirements": 5,
 }
 
+## The transitions that are wrapped around the map for each rotation
 const MAP_WRAP_TRANSITIONS = {
 	"0": {
 		"GA_vin_transi_P1": "LQ_vin_intro",
@@ -77,43 +92,62 @@ const ROTATION_OFFSETS := {
 	},
 }
 
+## The state of this player, including items given through this client and items received through archipelago.
+static var player_state: PlayerState
+
+## The values of the room requirements sheet, as a 2D array of strings.
 var room_requirements_sheet: Array[Array]
+## The values of the items sheet, as a 2D array of strings.
 var items_sheet: Array[Array]
+## The values of the transition requirements sheet, as a 2D array of strings.
 var transition_requirements_sheet: Array[Array]
+## The values of the location requirements sheet, as a 2D array of strings.
 var location_requirements_sheet: Array[Array]
+## The values of the combat requirements sheet, as a 2D array of strings.
 var combat_requirements_sheet: Array[Array]
 
+## Wether to highlight rows of sheets that their logic can be completed
 var highlight_rows_in_logic := true
+## Wether to highlight rows of sheets that are reachable
 var highlight_reachable_rows := true
+## The current logic kind, used to calculate reachable locations/items
 var logic_kind: LogicLevels = LogicLevels.INTENDED_LOGIC
 
-static var player_state: PlayerState
-signal update_itempool
-signal update_transitions
-signal finished_requesting
-signal rotation_changed
+## Intended reachable rooms
 var reachable_rooms: Array[String]
+## Simple skips reachable rooms
 var simple_reachable_rooms: Array[String]
+## Advanced skips reachable rooms
 var advanced_reachable_rooms: Array[String]
 
+## The room that the player starts in, used for logic calculation
 var starting_room := "ST_security_fall_P1"
+## If double clicking a location should mark it as checked (and send the archipelago check)
 var double_click_checks_locations := false
+## If item received popups from archipelago shoul persist until acknowledged
 var persistant_items := true
+## If item recieved popups from archipelago should show their save flags
 var show_item_flags := false
 
+## Intended reachable locations
 var reachable_locations: Array[LocationPanel]
+## Simple skips reachable locations
 var simple_reachable_locations: Array[LocationPanel]
+## Advanced skips reachable locations
 var advanced_reachable_locations: Array[LocationPanel]
+## If the player is in go mode
 var go_mode := false
 
+## Theme for the scene
 var window_theme := Theme.new()
 
+## The current rotation of the wheel
 var wheel_rotation := "0":
 	set(v):
 		wheel_rotation = v
 		rotation_changed.emit()
 
-
+## The save keys to preference nodes
 @onready var preferences_to_save: Dictionary[String, Control] = {
 	"MAP_SETTINGS>DOUBLE_CLICK_CHECK": $TabContainer/Map/MapSettings/VBoxContainer/DoubleChecker,
 	"MAP_SETTINGS>ROOM_POINTS": $TabContainer/Map/MapSettings/VBoxContainer/RoomPoints,
@@ -184,6 +218,7 @@ func _ready() -> void:
 			i.item_selected.connect(save_all_preferences.unbind(1))
 
 
+## Requests all the sheet data and loads it when it arrives
 func request_data():
 	var requester := HTTPRequest.new()
 	add_child(requester)
@@ -195,6 +230,8 @@ func request_data():
 	Globals.trigger_popup("Queued room requirements")
 
 
+## Receives a request and runs the next one from [param kinds]. Emits [signal finished_requesting] when finished.
+## Runs [method on_finished_request] for each.
 func iterate_requests(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, kinds: Array) -> void:
 	await on_finished_request(result, response_code, headers, body, kinds[0])
 	kinds.remove_at(0)
@@ -211,6 +248,7 @@ func iterate_requests(result: int, response_code: int, headers: PackedStringArra
 	Globals.trigger_popup("Queued " + kinds[0])
 
 
+## Loads data from a sheet.
 func on_finished_request(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray, kind: String = "") -> void:
 	$LoadingScreen/VBoxContainer/ProgressBar.value += 1
 	$LoadingScreen/VBoxContainer/Label.text = "Loading " + kind
@@ -376,6 +414,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 			update_itempool.connect(update_map)
 
 
+## Fills a sheet with data from [param body], limiting the amount of columns to [param cap]
 func fill_sheet(sheet_kind: String, body: PackedByteArray, cap: int = -1) -> void:
 	for i in body.get_string_from_utf8().split("\r\n"):
 		var current = row_to_list(i, cap)
@@ -383,6 +422,7 @@ func fill_sheet(sheet_kind: String, body: PackedByteArray, cap: int = -1) -> voi
 			get("%s_sheet" % sheet_kind.to_snake_case()).append(current)
 
 
+## Converts a stringified row to an array, limiting the amount of columns to [param cap]
 func row_to_list(row: String, cap := -1) -> Array:
 	var result: Array[String] = []
 	
@@ -407,15 +447,17 @@ func row_to_list(row: String, cap := -1) -> Array:
 	return result
 
 
+## Returns a dictionary of headings to their index
 func parse_header_row(row: Array[String]) -> Dictionary[String, int]:
 	var columns: Dictionary[String, int] = {}
 	for index in range(len(row)):
 		var heading = row[index]
-		if heading != "":
+		if not heading.is_empty():
 			columns[heading] = index
 	return columns
 
 
+## 'Ands' two logic strings into one.
 func combine_logic_strings(string1: String, string2: String) -> String:
 	if string1 == "":
 		return string2
@@ -432,6 +474,7 @@ func combine_logic_strings(string1: String, string2: String) -> String:
 	return "(%s) and (%s)" % [string1, string2]
 
 
+## Updates all reachable locations and items for each [enum LogicLevels]
 func update_reachable() -> void:
 	logic_kind = LogicLevels.INTENDED_LOGIC
 	reachable_rooms = get_reachable()
@@ -445,6 +488,7 @@ func update_reachable() -> void:
 	logic_kind = LogicLevels.INTENDED_LOGIC
 
 
+## Returns all reachable locations
 func get_reachable_locations(availible_rooms: Array[String]) -> Array[LocationPanel]:
 	var result: Array[LocationPanel] = []
 	
@@ -456,6 +500,7 @@ func get_reachable_locations(availible_rooms: Array[String]) -> Array[LocationPa
 	return result
 
 
+## Returns all the locations in a room
 func get_locations_for_room(room_id: String) -> Array[LocationPanel]:
 	var result: Array[LocationPanel] = []
 	for i: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
@@ -464,6 +509,7 @@ func get_locations_for_room(room_id: String) -> Array[LocationPanel]:
 	return result
 
 
+## Returns all reachable rooms
 func get_reachable() -> Array[String]:
 	var result: Array[String] = []
 	var current_room: String
@@ -478,6 +524,7 @@ func get_reachable() -> Array[String]:
 	return result
 
 
+## Returns all rooms connected to [param room] that have their transition in logic.
 func get_room_connections(room: String) -> Array[String]:
 	var result: Array[String] = []
 	for i: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
@@ -488,10 +535,12 @@ func get_room_connections(room: String) -> Array[String]:
 	return result
 
 
+## Returns the harder logic between the two
 func get_higher_logic(logic1: LogicLevels, logic2: LogicLevels) -> LogicLevels:
 	return maxi(logic1, logic2) as LogicLevels
 
 
+## Gets the [enum LogicLevels] for [param panel]
 func get_logic(panel: TransitionPanel) -> LogicLevels:
 	if panel.intended_logic.call():
 		return LogicLevels.INTENDED_LOGIC
@@ -505,6 +554,7 @@ func get_logic(panel: TransitionPanel) -> LogicLevels:
 	return LogicLevels.NONE
 
 
+## If the [param panel]'s logic is completable with the current logic kind (can override with [param override_logic_kind]
 func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevels.NONE) -> bool:
 	if panel.door == "Wrong Side":
 		return false
@@ -528,6 +578,7 @@ func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevels.NONE) -
 	return false
 
 
+## If the [param loc_panel]'s logic is completable with the current logic kind (can override with [param override_logic_kind]
 func loc_in_logic(loc_panel: LocationPanel, override_logic_kind := LogicLevels.NONE) -> bool:
 	if loc_panel.intended_logic.call():
 		return true
@@ -548,6 +599,7 @@ func loc_in_logic(loc_panel: LocationPanel, override_logic_kind := LogicLevels.N
 	return false
 
 
+## If the [param string_list] contains only empty strings
 func is_empty_string_list(string_list: Array[String]) -> bool:
 	return "".join(string_list).is_empty()
 
@@ -567,6 +619,7 @@ func get_rotated_position(start_point: Vector2i) -> Vector2i:
 	return start_point
 
 
+## Updates the map
 func update_map() -> void:
 	await get_tree().process_frame
 	var map_node: Node2D = $TabContainer/Map/SubViewportContainer/SubViewport/Node2D
@@ -702,6 +755,7 @@ func update_map() -> void:
 	$TabContainer/Map.update_filter()
 
 
+## If the [param loc_panel] is an event location
 func is_location_event(loc_panel: LocationPanel) -> bool:
 	for i: Item in %ItemPool.get_children():
 		if i.item_name == loc_panel.vanilla_item or (i.save_entry == loc_panel.save_flag and loc_panel.save_flag != ""):
@@ -709,6 +763,7 @@ func is_location_event(loc_panel: LocationPanel) -> bool:
 	return false
 
 
+## Returns the item at the [param loc_panel]
 func get_item_at_location(loc_panel: LocationPanel) -> Item:
 	var converted_vanilla: String = loc_panel.vanilla_item
 	for i in ["z", "s"]:
@@ -720,6 +775,7 @@ func get_item_at_location(loc_panel: LocationPanel) -> Item:
 	return null
 
 
+## Returns the event location for the event [param item]
 func get_event_location(item: Item) -> LocationPanel:
 	for i: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
 		if i.vanilla_item == item.item_name or (item.save_entry == i.save_flag and i.save_flag != ""):
@@ -727,6 +783,7 @@ func get_event_location(item: Item) -> LocationPanel:
 	return null
 
 
+## Shows the [TransitionPanel] when a [param line] is clicked
 func line_clicked(line: TransitionLine) -> void:
 	for i in $TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.get_children():
 		i.queue_free()
@@ -737,6 +794,8 @@ func line_clicked(line: TransitionLine) -> void:
 		$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(second_panel.duplicate())
 
 
+## Shows the [LocationPanel] or [RoomPanel] when a [param point] is clicked 
+## (checks the location if it's a location point, [param double_click] is true, and [member double_click_checks_locations
 func point_clicked(point: Polygon2D, double_click := false) -> void:
 	for i in $TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.get_children():
 		i.queue_free()
@@ -764,6 +823,7 @@ func point_clicked(point: Polygon2D, double_click := false) -> void:
 			break
 
 
+## Checks if the player is in go mode and updates the label for it
 func update_go_mode() -> void:
 	var event: String
 	event = $TabContainer/Map/MapSettings/VBoxContainer/GoalOption.get_item_text($TabContainer/Map/MapSettings/VBoxContainer/GoalOption.selected)
@@ -791,6 +851,7 @@ func update_go_mode() -> void:
 		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.label_settings.font_color = LEVEL_COLORS[level]
 
 
+## Gets the [TransitionPanel] for the room [param from] going into [param to]
 func get_transition_panel(to: String, from: String) -> TransitionPanel:
 	for i: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
 		if i.to == to and i.from == from:
@@ -798,6 +859,7 @@ func get_transition_panel(to: String, from: String) -> TransitionPanel:
 	return null
 
 
+## Gets the [RoomPanel] for the given [param id]
 func get_room_panel(id: String) -> RoomPanel:
 	for i: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D.get_node("Panels").get_children():
 		if i.room_id == id:
@@ -805,6 +867,7 @@ func get_room_panel(id: String) -> RoomPanel:
 	return null
 
 
+## Gets the [LocationPanel] for the serialized value [param serial]
 func get_location_panel(serial: String) -> LocationPanel:
 	for i in $TabContainer/LocationRequirements/VBoxContainer.get_children():
 		if PlayerState.serialize_location(i) == serial:
@@ -812,6 +875,7 @@ func get_location_panel(serial: String) -> LocationPanel:
 	return null
 
 
+## Gets the [Item] with name [param item_name]
 func get_item_node(item_name: String) -> Item:
 	for i: Item in %ItemPool.get_children():
 		if i.item_name == item_name:
@@ -819,12 +883,14 @@ func get_item_node(item_name: String) -> Item:
 	return null
 
 
+## Sets the game name and [member is_manual]
 func set_manual(is_manual: bool) -> void:
 	Globals.is_manual = is_manual
 	if not Archipelago.is_ap_connected():
 		Archipelago.AP_GAME_NAME = "Manual_MIO_Samwell" if is_manual else "Memories in Orbit"
 
 
+## Saves the player's preferences
 func save_all_preferences() -> void:
 	if not DirAccess.dir_exists_absolute("user://Data"):
 		DirAccess.make_dir_absolute("user://Data")
@@ -839,6 +905,7 @@ func save_all_preferences() -> void:
 	file.store_string(stringified)
 
 
+## Gets the preference value with the given [param key]
 func get_preference(key: String) -> Variant:
 	var node: Control = preferences_to_save[key]
 	if node is CheckBox or node is CheckButton:
@@ -850,6 +917,7 @@ func get_preference(key: String) -> Variant:
 	return ""
 
 
+## Loads the player's preferences
 func load_preferences() -> void:
 	if not DirAccess.dir_exists_absolute("user://Data"):
 		DirAccess.make_dir_absolute("user://Data")
@@ -857,7 +925,6 @@ func load_preferences() -> void:
 		FileAccess.open("user://Data/prefs.dat", FileAccess.WRITE)
 		return
 	
-	#var file := FileAccess.open("user://Data/prefs.dat", FileAccess.READ)
 	var stringified: String = FileAccess.get_file_as_string("user://Data/prefs.dat")
 	stringified = stringified.replace("\n}", "}").replace("{\n\t", "{").replace(",\n\t", ",")
 	var data: Dictionary = JSON.parse_string(stringified)
@@ -866,6 +933,7 @@ func load_preferences() -> void:
 			set_preference(i, data[i])
 
 
+## Sets the preference at [param entry] with [param value]
 func set_preference(entry: String, value: Variant) -> void:
 	var node: Control = preferences_to_save[entry]
 	if node is CheckBox or node is CheckButton:
@@ -939,14 +1007,20 @@ func _on_deathlink_send_pressed() -> void:
 
 
 class PlayerState:
+	## Class for holding items given by the client, received from archipelago, and checked locations
+	
+	## Reference to main
 	var main: Main
 	
+	## Items given from the client
 	var prog_items: Array[String] = []
+	## Items received from archipelago
 	var ap_prog_items: Array[String] = []
-	
+	## Checked [LocationPanel]s
 	var checked_locations: Array[LocationPanel]
 	
 	
+	## Returns a callable that calls [param calls] with the and operator
 	func and_call(calls: Array[Callable]) -> Callable:
 		return (func() -> bool:
 			for i in calls:
@@ -955,6 +1029,7 @@ class PlayerState:
 			return true)
 	
 	
+	## Returns a callable that calls [param calls] with the or operator
 	func or_call(calls: Array[Callable]) -> Callable:
 		return (func() -> bool:
 			for i in calls:
@@ -963,6 +1038,7 @@ class PlayerState:
 			return false)
 	
 	
+	## Returns a callable for if the player has the [param item]
 	func has_call(item: String) -> Callable:
 		return (func() -> bool:
 			if item == "False":
@@ -972,6 +1048,7 @@ class PlayerState:
 			return (prog_items + ap_prog_items).has(item))
 	
 	
+	## Returns [member checked_locations] but serializes them
 	func checked_locations_serialized() -> Array[String]:
 		var result: Array[String]
 		for i in checked_locations:
@@ -981,10 +1058,14 @@ class PlayerState:
 		return result
 	
 	
+	## Serializes the [param loc], adding its 
+	## [member LocationPanel.room_id] and [member LocationPanel.loc_description] with ": " in the middle
 	static func serialize_location(loc: LocationPanel) -> String:
 		return loc.room_id + ": " + loc.loc_description
 	
 	
+	## Serializes the [param loc], in manual form. [br]
+	## This form is [member LocationPanel.room_id]--([member LocationPanel.vanilla_item])
 	static func get_manual_serialized(loc: LocationPanel) -> String:
 		var result: String
 		var room: String = loc.room_id
@@ -998,12 +1079,17 @@ class PlayerState:
 		return result
 	
 	
+	## Gets the item name for [param item] in manual form. [br]
+	## This form is [member Item.save_entry] ([member Item.item_name]) [br]
+	## The : in [member Item.save_entry] is replaced with a >
 	static func get_manual_item_name(item: Item) -> String:
 		var result: String
 		result = "%s (%s)" % [item.save_entry.replace(":", ">"), item.item_name]
 		return result
 	
 	
+	## Gets the [LocationPanel] for the [param loc_name] in manual form
+	## (see [method get_manual_serialized] for this form)
 	static func get_manual_loc_node(loc_name: String) -> LocationPanel:
 		var room: String = loc_name.get_slice("--(", 0)
 		var item: String = loc_name.get_slice("--(", 1).trim_suffix(")")
@@ -1019,6 +1105,8 @@ class PlayerState:
 		return null
 	
 	
+	## Gets the item name from [param item] in manual form
+	## (see [method get_manual_item_name] for this form)
 	static func convert_from_manual_item(item: String) -> String:
 		var save_entry: String = item.get_slice(" (", 0).replace(">", ":")
 		if save_entry == "Crystallised Nacre":
@@ -1030,6 +1118,7 @@ class PlayerState:
 		return ""
 	
 	
+	## Checks the location from the [param serial] (unchecks if [param uncheck] is true)
 	func check_location_serialized(serial: String, uncheck := false) -> void:
 		if not checked_locations_serialized().has(serial):
 			if not uncheck:

@@ -1,11 +1,10 @@
 extends Camera2D
 
 
-var pos_last_frame: Vector2
-
-var double_click_timer := Timer.new()
-
 signal zoom_changed(value: float)
+
+var pos_last_frame: Vector2
+var double_click_timer := Timer.new()
 
 @onready var map_node: Control = get_parent().get_parent().get_parent().get_parent()
 @onready var draw_node: Node2D = $"../DrawNode"
