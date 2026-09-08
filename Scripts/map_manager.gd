@@ -226,7 +226,12 @@ func _on_rotation_item_selected(index: int) -> void:
 	for region in positions.keys():
 		var map_image: Node2D = map_node.get_node("Textures").get_node(region)
 		map_image.position.x = positions[region]
-	map_node.get_node("Textures").get_node("Lab2").visible = (wheel_rotation == "0")
+	map_node.get_node("Textures").get_node("Lab2").visible = wheel_rotation == "0"
+	
+	map_node.get_node("Skeleton/Bottom/Bottom1").position.x = map_node.get_node("Skeleton/Top").position.x - index * (1452 / 5.0)
+	map_node.get_node("Skeleton/Bottom/Bottom2").position.x = map_node.get_node("Skeleton/Top").position.x + (3 - index) * (1452 / 5.0)
+	map_node.get_node("Skeleton/Bottom/Bottom2").visible = wheel_rotation != "0"
+	
 	Globals.main.wheel_rotation = wheel_rotation
 
 

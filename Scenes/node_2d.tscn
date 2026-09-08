@@ -17,7 +17,8 @@
 [ext_resource type="Texture2D" uid="uid://blvsn32m3sxl3" path="res://Sprites/map/lab.png" id="15_c32x4"]
 [ext_resource type="Texture2D" uid="uid://deqx6ydngv8c1" path="res://Sprites/map/crucible.png" id="16_fg7i4"]
 [ext_resource type="Texture2D" uid="uid://7duwmjlmmv57" path="res://Sprites/map/vaults.png" id="17_gwne5"]
-[ext_resource type="Texture2D" uid="uid://bmmnifjqnx16x" path="res://Sprites/MapMesh.png" id="18_hpu6p"]
+[ext_resource type="Texture2D" uid="uid://d1njpdqcdc5ik" path="res://Sprites/top_half.png" id="18_op2xg"]
+[ext_resource type="Texture2D" uid="uid://be61dxwexjuar" path="res://Sprites/bottom_half.png" id="19_1nvmp"]
 
 [node name="Node2D" type="Node2D" unique_id=82726750]
 
@@ -138,7 +139,20 @@ z_index = 400
 visible = false
 z_index = -10
 
-[node name="Sprite2D" type="Sprite2D" parent="Skeleton" unique_id=1030492204]
+[node name="Top" type="Sprite2D" parent="Skeleton" unique_id=378745195]
 position = Vector2(-293.00003, -276.00003)
 scale = Vector2(0.2, 0.2)
-texture = ExtResource("18_hpu6p")
+texture = ExtResource("18_op2xg")
+
+[node name="Bottom" type="Node2D" parent="Skeleton" unique_id=1424684266]
+
+[node name="Bottom1" type="Sprite2D" parent="Skeleton/Bottom" unique_id=1638062936]
+position = Vector2(-293.00003, -276.00003)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("19_1nvmp")
+
+[node name="Bottom2" type="Sprite2D" parent="Skeleton/Bottom" unique_id=1832619769]
+visible = false
+position = Vector2(-293.00003, -276.00003)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("19_1nvmp")

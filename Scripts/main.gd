@@ -540,8 +540,8 @@ func update_map() -> void:
 	var map_node: Node2D = $TabContainer/Map/SubViewportContainer/SubViewport/Node2D
 	
 	for i in ["Points", "Lines", "LocPoints", "LocLines"].map(func(e): return map_node.get_node(e).get_children()):
-		for node in i:
-			node.queue_free()
+		for node: Node in i:
+			node.free()
 	
 	#await get_tree().process_frame
 	
