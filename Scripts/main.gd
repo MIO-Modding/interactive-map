@@ -114,6 +114,29 @@ var wheel_rotation := "0":
 		rotation_changed.emit()
 
 
+@onready var preferences_to_save: Dictionary[String, Control] = {
+	"MAP_SETTINGS>DOUBLE_CLICK_CHECK": $TabContainer/Map/MapSettings/VBoxContainer/DoubleChecker,
+	"MAP_SETTINGS>ROOM_POINTS": $TabContainer/Map/MapSettings/VBoxContainer/RoomPoints,
+	"MAP_SETTINGS>TRANSITIONS": $TabContainer/Map/MapSettings/VBoxContainer/Transitions,
+	"MAP_SETTINGS>LOCATIONS": $TabContainer/Map/MapSettings/VBoxContainer/Locations,
+	"MAP_SETTINGS>MAP_IMAGE_TYPE": $TabContainer/Map/MapSettings/VBoxContainer/MapImageType,
+	"MAP_SETTINGS>MAP_ROTATION": $TabContainer/Map/MapSettings/VBoxContainer/Rotation,
+	
+	"FILTERS>AREA_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter,
+	"FILTERS>TYPE_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter,
+	"FILTERS>LOGIC_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter,
+	"FILTERS>CHECKED_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/CheckedFilter,
+	"FILTERS>SCOUTABLE_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/ScoutableFilter,
+	
+	"CTRL_PANEL>HIGHLIGHT": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle,
+	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,
+	"CTRL_PANEL>STARTING_ROOM": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation,
+	
+	"ARCHIPELAGO>PERSISTANT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
+	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
+}
+
+
 func _ready() -> void:
 	$LoadingScreen.show()
 	player_state = PlayerState.new()
@@ -150,6 +173,15 @@ func _ready() -> void:
 	
 	await get_tree().process_frame
 	get_node("TabContainer").get_child(0).get_child(0).focus_mode = Control.FOCUS_CLICK
+	
+	await get_tree().process_frame
+	
+	load_preferences()
+	for i in preferences_to_save.values():
+		if i is CheckBox or i is CheckButton:
+			i.pressed.connect(save_all_preferences)
+		elif i is OptionButton:
+			i.item_selected.connect(save_all_preferences.unbind(1))
 
 
 func request_data():
@@ -793,12 +825,54 @@ func set_manual(is_manual: bool) -> void:
 		Archipelago.AP_GAME_NAME = "Manual_MIO_Samwell" if is_manual else "Memories in Orbit"
 
 
-func save_preferences() -> void:
-	pass #TODO
+func save_all_preferences() -> void:
+	if not DirAccess.dir_exists_absolute("user://Data"):
+		DirAccess.make_dir_absolute("user://Data")
+	
+	var file := FileAccess.open("user://Data/prefs.dat", FileAccess.WRITE)
+	
+	var result: Dictionary[String, Variant]
+	for i in preferences_to_save:
+		result[i] = get_preference(i)
+	var stringified: String = JSON.stringify(result)
+	stringified = stringified.replace(",", ",\n\t").replace("{", "{\n\t").replace("}", "\n}")
+	file.store_string(stringified)
+
+
+func get_preference(key: String) -> Variant:
+	var node: Control = preferences_to_save[key]
+	if node is CheckBox or node is CheckButton:
+		return node.button_pressed
+	elif node is OptionButton:
+		return node.selected
+	else:
+		printerr("Unrecognised node for %s" % node.get_path())
+	return ""
 
 
 func load_preferences() -> void:
-	pass
+	if not DirAccess.dir_exists_absolute("user://Data"):
+		DirAccess.make_dir_absolute("user://Data")
+	if not FileAccess.file_exists("user://Data/prefs.dat"):
+		FileAccess.open("user://Data/prefs.dat", FileAccess.WRITE)
+		return
+	
+	#var file := FileAccess.open("user://Data/prefs.dat", FileAccess.READ)
+	var stringified: String = FileAccess.get_file_as_string("user://Data/prefs.dat")
+	stringified = stringified.replace("\n}", "}").replace("{\n\t", "{").replace(",\n\t", ",")
+	var data: Dictionary = JSON.parse_string(stringified)
+	for i in preferences_to_save:
+		if data.has(i):
+			set_preference(i, data[i])
+
+
+func set_preference(entry: String, value: Variant) -> void:
+	var node: Control = preferences_to_save[entry]
+	if node is CheckBox or node is CheckButton:
+		node.button_pressed = value
+	elif node is OptionButton:
+		node.select(value)
+		node.item_selected.emit(value)
 
 
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
