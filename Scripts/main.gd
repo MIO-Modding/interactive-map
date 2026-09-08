@@ -635,17 +635,10 @@ func update_map() -> void:
 			all_location_types.append(loc_panel.type)
 			$TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.add_item(loc_panel.type)
 		
-		var point := Sprite2D.new()
+		var point: LocationIcon = preload("res://Scenes/location_icon.tscn").instantiate()
 		point.set_meta("panel", loc_panel)
-		if loc_panel.type not in MAP_ICON_TEXTURES:
-			point.texture = MAP_ICON_TEXTURES["Default"]
-		else:
-			point.texture = MAP_ICON_TEXTURES[loc_panel.type]
-		#point.texture = preload("res://Sprites/color-icon.png")
-		point.scale = Vector2(0.03, 0.03)
-		#point.z_index = 1
-		#point.polygon = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)].map(func(e): return e / 2)
-		var reachable_color = Color.WHITE
+		point.icon_type = loc_panel.type
+		var reachable_color = Color(0.7, 0.7, 0.7)
 		if highlight_reachable_rows:
 			if reachable_locations.has(loc_panel):
 				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]
@@ -653,6 +646,7 @@ func update_map() -> void:
 				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["simple"]
 			elif advanced_reachable_locations.has(loc_panel):
 				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
+		point.self_modulate = reachable_color
 		loc_panel.modulate = reachable_color
 		point.name = loc_panel.room_id + ": " + loc_panel.loc_description
 		if loc_panel.room_id == "ST_security_secret_S1":
@@ -671,10 +665,10 @@ func update_map() -> void:
 			var iterations: int = 0
 			while taken_positions.has(temp_point):
 				iterations += 1
-				temp_point.x -= 20
-				if iterations % 5 == 0:
-					temp_point.y -= 20
-					temp_point.x += 20*5
+				temp_point.x -= 26
+				if iterations % 4 == 0:
+					temp_point.y -= 26
+					temp_point.x += 26*4
 			taken_positions.append(temp_point)
 			
 			point.position = Vector2(temp_point) / 5 * Vector2(1, -1)
@@ -685,7 +679,7 @@ func update_map() -> void:
 		var line: LocationLine = preload("res://Scenes/location_line.tscn").instantiate()
 		line.loc_panel = loc_panel
 		line.default_color = reachable_color
-		line.default_color.v -= 0.5
+		line.default_color.v -= 0.3
 		line.width = 1 / ceilf(map_node.get_node("Camera2D").zoom.x / 10)
 		if loc_panel.room_id == "N/A":
 			line.add_point(Vector2(100, 100))
