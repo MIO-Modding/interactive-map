@@ -659,16 +659,32 @@ func update_map() -> void:
 				temp_point = loc_panel.coords
 				temp_point.x += ROTATION_OFFSETS["120"]["Lab"]
 			
+			# Mel and capucine checks get moved to the space below the Nexus so they don't clutter up the map
+			if loc_panel.region_name == "Mel's Shop":
+				if loc_panel.intended_string.contains("Meet Mel"):
+					temp_point = Vector2i(-1560, 1440)
+				elif loc_panel.intended_string.contains("1 Scrapling"):
+					temp_point = Vector2i(-1560, 1410)
+				elif loc_panel.intended_string.contains("2 Scraplings"):
+					temp_point = Vector2i(-1560, 1380)
+				elif loc_panel.intended_string.contains("3 Scraplings"):
+					temp_point = Vector2i(-1560, 1350)
+				elif loc_panel.intended_string.contains("Mel Freed"):
+					temp_point = Vector2i(-1560, 1320)
+			
+			if loc_panel.region_name == "Capucine":
+				temp_point = Vector2i(-1560, 1250)
+			
 			if (Vector2(temp_point) / 5 * Vector2(1, -1)).distance_to(room_panel.point_node.position) <= 0.7:
 				temp_point += Vector2i(10, 10)
 			
 			var iterations: int = 0
 			while taken_positions.has(temp_point):
 				iterations += 1
-				temp_point.x -= 26
-				if iterations % 4 == 0:
+				temp_point.x += 26
+				if iterations % 4 == 0 && loc_panel.region_name != "Mel's Shop" && loc_panel.region_name != "Capucine":
 					temp_point.y -= 26
-					temp_point.x += 26*4
+					temp_point.x -= 26*4
 			taken_positions.append(temp_point)
 			
 			point.position = Vector2(temp_point) / 5 * Vector2(1, -1)
@@ -686,6 +702,10 @@ func update_map() -> void:
 		else:
 			line.add_point(room_panel.point_node.position)
 		line.add_point(point.position)
+		
+		if loc_panel.region_name == "Mel's Shop" || loc_panel.region_name == "Capucine":
+			line.default_color.a = 0
+		
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocLines.add_child(line)
 		loc_panel.update()
 		
