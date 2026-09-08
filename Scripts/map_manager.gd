@@ -43,8 +43,9 @@ func update_filter() -> void:
 	var room_panels = map_node.get_node("Panels").get_children()
 	var transition_lines = map_node.get_node("Lines").get_children()
 	var location_points = map_node.get_node("LocPoints").get_children()
+	var location_lines = map_node.get_node("LocLines").get_children()
 	
-	for i in room_points + transition_lines + location_points + map_node.get_node("LocLines").get_children():
+	for i in room_points + transition_lines + location_points + location_lines:
 		i.show()
 	
 	var region_index: int = $MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.selected
@@ -172,6 +173,7 @@ func _on_reset_pressed() -> void:
 
 
 func _on_room_points_toggled(toggled_on: bool) -> void:
+	map_node.get_node("LocLines").visible = toggled_on && $MapSettings/VBoxContainer/Locations.button_pressed
 	map_node.get_node("Points").visible = toggled_on
 
 
@@ -180,7 +182,7 @@ func _on_transitions_toggled(toggled_on: bool) -> void:
 
 
 func _on_locations_toggled(toggled_on: bool) -> void:
-	map_node.get_node("LocLines").visible = toggled_on
+	map_node.get_node("LocLines").visible = toggled_on && $MapSettings/VBoxContainer/RoomPoints.button_pressed
 	map_node.get_node("LocPoints").visible = toggled_on
 
 
