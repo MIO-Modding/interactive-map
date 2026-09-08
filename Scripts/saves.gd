@@ -28,7 +28,6 @@ func load_state(file_name: String) -> Main.PlayerState:
 
 
 func rename_state(current_name: String, target_name: String) -> void:
-	#save_state(load_state(current_name), target_name)
 	DirAccess.rename_absolute(BASE_PATH % current_name, BASE_PATH % target_name)
 	delete_state(current_name)
 
