@@ -114,6 +114,31 @@ var wheel_rotation := "0":
 		rotation_changed.emit()
 
 
+const MAP_ICON_TEXTURES := {
+	"Ability": preload("res://Sprites/map-icons/UNLOCK_HOOK.png"),
+	"Boss": preload("res://Sprites/map-icons/MAP_MARK_4.png"),
+	"Candle": preload("res://Sprites/map-icons/CANDLE.png"),
+	"Coating Component": preload("res://Sprites/map-icons/SHIELD_FRAGMENT.png"),
+	"Curio": preload("res://Sprites/map-icons/DATAPAD_CURIO_MARBLES.png"),
+	"Flash Memory": preload("res://Sprites/map-icons/DATAPAD_MEM_LIBRARIAN.png"),
+	"Forebears' Legacy": preload("res://Sprites/map-icons/ATTACK_POWER.png"),
+	"Key": preload("res://Sprites/map-icons/KEY_ROOTS_CORRIDOR.png"),
+	"Misc": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
+	"Modifier Extension": preload("res://Sprites/map-icons/TRINKET_SLOT_UPGRADE.png"),
+	"Modifier": preload("res://Sprites/map-icons/TRINKET_HUD.png"),
+	"Nacre": preload("res://Sprites/map-icons/RESOURCE_PEARL_SHARDS.png"),
+	"Npc": preload("res://Sprites/map-icons/MAP_MARK_3.png"),
+	"Old Core": preload("res://Sprites/map-icons/RESOURCE_FULL_PEARLS.png"),
+	"Overseer": preload("res://Sprites/map-icons/MAP_MARK_1.png"),
+	"Pearl Record": preload("res://Sprites/map-icons/DATAPAD_PEARL_KHLIA.png"),
+	"Serial Number": preload("res://Sprites/map-icons/CHEST_KEY.png"),
+	"Tomo Letter": preload("res://Sprites/map-icons/DATAPAD_LETTER_FIRST_CASE.png"),
+	"Traveller's Log": preload("res://Sprites/map-icons/DATAPAD_TXT_TRAVELLER_LOG1_TRANSLATED.png"),
+	"Tremor": preload("res://Sprites/map-icons/MAP_MARK_2.png"),
+	"Voice": preload("res://Sprites/map-icons/VOICE_ASMA.png"),
+	"Default": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
+}
+
 func _ready() -> void:
 	$LoadingScreen.show()
 	player_state = PlayerState.new()
@@ -610,18 +635,25 @@ func update_map() -> void:
 			all_location_types.append(loc_panel.type)
 			$TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.add_item(loc_panel.type)
 		
-		var point := Polygon2D.new()
+		var point := Sprite2D.new()
 		point.set_meta("panel", loc_panel)
-		point.polygon = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)].map(func(e): return e / 2)
-		point.self_modulate = Color.WHITE
+		if loc_panel.type not in MAP_ICON_TEXTURES:
+			point.texture = MAP_ICON_TEXTURES["Default"]
+		else:
+			point.texture = MAP_ICON_TEXTURES[loc_panel.type]
+		#point.texture = preload("res://Sprites/color-icon.png")
+		point.scale = Vector2(0.03, 0.03)
+		#point.z_index = 1
+		#point.polygon = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)].map(func(e): return e / 2)
+		var reachable_color = Color.WHITE
 		if highlight_reachable_rows:
 			if reachable_locations.has(loc_panel):
-				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]
+				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]
 			elif simple_reachable_locations.has(loc_panel):
-				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["simple"]
+				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["simple"]
 			elif advanced_reachable_locations.has(loc_panel):
-				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
-		loc_panel.modulate = point.self_modulate
+				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
+		loc_panel.modulate = reachable_color
 		point.name = loc_panel.room_id + ": " + loc_panel.loc_description
 		if loc_panel.room_id == "ST_security_secret_S1":
 			point.position = room_panel.point_node.position
@@ -639,10 +671,10 @@ func update_map() -> void:
 			var iterations: int = 0
 			while taken_positions.has(temp_point):
 				iterations += 1
-				temp_point.x -= 5
+				temp_point.x -= 20
 				if iterations % 5 == 0:
-					temp_point.y -= 5
-					temp_point.x += 25
+					temp_point.y -= 20
+					temp_point.x += 20*5
 			taken_positions.append(temp_point)
 			
 			point.position = Vector2(temp_point) / 5 * Vector2(1, -1)
@@ -652,7 +684,7 @@ func update_map() -> void:
 		
 		var line: LocationLine = preload("res://Scenes/location_line.tscn").instantiate()
 		line.loc_panel = loc_panel
-		line.default_color = point.self_modulate
+		line.default_color = reachable_color
 		line.default_color.v -= 0.5
 		line.width = 1 / ceilf(map_node.get_node("Camera2D").zoom.x / 10)
 		if loc_panel.room_id == "N/A":
@@ -705,7 +737,7 @@ func line_clicked(line: TransitionLine) -> void:
 		$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(second_panel.duplicate())
 
 
-func point_clicked(point: Polygon2D, double_click := false) -> void:
+func point_clicked(point: Node2D, double_click := false) -> void:
 	for i in $TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.get_children():
 		i.queue_free()
 	

@@ -96,7 +96,7 @@ var checked := false:
 		checked = v
 		$HBoxContainer/Checked.button_pressed = v
 
-var point_node: Polygon2D
+var point_node: Sprite2D
 
 var original_color: Color
 
@@ -104,9 +104,10 @@ var original_color: Color
 func update() -> void:
 	if Main.player_state.checked_locations.has(self):
 		modulate = Color(0.232, 0.566, 0.61)
-		point_node.color = Color(0.1, 0.1, 0.1)
+		#point_node.color = Color(0.1, 0.1, 0.1)
+		point_node.modulate.a = 0.3
 	elif $/root/Main.highlight_rows_in_logic:
-		point_node.color = Color.WHITE
+		#point_node.color = Color.WHITE
 		await get_tree().process_frame
 		if $/root/Main.reachable_locations.has(self):
 			modulate = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]

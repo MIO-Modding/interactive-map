@@ -89,12 +89,12 @@ func run_click(double := false) -> void:
 		return
 
 
-func find_closest_point() -> Polygon2D:
+func find_closest_point() -> Node2D:
 	var mouse_pos := get_global_mouse_position()
-	var closest_point: Polygon2D = null
+	var closest_point: Node2D = null
 	var closest_dist: float = -1.0
 	
-	for i: Polygon2D in $"../Points".get_children() + $"../LocPoints".get_children():
+	for i: Node2D in $"../Points".get_children() + $"../LocPoints".get_children():
 		if not i.is_visible_in_tree():
 			continue
 		
