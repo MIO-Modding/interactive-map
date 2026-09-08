@@ -173,7 +173,7 @@ func _on_reset_pressed() -> void:
 
 
 func _on_room_points_toggled(toggled_on: bool) -> void:
-	map_node.get_node("LocLines").visible = toggled_on && $MapSettings/VBoxContainer/Locations.button_pressed
+	map_node.get_node("LocLines").visible = toggled_on and $MapSettings/VBoxContainer/Locations.button_pressed
 	map_node.get_node("Points").visible = toggled_on
 
 
@@ -182,8 +182,9 @@ func _on_transitions_toggled(toggled_on: bool) -> void:
 
 
 func _on_locations_toggled(toggled_on: bool) -> void:
-	map_node.get_node("LocLines").visible = toggled_on && $MapSettings/VBoxContainer/RoomPoints.button_pressed
+	map_node.get_node("LocLines").visible = toggled_on and $MapSettings/VBoxContainer/RoomPoints.button_pressed
 	map_node.get_node("LocPoints").visible = toggled_on
+	map_node.get_node("LocGroupLabels").visible = toggled_on
 
 
 func _on_area_filter_item_selected(_index: int) -> void:

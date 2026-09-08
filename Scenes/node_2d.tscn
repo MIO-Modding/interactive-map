@@ -52,6 +52,71 @@ z_index = 9
 
 [node name="LocLines" type="Node2D" parent="." unique_id=466781403]
 
+[node name="LocGroupLabels" type="Node2D" parent="." unique_id=600536210]
+
+[node name="Mel" type="Label" parent="LocGroupLabels" unique_id=1602276604]
+offset_left = -275.0
+offset_top = -278.0
+offset_right = -192.0
+offset_bottom = -255.0
+scale = Vector2(0.2, 0.2)
+text = "Mel's Shop"
+
+[node name="Capucine" type="Label" parent="LocGroupLabels" unique_id=285257693]
+offset_left = -275.00003
+offset_top = -253.00002
+offset_right = -192.00003
+offset_bottom = -230.00002
+scale = Vector2(0.2, 0.2)
+text = "Capucine"
+
+[node name="MelLabels" type="Node2D" parent="LocGroupLabels" unique_id=1075541803]
+
+[node name="Init" type="Label" parent="LocGroupLabels/MelLabels" unique_id=81749612]
+offset_left = -332.0
+offset_top = -290.0
+offset_right = -249.0
+offset_bottom = -267.0
+scale = Vector2(0.2, 0.2)
+text = "Init"
+horizontal_alignment = 2
+
+[node name="Scrap1" type="Label" parent="LocGroupLabels/MelLabels" unique_id=1625081616]
+offset_left = -332.0
+offset_top = -284.0
+offset_right = -249.0
+offset_bottom = -261.0
+scale = Vector2(0.2, 0.2)
+text = "1 Scrap"
+horizontal_alignment = 2
+
+[node name="Scrap2" type="Label" parent="LocGroupLabels/MelLabels" unique_id=646195259]
+offset_left = -332.00003
+offset_top = -278.00003
+offset_right = -249.00003
+offset_bottom = -255.00003
+scale = Vector2(0.2, 0.2)
+text = "2 Scrap"
+horizontal_alignment = 2
+
+[node name="Scrap3" type="Label" parent="LocGroupLabels/MelLabels" unique_id=1483098976]
+offset_left = -332.0
+offset_top = -272.0
+offset_right = -249.0
+offset_bottom = -249.0
+scale = Vector2(0.2, 0.2)
+text = "3 Scrap"
+horizontal_alignment = 2
+
+[node name="Gratitude" type="Label" parent="LocGroupLabels/MelLabels" unique_id=1886238904]
+offset_left = -332.0
+offset_top = -266.0
+offset_right = -249.0
+offset_bottom = -243.0
+scale = Vector2(0.2, 0.2)
+text = "Gratitude"
+horizontal_alignment = 2
+
 [node name="Textures" type="Node2D" parent="." unique_id=1709161364]
 z_index = -10
 position = Vector2(-374, -404.9999)

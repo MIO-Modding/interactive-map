@@ -77,6 +77,41 @@ const ROTATION_OFFSETS := {
 	},
 }
 
+## Icons for location types on the map
+const MAP_ICON_TEXTURES: Dictionary[String, Texture2D] = {
+	"Ability": preload("res://Sprites/map-icons/UNLOCK_HOOK.png"),
+	"Boss": preload("res://Sprites/map-icons/MAP_MARK_4.png"),
+	"Candle": preload("res://Sprites/map-icons/CANDLE.png"),
+	"Coating Component": preload("res://Sprites/map-icons/SHIELD_FRAGMENT.png"),
+	"Curio": preload("res://Sprites/map-icons/DATAPAD_CURIO_MARBLES.png"),
+	"Flash Memory": preload("res://Sprites/map-icons/DATAPAD_MEM_LIBRARIAN.png"),
+	"Forebears' Legacy": preload("res://Sprites/map-icons/ATTACK_POWER.png"),
+	"Key": preload("res://Sprites/map-icons/KEY_ROOTS_CORRIDOR.png"),
+	"Misc": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
+	"Modifier Extension": preload("res://Sprites/map-icons/TRINKET_SLOT_UPGRADE.png"),
+	"Modifier": preload("res://Sprites/map-icons/TRINKET_HUD.png"),
+	"Nacre": preload("res://Sprites/map-icons/RESOURCE_PEARL_SHARDS.png"),
+	"Npc": preload("res://Sprites/map-icons/MAP_MARK_3.png"),
+	"Old Core": preload("res://Sprites/map-icons/RESOURCE_FULL_PEARLS.png"),
+	"Overseer": preload("res://Sprites/map-icons/MAP_MARK_1.png"),
+	"Pearl Record": preload("res://Sprites/map-icons/DATAPAD_PEARL_KHLIA.png"),
+	"Serial Number": preload("res://Sprites/map-icons/CHEST_KEY.png"),
+	"Tomo Letter": preload("res://Sprites/map-icons/DATAPAD_LETTER_FIRST_CASE.png"),
+	"Traveller's Log": preload("res://Sprites/map-icons/DATAPAD_TXT_TRAVELLER_LOG1_TRANSLATED.png"),
+	"Tremor": preload("res://Sprites/map-icons/MAP_MARK_2.png"),
+	"Voice": preload("res://Sprites/map-icons/VOICE_ASMA.png"),
+	"Default": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
+}
+
+const MEL_LEVELS: Array[String] = [
+	"Meet Mel",
+	"1 Scrapling",
+	"2 Scraplings",
+	"3 Scraplings",
+	"Mel Freed"
+]
+
+
 var room_requirements_sheet: Array[Array]
 var items_sheet: Array[Array]
 var transition_requirements_sheet: Array[Array]
@@ -113,31 +148,6 @@ var wheel_rotation := "0":
 		wheel_rotation = v
 		rotation_changed.emit()
 
-
-const MAP_ICON_TEXTURES := {
-	"Ability": preload("res://Sprites/map-icons/UNLOCK_HOOK.png"),
-	"Boss": preload("res://Sprites/map-icons/MAP_MARK_4.png"),
-	"Candle": preload("res://Sprites/map-icons/CANDLE.png"),
-	"Coating Component": preload("res://Sprites/map-icons/SHIELD_FRAGMENT.png"),
-	"Curio": preload("res://Sprites/map-icons/DATAPAD_CURIO_MARBLES.png"),
-	"Flash Memory": preload("res://Sprites/map-icons/DATAPAD_MEM_LIBRARIAN.png"),
-	"Forebears' Legacy": preload("res://Sprites/map-icons/ATTACK_POWER.png"),
-	"Key": preload("res://Sprites/map-icons/KEY_ROOTS_CORRIDOR.png"),
-	"Misc": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
-	"Modifier Extension": preload("res://Sprites/map-icons/TRINKET_SLOT_UPGRADE.png"),
-	"Modifier": preload("res://Sprites/map-icons/TRINKET_HUD.png"),
-	"Nacre": preload("res://Sprites/map-icons/RESOURCE_PEARL_SHARDS.png"),
-	"Npc": preload("res://Sprites/map-icons/MAP_MARK_3.png"),
-	"Old Core": preload("res://Sprites/map-icons/RESOURCE_FULL_PEARLS.png"),
-	"Overseer": preload("res://Sprites/map-icons/MAP_MARK_1.png"),
-	"Pearl Record": preload("res://Sprites/map-icons/DATAPAD_PEARL_KHLIA.png"),
-	"Serial Number": preload("res://Sprites/map-icons/CHEST_KEY.png"),
-	"Tomo Letter": preload("res://Sprites/map-icons/DATAPAD_LETTER_FIRST_CASE.png"),
-	"Traveller's Log": preload("res://Sprites/map-icons/DATAPAD_TXT_TRAVELLER_LOG1_TRANSLATED.png"),
-	"Tremor": preload("res://Sprites/map-icons/MAP_MARK_2.png"),
-	"Voice": preload("res://Sprites/map-icons/VOICE_ASMA.png"),
-	"Default": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
-}
 
 func _ready() -> void:
 	$LoadingScreen.show()
@@ -295,9 +305,6 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				update_transitions.connect(panel.update)
 				$TabContainer/TransitionRequirements/VBoxContainer.add_child(panel)
 			
-			for i in range(3):
-				await get_tree().process_frame
-			
 			update_reachable()
 			update_transitions.emit()
 		"location requirements":
@@ -436,6 +443,22 @@ func update_reachable() -> void:
 	advanced_reachable_rooms = get_reachable()
 	advanced_reachable_locations = get_reachable_locations(advanced_reachable_rooms)
 	logic_kind = LogicLevels.INTENDED_LOGIC
+	
+	if not $TabContainer/LocationRequirements/VBoxContainer.get_children().is_empty():
+		await get_tree().process_frame
+		
+		update_loc_group_labels()
+
+
+func update_loc_group_labels() -> void:
+	var group_labels: Node2D = get_node("TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocGroupLabels")
+	group_labels.get_node("Mel").self_modulate = get_location_panel("HUB_hub_shop: Buy from Mel's Shop (Maintenance Hack)").modulate
+	group_labels.get_node("MelLabels/Init").self_modulate = group_labels.get_node("Mel").self_modulate
+	group_labels.get_node("MelLabels/Gratitude").self_modulate = group_labels.get_node("Mel").self_modulate
+	for i in range(1, 4):
+		group_labels.get_node("MelLabels/Scrap%d" % i).self_modulate = LEVEL_COLORS[await theoretical_logic("HUB_hub_shop", "Mel Freed and %d Scrapling%s" % [i, "" if i == 1 else "s"])]
+	
+	group_labels.get_node("Capucine").self_modulate = LEVEL_COLORS[await theoretical_logic("LQ_ruins_hall_C1", "True")]
 
 
 func get_reachable_locations(availible_rooms: Array[String]) -> Array[LocationPanel]:
@@ -539,6 +562,21 @@ func loc_in_logic(loc_panel: LocationPanel, override_logic_kind := LogicLevels.N
 				return true
 	
 	return false
+
+
+func theoretical_logic(room_id: String, logic_string: String) -> LogicLevels:
+	var parsed: Callable = await TransitionPanel.string_to_logic(logic_string, "intended", self)
+	if not parsed.call():
+		return LogicLevels.NONE
+	else:
+		if reachable_rooms.has(room_id):
+			return LogicLevels.INTENDED_LOGIC
+		elif simple_reachable_rooms.has(room_id):
+			return LogicLevels.SIMPLE_SKIPS
+		elif advanced_reachable_rooms.has(room_id):
+			return LogicLevels.ADVANCED_SKIPS
+		else:
+			return LogicLevels.NONE
 
 
 func is_empty_string_list(string_list: Array[String]) -> bool:
@@ -661,16 +699,10 @@ func update_map() -> void:
 			
 			# Mel and capucine checks get moved to the space below the Nexus so they don't clutter up the map
 			if loc_panel.region_name == "Mel's Shop":
-				if loc_panel.intended_string.contains("Meet Mel"):
-					temp_point = Vector2i(-1560, 1440)
-				elif loc_panel.intended_string.contains("1 Scrapling"):
-					temp_point = Vector2i(-1560, 1410)
-				elif loc_panel.intended_string.contains("2 Scraplings"):
-					temp_point = Vector2i(-1560, 1380)
-				elif loc_panel.intended_string.contains("3 Scraplings"):
-					temp_point = Vector2i(-1560, 1350)
-				elif loc_panel.intended_string.contains("Mel Freed"):
-					temp_point = Vector2i(-1560, 1320)
+				for i: String in MEL_LEVELS:
+					if loc_panel.intended_string.contains(i):
+						temp_point = Vector2i(-1560, 1440 - (30 * MEL_LEVELS.find(i)))
+						break
 			
 			if loc_panel.region_name == "Capucine":
 				temp_point = Vector2i(-1560, 1250)
@@ -682,7 +714,7 @@ func update_map() -> void:
 			while taken_positions.has(temp_point):
 				iterations += 1
 				temp_point.x += 26
-				if iterations % 4 == 0 && loc_panel.region_name != "Mel's Shop" && loc_panel.region_name != "Capucine":
+				if iterations % 4 == 0 and not loc_panel.region_name in ["Mel's Shop", "Capucine"]:
 					temp_point.y -= 26
 					temp_point.x -= 26*4
 			taken_positions.append(temp_point)
@@ -820,7 +852,7 @@ func get_room_panel(id: String) -> RoomPanel:
 
 
 func get_location_panel(serial: String) -> LocationPanel:
-	for i in $TabContainer/LocationRequirements/VBoxContainer.get_children():
+	for i: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
 		if PlayerState.serialize_location(i) == serial:
 			return i
 	return null
