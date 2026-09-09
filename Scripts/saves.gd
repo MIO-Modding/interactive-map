@@ -3,12 +3,18 @@ class_name SavesMenu extends Control
 
 signal toggle_delete(on: bool)
 
-const STATE_PATH: String = "user://Data/saves/states/%s.dat"
+const STATE_PATH: String = "user://Data/Saves/States/%s.dat"
+const SAVE_FILES_PATH: String = "user://Data/Saves/SaveFiles/%s.dat"
+
+var mio_saves_path: String
 
 
 func _ready() -> void:
-	validate_folders(STATE_PATH.trim_suffix("%s.dat"))
+	for i in [STATE_PATH, SAVE_FILES_PATH]:
+		validate_folders(i.trim_suffix("%s.dat"))
+	
 	Globals.main.finished_requesting.connect(update_display)
+	mio_saves_path = find_mio_saves_path()
 
 
 func update_display() -> void:
@@ -72,6 +78,31 @@ func delete_state(state_name: String) -> void:
 func clear_state() -> void:
 	Main.player_state.checked_locations = []
 	Main.player_state.prog_items = []
+
+
+func find_mio_dir() -> String:
+	var result: String
+	if not OS.has_feature("web"):
+		if OS.has_feature("windows"):
+			result = OS.get_environment("LOCALAPPDATA") + "\\MIO\\Saves\\Steam"
+			result += "\\" + DirAccess.get_directories_at(result)[0]
+		elif OS.has_feature("linux"):
+			result = "./.local/share/Steam/steamapps/compatdata/1672810/pfx/drive_c/users/steamuser/AppData/Local/MIO/Saves/Steam/"
+			result += "/" + DirAccess.get_directories_at(result)[0]
+	return result
+
+
+func find_mio_saves_path() -> String:
+	var result := find_mio_dir()
+	if OS.has_feature("windows"):
+		result += "\\%s.save"
+	elif OS.has_feature("linux"):
+		result += "/%s.save"
+	return result
+
+
+func save_save(state: Main.PlayerState) -> void:
+	pass
 
 
 func _on_new_state_pressed() -> void:
