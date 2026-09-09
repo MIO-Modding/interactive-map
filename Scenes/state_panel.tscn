@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bfltek0gxtjs2"]
+
+[node name="StatePanel" type="PanelContainer" unique_id=184877640]
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 3
+
+[node name="H" type="HBoxContainer" parent="." unique_id=732369400]
+layout_mode = 2
+
+[node name="Save" type="Button" parent="H" unique_id=269940449]
+layout_mode = 2
+text = "Save"
+
+[node name="Name" type="Label" parent="H" unique_id=154986595]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="Load" type="Button" parent="H" unique_id=1284461472]
+layout_mode = 2
+text = "Load"
+
+[node name="Delete" type="Button" parent="H" unique_id=180888760]
+visible = false
+layout_mode = 2
+text = "Delete"

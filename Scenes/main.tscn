@@ -33,8 +33,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 7
-tab_8/hidden = true
+current_tab = 8
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -572,11 +571,11 @@ This feature is in no way finished."
 metadata/_custom_type_script = "uid://dwe8brs2p3rup"
 
 [node name="ArchipelagoClient" type="Control" parent="TabContainer" unique_id=317490321]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 7
 
 [node name="Saves" type="Control" parent="TabContainer" unique_id=672664825]
-visible = false
 layout_mode = 2
 script = ExtResource("8_344ge")
 metadata/_tab_index = 8
@@ -671,7 +670,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="State" type="Panel" parent="TabContainer/Saves/Lists" unique_id=1427433492]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -684,7 +683,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Scroll" type="ScrollContainer" parent="TabContainer/Saves/Lists/State/V" unique_id=9265367]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -693,9 +692,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="TabContainer/Saves/Lists/State/V" unique_id=29455274]
+[node name="NewButton" type="Button" parent="TabContainer/Saves/Lists/State/V" unique_id=29455274]
 layout_mode = 2
 text = "As New..."
+
+[node name="DeleteButton" type="CheckButton" parent="TabContainer/Saves/Lists/State/V" unique_id=1065053438]
+layout_mode = 2
+text = "Delete Mode"
+alignment = 1
 
 [node name="File" type="Panel" parent="TabContainer/Saves/Lists" unique_id=825569550]
 custom_minimum_size = Vector2(200, 0)
@@ -711,7 +715,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Scroll" type="ScrollContainer" parent="TabContainer/Saves/Lists/File/V" unique_id=905846006]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -826,5 +830,6 @@ text = "Skip (I know what I'm doing)"
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/-" to="TabContainer/Map" method="_on_minus_pressed"]
 [connection signal="tab_close_pressed" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="close_tab"]
 [connection signal="tab_selected" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="select_tab"]
-[connection signal="pressed" from="TabContainer/Saves/Lists/State/V/Button" to="TabContainer/Saves" method="_on_new_state_pressed"]
+[connection signal="pressed" from="TabContainer/Saves/Lists/State/V/NewButton" to="TabContainer/Saves" method="_on_new_state_pressed"]
+[connection signal="toggled" from="TabContainer/Saves/Lists/State/V/DeleteButton" to="TabContainer/Saves" method="_on_delete_state_button_toggled"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]

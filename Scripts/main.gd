@@ -1045,7 +1045,7 @@ class PlayerState:
 				return false
 			elif item == "True":
 				return true
-			return (prog_items + ap_prog_items).has(item))
+			return full_itemset().has(item))
 	
 	
 	## Returns [member checked_locations] but serializes them
@@ -1056,6 +1056,10 @@ class PlayerState:
 				continue
 			result.append(i.room_id + ": " + i.loc_description)
 		return result
+	
+	
+	func full_itemset() -> Array[String]:
+		return Globals.main.player_state.prog_items + Globals.main.player_state.ap_prog_items
 	
 	
 	## Serializes the [param loc], adding its 
