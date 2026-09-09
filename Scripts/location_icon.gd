@@ -18,3 +18,15 @@ var is_checked: bool:
 		else:
 			self_modulate.a = 1.0
 			modulate.a = 1.0
+
+
+var icon_style: String:
+	set(v):
+		icon_style = v
+		if v == "Border Color":
+			$icon_image.modulate = Color.WHITE
+			$inner_background.modulate.a = 1
+		elif v == "Full Color":
+			$icon_image.modulate = Color.BLACK
+			$inner_background.modulate.a = 0
+			

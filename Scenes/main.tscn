@@ -363,6 +363,19 @@ popup/item_1/id = 1
 popup/item_2/text = "Rotation: 240"
 popup/item_2/id = 2
 
+[node name="Label2" type="Label" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1285139126]
+layout_mode = 2
+text = "Icon Style:"
+
+[node name="IconStyle" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1872916685]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Border Color"
+popup/item_0/id = 0
+popup/item_1/text = "Full Color"
+popup/item_1/id = 1
+
 [node name="Filters" type="FoldableContainer" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1891767696]
 layout_mode = 2
 folded = true
@@ -649,6 +662,7 @@ text = "Skip (I know what I'm doing)"
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Locations" to="TabContainer/Map" method="_on_locations_toggled"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/MapImageType" to="TabContainer/Map" method="_on_map_image_type_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Rotation" to="TabContainer/Map" method="_on_rotation_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/IconStyle" to="TabContainer/Map" method="_on_icon_style_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption" to="TabContainer/Map" method="_on_shape_option_item_selected"]

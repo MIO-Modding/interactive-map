@@ -253,3 +253,9 @@ func _on_map_image_type_item_selected(index: int) -> void:
 		2:
 			map_node.get_node("Textures").show()
 			map_node.get_node("Skeleton").hide()
+
+
+func _on_icon_style_item_selected(index: int) -> void:
+	var icon_style = $MapSettings/VBoxContainer/IconStyle.get_item_text(index)
+	for loc_icon: LocationIcon in map_node.get_node("LocPoints").get_children():
+		loc_icon.icon_style = icon_style
