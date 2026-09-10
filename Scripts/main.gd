@@ -310,6 +310,9 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					item.notes = row[columns["Remarks"]]
 					update_itempool.connect(item.update)
 					
+					if item.item_name.contains("Old Core") and item.save_entry.contains("DIALOG:"):
+						$TabContainer/Saves.old_core_dialog.append(item.save_entry)
+					
 					%ItemPool.add_child(item)
 					item.update()
 				else:

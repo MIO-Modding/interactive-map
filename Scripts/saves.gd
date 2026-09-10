@@ -8,6 +8,8 @@ const STATE_PATH: String = SAVES_FOLDER + "/States/%s.dat"
 const SAVE_FILES_PATH: String = SAVES_FOLDER + "/SaveFiles/%s.dat"
 const METADATA_PATH: String = SAVES_FOLDER + "/Metadata/%s.dat"
 
+var old_core_dialog: Array[String]
+
 var mio_saves_path: String
 
 
@@ -155,9 +157,10 @@ func load_save(file_name: String) -> Main.PlayerState:
 		data[key][0] = data[key][0].trim_prefix("  ")
 	#print(data["Saved_entries"])
 	var leftover_items: Array[Item]
+	leftover_items.assign(%ItemPool.get_children())
 	
 	for data_entry: String in data["Saved_entries"]:
-		leftover_items.assign(%ItemPool.get_children())
+		
 		if not data_entry.contains("key") or data_entry.contains("pairs.0.") or data_entry.contains("pairs.1."):
 			continue
 		var save_entry: String = data_entry.get_slice(".key = String(\"", 1).trim_suffix("\")")
@@ -165,7 +168,9 @@ func load_save(file_name: String) -> Main.PlayerState:
 		var bad_entry := false
 		for i in ["ARENA", "DIALOG", "BOSS_MEET", "BOSS_TRY", "BREAKABLE", "DISCOVERED_ZONE", "DOOR", "FLASHBACK",
 				"FLOOR_ELEVATOR", "GAME", "ITEM_DISCOVERED", "ITEM_NOTIF", "TITLE_CARD", "SQUAD", "STATS"]:
-			if save_entry.contains(i):
+			if save_entry in old_core_dialog:
+				break
+			if save_entry.begins_with(i):
 				bad_entry = true
 				break
 		if bad_entry:
