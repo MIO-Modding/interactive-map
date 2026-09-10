@@ -9,6 +9,8 @@ class_name StatePanel extends PanelContainer
 			if get_child_count() > 0:
 				$H/Name.text = v
 
+var is_save_panel := false
+
 
 func _init() -> void:
 	if not is_inside_tree():
@@ -30,12 +32,19 @@ func get_saves_tab() -> SavesMenu:
 
 
 func save_file() -> void:
-	get_saves_tab().save_state(Main.player_state, text)
+	if is_save_panel:
+		get_saves_tab().save_save(Main.player_state, text)
+	else:
+		get_saves_tab().save_state(Main.player_state, text)
 
 
 func load_file() -> void:
 	var ap_items: Array[String]
-	var state: Main.PlayerState = get_saves_tab().load_state(text)
+	var state: Main.PlayerState
+	if is_save_panel:
+		state = get_saves_tab().load_save(text)
+	else:
+		state = get_saves_tab().load_state(text)
 	ap_items = Main.player_state.ap_prog_items
 	state.ap_prog_items = ap_items
 	Main.player_state = state
@@ -43,7 +52,10 @@ func load_file() -> void:
 
 
 func delete_file() -> void:
-	get_saves_tab().delete_state(text)
+	if is_save_panel:
+		get_saves_tab().delete_save(text)
+	else:
+		get_saves_tab().delete_state(text)
 	get_saves_tab().update_display()
 
 

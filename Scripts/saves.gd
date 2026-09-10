@@ -3,14 +3,16 @@ class_name SavesMenu extends Control
 
 signal toggle_delete(on: bool)
 
-const STATE_PATH: String = "user://Data/Saves/States/%s.dat"
-const SAVE_FILES_PATH: String = "user://Data/Saves/SaveFiles/%s.dat"
+const SAVES_FOLDER: String = "user://Data/Saves"
+const STATE_PATH: String = SAVES_FOLDER + "/States/%s.dat"
+const SAVE_FILES_PATH: String = SAVES_FOLDER + "/SaveFiles/%s.dat"
+const METADATA_PATH: String = SAVES_FOLDER + "/Metadata/%s.dat"
 
 var mio_saves_path: String
 
 
 func _ready() -> void:
-	for i in [STATE_PATH, SAVE_FILES_PATH]:
+	for i in [STATE_PATH, SAVE_FILES_PATH, METADATA_PATH]:
 		validate_folders(i.trim_suffix("%s.dat"))
 	
 	Globals.main.finished_requesting.connect(update_display)
@@ -18,7 +20,7 @@ func _ready() -> void:
 
 
 func update_display() -> void:
-	for i in $Lists/State/V/Scroll/VBoxContainer.get_children():
+	for i in $Lists/State/V/Scroll/VBoxContainer.get_children() + $Lists/File/V/Scroll/VBoxContainer.get_children():
 		i.queue_free()
 	
 	var list: Array[String]
@@ -31,6 +33,19 @@ func update_display() -> void:
 		state_panel.text = i.get_basename()
 		state_panel.call_deferred("toggle_delete", $Lists/State/V/DeleteButton.button_pressed)
 		$Lists/State/V/Scroll/VBoxContainer.add_child(state_panel)
+	
+	if not OS.has_feature("web") and not mio_saves_path.is_empty():
+		var all_files: Array[String] = get_mio_saves()
+		for i in range(3):
+			if all_files.has("slot_%d" % i):
+				pass # make metadata
+		
+		for file_name in all_files:
+			var state_panel := await StatePanel.new()
+			state_panel.text = file_name
+			state_panel.is_save_panel = true
+			state_panel.call_deferred("toggle_delete", $Lists/State/V/DeleteButton.button_pressed)
+			$Lists/File/V/Scroll/VBoxContainer.add_child(state_panel)
 
 
 func validate_folders(path: String) -> void:
@@ -87,7 +102,7 @@ func find_mio_dir() -> String:
 			result = OS.get_environment("LOCALAPPDATA") + "\\MIO\\Saves\\Steam"
 			result += "\\" + DirAccess.get_directories_at(result)[0]
 		elif OS.has_feature("linux"):
-			result = "./.local/share/Steam/steamapps/compatdata/1672810/pfx/drive_c/users/steamuser/AppData/Local/MIO/Saves/Steam/"
+			result = OS.get_environment("HOME") + "/.local/share/Steam/steamapps/compatdata/1672810/pfx/drive_c/users/steamuser/AppData/Local/MIO/Saves/Steam/"
 			result += "/" + DirAccess.get_directories_at(result)[0]
 	return result
 
@@ -101,8 +116,72 @@ func find_mio_saves_path() -> String:
 	return result
 
 
-func save_save(state: Main.PlayerState) -> void:
+func get_mio_saves() -> Array[String]:
+	var result: Array[String]
+	var folder := DirAccess.open(mio_saves_path.trim_suffix("%s.save"))
+	
+	if folder:
+		folder.list_dir_begin()
+		var current := folder.get_next()
+		
+		while not current.is_empty():
+			if not folder.current_is_dir():
+				if current.ends_with(".save") and not current.contains("_bck_"):
+					result.append(current.get_basename())
+			current = folder.get_next()
+	
+	return result
+
+
+func save_save(state: Main.PlayerState, file_name: String = "") -> void:
+	if file_name.is_empty():
+		file_name = "slot_" + str($Lists/FIle/V/Scroll/VBoxContainer.get_child_count() + 1)
+	
+	Globals.trigger_popup("This does not work yet")
+	
 	pass
+
+
+func load_save(file_name: String) -> Main.PlayerState:
+	var state := Main.PlayerState.new()
+	var file := FileAccess.open(mio_saves_path.replace("\\", "/") % file_name, FileAccess.READ)
+	var contents: String = file.get_as_text()
+	var data: Dictionary[String, Array]
+	for i: String in Array(contents.split("}\n\n")):
+		if i.is_empty():
+			continue
+		var key: String = i.get_slice(" {\n", 0)
+		data[key] = Array(i.get_slice(" {\n", 1).split("\n  "))
+		data[key][0] = data[key][0].trim_prefix("  ")
+	#print(data["Saved_entries"])
+	var leftover_items: Array[Item]
+	
+	for data_entry: String in data["Saved_entries"]:
+		leftover_items.assign(%ItemPool.get_children())
+		if not data_entry.contains("key") or data_entry.contains("pairs.0.") or data_entry.contains("pairs.1."):
+			continue
+		var save_entry: String = data_entry.get_slice(".key = String(\"", 1).trim_suffix("\")")
+		
+		var bad_entry := false
+		for i in ["ARENA", "DIALOG", "BOSS_MEET", "BOSS_TRY", "BREAKABLE", "DISCOVERED_ZONE", "DOOR", "FLASHBACK",
+				"FLOOR_ELEVATOR", "GAME", "ITEM_DISCOVERED", "ITEM_NOTIF", "TITLE_CARD", "SQUAD", "STATS"]:
+			if save_entry.contains(i):
+				bad_entry = true
+				break
+		if bad_entry:
+			continue
+		
+		var item: Item
+		for test_item in leftover_items:
+			if test_item.save_entry == save_entry:
+				item = test_item
+				leftover_items.erase(item)
+				break
+		if item == null:
+			continue
+		state.prog_items.append(item.item_name)
+	
+	return state
 
 
 func _on_new_state_pressed() -> void:

@@ -18,7 +18,10 @@ func _ready() -> void:
 	draw_node.draw.connect(update_shape_visualization)
 
 
-func _process(_delta: float) -> void:
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		return
+	
 	var previous_zoom: Vector2 = zoom
 	
 	if get_parent().get_parent().get_parent().is_visible_in_tree():
