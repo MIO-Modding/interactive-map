@@ -1,6 +1,10 @@
 class_name LocationIcon extends Polygon2D
 
+@onready var camera: Camera2D = get_parent().get_parent().get_node("Camera2D")
 
+
+func _ready() -> void:
+	camera.zoom_changed.connect(func(v): scale = Vector2(1.0, 1.0) * clampf(((35.0 - v)/25.0), 0.4, 1.0))
 
 var icon_type: String:
 	set(v):

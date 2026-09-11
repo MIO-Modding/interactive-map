@@ -30,7 +30,7 @@ func _process(_delta: float) -> void:
 				zoom /= 1.1
 			clamp_zoom()
 			if Input.is_action_just_pressed("scroll_down") or Input.is_action_just_pressed("scroll_up"):
-				if 1 / ceilf(zoom.x / 10) != 1 / ceilf(previous_zoom.x / 10):
+				if ceilf(zoom.x / 3) != ceilf(previous_zoom.x / 3):
 					zoom_changed.emit(zoom.x)
 			
 			if zoom != previous_zoom:
