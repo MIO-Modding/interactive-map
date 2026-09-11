@@ -92,6 +92,41 @@ const ROTATION_OFFSETS := {
 	},
 }
 
+## Icons for location types on the map
+const MAP_ICON_TEXTURES: Dictionary[String, Texture2D] = {
+	"Ability": preload("res://Sprites/map-icons/UNLOCK_HOOK.png"),
+	"Boss": preload("res://Sprites/map-icons/MAP_MARK_4.png"),
+	"Candle": preload("res://Sprites/map-icons/CANDLE.png"),
+	"Coating Component": preload("res://Sprites/map-icons/SHIELD_FRAGMENT.png"),
+	"Curio": preload("res://Sprites/map-icons/DATAPAD_CURIO_MARBLES.png"),
+	"Flash Memory": preload("res://Sprites/map-icons/DATAPAD_MEM_LIBRARIAN.png"),
+	"Forebears' Legacy": preload("res://Sprites/map-icons/ATTACK_POWER.png"),
+	"Key": preload("res://Sprites/map-icons/KEY_ROOTS_CORRIDOR.png"),
+	"Misc": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
+	"Modifier Extension": preload("res://Sprites/map-icons/TRINKET_SLOT_UPGRADE.png"),
+	"Modifier": preload("res://Sprites/map-icons/TRINKET_HUD.png"),
+	"Nacre": preload("res://Sprites/map-icons/RESOURCE_PEARL_SHARDS.png"),
+	"Npc": preload("res://Sprites/map-icons/MAP_MARK_3.png"),
+	"Old Core": preload("res://Sprites/map-icons/RESOURCE_FULL_PEARLS.png"),
+	"Overseer": preload("res://Sprites/map-icons/MAP_MARK_1.png"),
+	"Pearl Record": preload("res://Sprites/map-icons/DATAPAD_PEARL_KHLIA.png"),
+	"Serial Number": preload("res://Sprites/map-icons/CHEST_KEY.png"),
+	"Tomo Letter": preload("res://Sprites/map-icons/DATAPAD_LETTER_FIRST_CASE.png"),
+	"Traveller's Log": preload("res://Sprites/map-icons/DATAPAD_TXT_TRAVELLER_LOG1_TRANSLATED.png"),
+	"Tremor": preload("res://Sprites/map-icons/MAP_MARK_2.png"),
+	"Voice": preload("res://Sprites/map-icons/VOICE_ASMA.png"),
+	"Default": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
+}
+
+const MEL_LEVELS: Array[String] = [
+	"Meet Mel",
+	"1 Scrapling",
+	"2 Scraplings",
+	"3 Scraplings",
+	"Mel Freed"
+]
+
+
 ## The state of this player, including items given through this client and items received through archipelago.
 static var player_state: PlayerState
 
@@ -343,9 +378,6 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				update_transitions.connect(panel.update)
 				$TabContainer/TransitionRequirements/VBoxContainer.add_child(panel)
 			
-			for i in range(3):
-				await get_tree().process_frame
-			
 			update_reachable()
 			update_transitions.emit()
 		"location requirements":
@@ -489,6 +521,22 @@ func update_reachable() -> void:
 	advanced_reachable_rooms = get_reachable()
 	advanced_reachable_locations = get_reachable_locations(advanced_reachable_rooms)
 	logic_kind = LogicLevels.INTENDED_LOGIC
+	
+	if not $TabContainer/LocationRequirements/VBoxContainer.get_children().is_empty():
+		await get_tree().process_frame
+		
+		update_loc_group_labels()
+
+
+func update_loc_group_labels() -> void:
+	var group_labels: Node2D = get_node("TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocGroupLabels")
+	group_labels.get_node("Mel").self_modulate = get_location_panel("HUB_hub_shop: Buy from Mel's Shop (Maintenance Hack)").modulate
+	group_labels.get_node("MelLabels/Init").self_modulate = group_labels.get_node("Mel").self_modulate
+	group_labels.get_node("MelLabels/Gratitude").self_modulate = group_labels.get_node("Mel").self_modulate
+	for i in range(1, 4):
+		group_labels.get_node("MelLabels/Scrap%d" % i).self_modulate = LEVEL_COLORS[await theoretical_logic("HUB_hub_shop", "Mel Freed and %d Scrapling%s" % [i, "" if i == 1 else "s"])]
+	
+	group_labels.get_node("Capucine").self_modulate = LEVEL_COLORS[await theoretical_logic("LQ_ruins_hall_C1", "True")]
 
 
 ## Returns all reachable locations
@@ -698,18 +746,19 @@ func update_map() -> void:
 			all_location_types.append(loc_panel.type)
 			$TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.add_item(loc_panel.type)
 		
-		var point := Polygon2D.new()
+		var point: LocationIcon = preload("res://Scenes/location_icon.tscn").instantiate()
 		point.set_meta("panel", loc_panel)
-		point.polygon = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)].map(func(e): return e / 2)
-		point.self_modulate = Color.WHITE
+		point.icon_type = loc_panel.type
+		var reachable_color = Color(0.7, 0.7, 0.7)
 		if highlight_reachable_rows:
 			if reachable_locations.has(loc_panel):
-				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]
+				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["intended"]
 			elif simple_reachable_locations.has(loc_panel):
-				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["simple"]
+				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["simple"]
 			elif advanced_reachable_locations.has(loc_panel):
-				point.self_modulate = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
-		loc_panel.modulate = point.self_modulate
+				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
+		point.self_modulate = reachable_color
+		loc_panel.modulate = reachable_color
 		point.name = loc_panel.room_id + ": " + loc_panel.loc_description
 		if loc_panel.room_id == "ST_security_secret_S1":
 			point.position = room_panel.point_node.position
@@ -721,16 +770,26 @@ func update_map() -> void:
 				temp_point = loc_panel.coords
 				temp_point.x += ROTATION_OFFSETS["120"]["Lab"]
 			
+			# Mel and capucine checks get moved to the space below the Nexus so they don't clutter up the map
+			if loc_panel.region_name == "Mel's Shop":
+				for i: String in MEL_LEVELS:
+					if loc_panel.intended_string.contains(i):
+						temp_point = Vector2i(-1560, 1440 - (30 * MEL_LEVELS.find(i)))
+						break
+			
+			if loc_panel.region_name == "Capucine":
+				temp_point = Vector2i(-1560, 1250)
+			
 			if (Vector2(temp_point) / 5 * Vector2(1, -1)).distance_to(room_panel.point_node.position) <= 0.7:
 				temp_point += Vector2i(10, 10)
 			
 			var iterations: int = 0
 			while taken_positions.has(temp_point):
 				iterations += 1
-				temp_point.x -= 5
-				if iterations % 5 == 0:
-					temp_point.y -= 5
-					temp_point.x += 25
+				temp_point.x += 26
+				if iterations % 4 == 0 and not loc_panel.region_name in ["Mel's Shop", "Capucine"]:
+					temp_point.y -= 26
+					temp_point.x -= 26*4
 			taken_positions.append(temp_point)
 			
 			point.position = Vector2(temp_point) / 5 * Vector2(1, -1)
@@ -740,14 +799,18 @@ func update_map() -> void:
 		
 		var line: LocationLine = preload("res://Scenes/location_line.tscn").instantiate()
 		line.loc_panel = loc_panel
-		line.default_color = point.self_modulate
-		line.default_color.v -= 0.5
+		line.default_color = reachable_color
+		line.default_color.v -= 0.3
 		line.width = 1 / ceilf(map_node.get_node("Camera2D").zoom.x / 10)
 		if loc_panel.room_id == "N/A":
 			line.add_point(Vector2(100, 100))
 		else:
 			line.add_point(room_panel.point_node.position)
 		line.add_point(point.position)
+		
+		if loc_panel.region_name == "Mel's Shop" || loc_panel.region_name == "Capucine":
+			line.default_color.a = 0
+		
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocLines.add_child(line)
 		loc_panel.update()
 		
@@ -799,7 +862,7 @@ func line_clicked(line: TransitionLine) -> void:
 
 ## Shows the [LocationPanel] or [RoomPanel] when a [param point] is clicked 
 ## (checks the location if it's a location point, [param double_click] is true, and [member double_click_checks_locations
-func point_clicked(point: Polygon2D, double_click := false) -> void:
+func point_clicked(point: Node2D, double_click := false) -> void:
 	for i in $TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.get_children():
 		i.queue_free()
 	
@@ -872,7 +935,7 @@ func get_room_panel(id: String) -> RoomPanel:
 
 ## Gets the [LocationPanel] for the serialized value [param serial]
 func get_location_panel(serial: String) -> LocationPanel:
-	for i in $TabContainer/LocationRequirements/VBoxContainer.get_children():
+	for i: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
 		if PlayerState.serialize_location(i) == serial:
 			return i
 	return null
@@ -1074,7 +1137,7 @@ class PlayerState:
 	## Serializes the [param loc], in manual form. [br]
 	## This form is [member LocationPanel.room_id]--([member LocationPanel.vanilla_item])
 	static func get_manual_serialized(loc: LocationPanel) -> String:
-		var result: String
+		var result: Stringt
 		var room: String = loc.room_id
 		var item: String = loc.vanilla_item
 		if loc.vanilla_item.contains("Capucined"):

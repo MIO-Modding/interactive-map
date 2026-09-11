@@ -114,7 +114,9 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 			if not node.is_inside_tree():
 				await node.tree_entered
 			await node.get_tree().process_frame
-			return node.get("%s_logic" % heirarchy[heirarchy.find(from_type) - 1])
+			var getting: String = "%s_logic" % heirarchy[heirarchy.find(from_type) - 1]
+			if getting in node:
+				return node.get(getting)
 	elif string == "True":
 		return func(): return true
 	elif string == "False":
@@ -123,6 +125,7 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 		string = string.replace("(", "{ ").replace(")", " }").replace(" and ", " && ").replace(" or ", " || ").replace("glide", "sail")
 		for i in ["airstall", "crystal_stall", "ground_pogo", "enemy_pogo", "pogo_jump", "enemy_pogos"]:
 			string = string.replace(i, "slash")
+		string = string.replace("Meet Mel", "Find Mel")
 		string = string.replace("hairpin_launch", "hairpin").replace("slope_boost", "True")
 		string = string.replace("e_dodge", "{ dodge && TRINKET:BETTER_DODGE }")
 		string = string.replace("latency", "TRINKET:FAST_RECOVERY")
@@ -141,13 +144,15 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 		string = string.replace("flowing_steps", "{ striders && flowing_steps }").replace("striders", "{ striders || flowing_steps }")
 		string = string.replace("{ striders || flowing_steps } & flowing_steps", "striders & flowing_steps")
 		string = string.replace("CHEST_KEY:0-5", "{ CHEST_KEY:0 && CHEST_KEY:1 && CHEST_KEY:2 && CHEST_KEY:3 && CHEST_KEY:4 && CHEST_KEY:5 }")
-		string = string.replace("Meet Mel && Mel Freed", "Mel Freed").replace("Mel Freed", "Meet Mel && Mel Freed")
+		string = string.replace("Find Mel && Mel Freed", "Mel Freed").replace("Mel Freed", "Find Mel && Mel Freed")
 		string = string.replace("1 Scrapling", "{ Find Sin || Find Cos || Find Tan }")
 		string = string.replace("2 Scraplings", "{ { Find Sin && Find Cos } || { Find Sin && Find Tan } || { Find Cos && Find Tan } }")
 		string = string.replace("3 Scraplings", "{ Find Sin && Find Cos && Find Tan }")
 		string = string.replace("attack", "{ slash || { hairpin && TRINKET:CARLO_HOOK } || { hairpin && TRINKET:DECOY } || { glide && TRINKET:GLIDE_STATIC } }") # TODO
 		
 		return await parse_logic(string, node)
+	
+	return func(): return false
 
 
 static func parse_logic(logic_string: String, node: Node) -> Callable:

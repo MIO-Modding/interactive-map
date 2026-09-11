@@ -32,7 +32,7 @@ func _input(event: InputEvent) -> void:
 				zoom /= 1.1
 			clamp_zoom()
 			if Input.is_action_just_pressed("scroll_down") or Input.is_action_just_pressed("scroll_up"):
-				if 1 / ceilf(zoom.x / 10) != 1 / ceilf(previous_zoom.x / 10):
+				if ceilf(zoom.x / 3) != ceilf(previous_zoom.x / 3):
 					zoom_changed.emit(zoom.x)
 			
 			if zoom != previous_zoom:
@@ -91,12 +91,12 @@ func run_click(double := false) -> void:
 		return
 
 
-func find_closest_point() -> Polygon2D:
+func find_closest_point() -> Node2D:
 	var mouse_pos := get_global_mouse_position()
-	var closest_point: Polygon2D = null
+	var closest_point: Node2D = null
 	var closest_dist: float = -1.0
 	
-	for i: Polygon2D in $"../Points".get_children() + $"../LocPoints".get_children():
+	for i: Node2D in $"../Points".get_children() + $"../LocPoints".get_children():
 		if not i.is_visible_in_tree():
 			continue
 		

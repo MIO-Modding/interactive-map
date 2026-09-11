@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cvastwsrvlbhu"]
+
+[ext_resource type="Script" uid="uid://ylwvphaq6vj3" path="res://Scripts/location_icon.gd" id="1_pk8gq"]
+
+[node name="LocationIcon" type="Polygon2D" unique_id=1388652287]
+polygon = PackedVector2Array(2.5, 0, 0, 2.5, -2.5, 0, 0, -2.5)
+script = ExtResource("1_pk8gq")
+
+[node name="inner_background" type="Polygon2D" parent="." unique_id=579056301]
+scale = Vector2(0.9, 0.9)
+color = Color(0.14117648, 0.14509805, 0.15294118, 1)
+polygon = PackedVector2Array(2.5, 0, 0, 2.5, -2.5, 0, 0, -2.5)
+
+[node name="icon_image" type="Sprite2D" parent="." unique_id=169126908]
+scale = Vector2(0.02, 0.02)
