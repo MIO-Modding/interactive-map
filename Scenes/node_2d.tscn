@@ -215,6 +215,6 @@ texture = ExtResource("27_fpmp2")
 
 [node name="FeralUndergrowth" type="Sprite2D" parent="Skeleton" unique_id=196988456]
 visible = false
-position = Vector2(-195, -305)
+position = Vector2(-195, -304.8)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("28_xiv05")

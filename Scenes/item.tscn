@@ -9,7 +9,7 @@ script = ExtResource("1_tnite")
 
 [node name="Link" type="Button" parent="." unique_id=1009767357]
 layout_mode = 2
-text = "I"
+text = "?"
 
 [node name="Name" type="Label" parent="." unique_id=1736256725]
 layout_mode = 2

@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://bfltek0gxtjs2"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_4tamd"]
+
 [node name="StatePanel" type="PanelContainer" unique_id=184877640]
 offset_right = 40.0
 offset_bottom = 40.0
@@ -7,6 +9,24 @@ size_flags_horizontal = 3
 
 [node name="H" type="HBoxContainer" parent="." unique_id=732369400]
 layout_mode = 2
+
+[node name="MoveUp" type="Button" parent="H" unique_id=75693277]
+visible = false
+layout_mode = 2
+text = "/\\"
+
+[node name="OrderLabel" type="Label" parent="H" unique_id=1731079232]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+text = "#1"
+label_settings = SubResource("LabelSettings_4tamd")
+horizontal_alignment = 1
+
+[node name="MoveDown" type="Button" parent="H" unique_id=29688968]
+visible = false
+layout_mode = 2
+text = "\\/"
 
 [node name="Save" type="Button" parent="H" unique_id=269940449]
 layout_mode = 2

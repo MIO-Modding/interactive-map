@@ -2,6 +2,7 @@ class_name SavesMenu extends Control
 
 
 signal toggle_delete(on: bool)
+signal mode_changed(mode: int)
 
 const SAVES_FOLDER: String = "user://Data/Saves"
 const STATE_PATH: String = SAVES_FOLDER + "/States/%s.dat"
@@ -22,13 +23,13 @@ func _ready() -> void:
 
 
 func update_display() -> void:
-	for i in $Lists/State/V/Scroll/VBoxContainer.get_children() + $Lists/File/V/Scroll/VBoxContainer.get_children():
-		i.queue_free()
-	
 	var list: Array[String]
 	list.assign(Array(DirAccess.get_files_at(STATE_PATH.trim_suffix("%s.dat"))))
 	
 	list.sort_custom(func(str1: String, str2: String): return str1.naturalnocasecmp_to(str2) < 0)
+	
+	for i in $Lists/State/V/Scroll/VBoxContainer.get_children():
+		i.queue_free()
 	
 	for i in list:
 		var state_panel := await StatePanel.new()
@@ -38,16 +39,50 @@ func update_display() -> void:
 	
 	if not OS.has_feature("web") and not mio_saves_path.is_empty():
 		var all_files: Array[String] = get_mio_saves()
-		for i in range(3):
-			if all_files.has("slot_%d" % i):
-				pass # make metadata
+		#for i in range(3):
+			#if all_files.has("slot_%d" % i):
+				#pass # make metadata
+		
+		var all_saves: Array[StatePanel]
+		all_saves.assign($Lists/File/V/Scroll/VBoxContainer.get_children())
+		
+		if $Lists/File/V/ModeOption.selected == 2:
+			var temp: Array[String]
+			for i in range(all_files.size()):
+				for save in all_saves:
+					if save.save_index == i:
+						temp.append(save.text)
+			all_files.assign(temp)
+		else:
+			all_files.sort_custom(func(str1: String, str2: String): return str1.naturalnocasecmp_to(str2) < 0)
+		
+		var start_index = 0
+		for i in range(3).map(func(e): return "slot_%d" % e):
+			if all_files.has(i):
+				start_index += 1
 		
 		for file_name in all_files:
 			var state_panel := await StatePanel.new()
+			
+			if all_saves.is_empty():
+				if range(3).map(func(e): return "slot_%d" % e).has(file_name):
+					state_panel.save_index = file_name[-1].to_int()
+				else:
+					state_panel.save_index = start_index
+					start_index += 1
+			else:
+				for i in all_saves:
+					if i.text == file_name:
+						state_panel.save_index = i.save_index
+			
 			state_panel.text = file_name
 			state_panel.is_save_panel = true
 			state_panel.call_deferred("toggle_delete", $Lists/State/V/DeleteButton.button_pressed)
+			state_panel.call_deferred("set", "save_index", state_panel.save_index)
 			$Lists/File/V/Scroll/VBoxContainer.add_child(state_panel)
+		
+		for i in all_saves:
+			i.queue_free()
 
 
 func validate_folders(path: String) -> void:
@@ -189,6 +224,10 @@ func load_save(file_name: String) -> Main.PlayerState:
 	return state
 
 
+func make_meta_file(from: StatePanel) -> void:
+	pass
+
+
 func _on_new_state_pressed() -> void:
 	save_state(Main.player_state)
 	
@@ -216,3 +255,9 @@ It also doesn't store any archipelago information.
 """
 	get_parent().get_node("Info").add_page_node(page)
 	get_parent().get_node("Info").select_last_page()
+
+
+func _on_mode_option_item_selected(index: int) -> void:
+	update_display()
+	await get_tree().process_frame
+	mode_changed.emit(index)
