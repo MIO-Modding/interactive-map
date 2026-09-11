@@ -608,6 +608,17 @@ grow_horizontal = 2
 text = "Save as State"
 horizontal_alignment = 1
 
+[node name="Difference" type="Button" parent="TabContainer/Saves/VBoxContainer/AsState/StateSave" unique_id=262632586]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -8.0
+offset_right = 8.0
+grow_vertical = 0
+text = "What's the difference between
+a state and a save file?"
+
 [node name="StateLoad" type="Panel" parent="TabContainer/Saves/VBoxContainer/AsState" unique_id=1832944010]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -830,6 +841,7 @@ text = "Skip (I know what I'm doing)"
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/-" to="TabContainer/Map" method="_on_minus_pressed"]
 [connection signal="tab_close_pressed" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="close_tab"]
 [connection signal="tab_selected" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="select_tab"]
+[connection signal="pressed" from="TabContainer/Saves/VBoxContainer/AsState/StateSave/Difference" to="TabContainer/Saves" method="_on_difference_pressed"]
 [connection signal="pressed" from="TabContainer/Saves/Lists/State/V/NewButton" to="TabContainer/Saves" method="_on_new_state_pressed"]
 [connection signal="toggled" from="TabContainer/Saves/Lists/State/V/DeleteButton" to="TabContainer/Saves" method="_on_delete_state_button_toggled"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]

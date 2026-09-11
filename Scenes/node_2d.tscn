@@ -19,6 +19,15 @@
 [ext_resource type="Texture2D" uid="uid://7duwmjlmmv57" path="res://Sprites/map/vaults.png" id="17_gwne5"]
 [ext_resource type="Texture2D" uid="uid://d1njpdqcdc5ik" path="res://Sprites/top_half.png" id="18_op2xg"]
 [ext_resource type="Texture2D" uid="uid://be61dxwexjuar" path="res://Sprites/bottom_half.png" id="19_1nvmp"]
+[ext_resource type="Texture2D" uid="uid://hp8ujxfn8nx3" path="res://Sprites/map_mesh/bell_tower.png" id="20_el1jj"]
+[ext_resource type="Texture2D" uid="uid://cn7qetisafwlh" path="res://Sprites/map_mesh/haven.png" id="21_03fgm"]
+[ext_resource type="Texture2D" uid="uid://bkn18foqi1jt8" path="res://Sprites/map_mesh/promenade.png" id="22_jiy1d"]
+[ext_resource type="Texture2D" uid="uid://bdeb5qlqipe5y" path="res://Sprites/map_mesh/the_severed_spine.png" id="23_ud1os"]
+[ext_resource type="Texture2D" uid="uid://byf2wot8bgick" path="res://Sprites/map_mesh/celestial_bay.png" id="24_fpmp2"]
+[ext_resource type="Texture2D" uid="uid://1w2nn17lyph" path="res://Sprites/map_mesh/the_breaths_spring.png" id="25_xiv05"]
+[ext_resource type="Texture2D" uid="uid://dk1ao2qgjtgil" path="res://Sprites/map_mesh/library.png" id="26_ud1os"]
+[ext_resource type="Texture2D" uid="uid://dyfupou1ldgn6" path="res://Sprites/map_mesh/canopy.png" id="27_fpmp2"]
+[ext_resource type="Texture2D" uid="uid://cvpj1r0bew8ih" path="res://Sprites/map_mesh/feral_undergrowth.png" id="28_xiv05"]
 
 [node name="Node2D" type="Node2D" unique_id=82726750]
 
@@ -136,7 +145,6 @@ color = Color(0.14901961, 0.15294118, 0.16078432, 1)
 z_index = 400
 
 [node name="Skeleton" type="Node2D" parent="." unique_id=1162090445]
-visible = false
 z_index = -10
 
 [node name="Top" type="Sprite2D" parent="Skeleton" unique_id=378745195]
@@ -156,3 +164,57 @@ visible = false
 position = Vector2(-293.00003, -276.00003)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("19_1nvmp")
+
+[node name="BellTower" type="Sprite2D" parent="Skeleton" unique_id=454780020]
+visible = false
+position = Vector2(-179.6, -418.6)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("20_el1jj")
+
+[node name="Haven" type="Sprite2D" parent="Skeleton" unique_id=2116330440]
+visible = false
+position = Vector2(-178.8, -354.6)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("21_03fgm")
+
+[node name="Promenade" type="Sprite2D" parent="Skeleton" unique_id=1764375784]
+visible = false
+position = Vector2(-25.8, -326.8)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("22_jiy1d")
+
+[node name="TheSeveredSpine" type="Sprite2D" parent="Skeleton" unique_id=1703532121]
+visible = false
+position = Vector2(-294, -336.2)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("23_ud1os")
+
+[node name="CelestialBay" type="Sprite2D" parent="Skeleton" unique_id=1735476537]
+visible = false
+position = Vector2(-281.6, -492.1)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("24_fpmp2")
+
+[node name="TheBreathsSpring" type="Sprite2D" parent="Skeleton" unique_id=1688668417]
+visible = false
+position = Vector2(-105.4, -387.5)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("25_xiv05")
+
+[node name="Library" type="Sprite2D" parent="Skeleton" unique_id=895901732]
+visible = false
+position = Vector2(-38.3, -514.2)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("26_ud1os")
+
+[node name="Canopy" type="Sprite2D" parent="Skeleton" unique_id=844153898]
+visible = false
+position = Vector2(-100.2, -457.7)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("27_fpmp2")
+
+[node name="FeralUndergrowth" type="Sprite2D" parent="Skeleton" unique_id=196988456]
+visible = false
+position = Vector2(-195, -305)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("28_xiv05")

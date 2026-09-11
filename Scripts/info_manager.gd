@@ -34,6 +34,10 @@ This feature is in no way finished."""
 
 func add_page(feature_info: FeaturePanel) -> void:
 	add_page_node(await create_page(feature_info))
+	select_last_page()
+
+
+func select_last_page() -> void:
 	var index: int = $VBoxContainer/Tabs.get_child_count() - 1
 	$VBoxContainer/TabBar.current_tab = index
 	select_tab(index)

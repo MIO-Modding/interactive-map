@@ -135,7 +135,7 @@ func get_mio_saves() -> Array[String]:
 	return result
 
 
-func save_save(state: Main.PlayerState, file_name: String = "") -> void:
+func save_save(_state: Main.PlayerState, file_name: String = "") -> void:
 	if file_name.is_empty():
 		file_name = "slot_" + str($Lists/FIle/V/Scroll/VBoxContainer.get_child_count() + 1)
 	
@@ -197,3 +197,22 @@ func _on_new_state_pressed() -> void:
 
 func _on_delete_state_button_toggled(toggled_on: bool) -> void:
 	toggle_delete.emit(toggled_on)
+
+
+func _on_difference_pressed() -> void:
+	var page := InfoPage.new()
+	page.name = "States VS Save Files"
+	page.text = """
+# States VS Save Files
+
+#### States
+States are this map's way of saving your progress. It is a type native to this, and only usable to this.
+It stores the items you set and the locations you've checked.
+It does not store any archipelago information, that will be automatically restored when you re-connect to the server.
+
+#### Save Files
+These are saves that mio can actually read.
+It also doesn't store any archipelago information.
+"""
+	get_parent().get_node("Info").add_page_node(page)
+	get_parent().get_node("Info").select_last_page()
