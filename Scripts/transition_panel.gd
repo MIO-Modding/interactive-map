@@ -163,7 +163,7 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 	
 	if not node.is_inside_tree():
 		await node.tree_entered
-	var state = node.get_node("/root/Main").player_state
+	var state: Main.PlayerState = Globals.main.player_state
 	
 	while edited_string.contains("{"):
 		var right_brace_pos: int = edited_string.find("}")

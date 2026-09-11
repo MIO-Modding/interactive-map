@@ -1,12 +1,17 @@
 [gd_scene format=3 uid="uid://byon55q32ykw1"]
 
 [ext_resource type="Script" uid="uid://dnq0nxqfw3n3" path="res://Scripts/main.gd" id="1_bo1nx"]
+[ext_resource type="FontFile" uid="uid://uuqfviuc7ns4" path="res://Speeches/Gilroy-Light.otf" id="1_ynf5e"]
 [ext_resource type="Script" uid="uid://cgrgrbd0cgj4" path="res://Scripts/items_panel.gd" id="2_8gbba"]
 [ext_resource type="PackedScene" uid="uid://d053j7xxppayl" path="res://Scenes/node_2d.tscn" id="3_8gbba"]
 [ext_resource type="Script" uid="uid://cf0bcw5xtc03o" path="res://Scripts/map_manager.gd" id="3_jjvhh"]
 [ext_resource type="Script" uid="uid://blhmfcrwuh8kj" path="res://Scripts/vector_2i_box.gd" id="5_kry3j"]
 [ext_resource type="Script" uid="uid://cccbr4ew5h430" path="res://Scripts/info_manager.gd" id="6_6bp64"]
 [ext_resource type="Script" uid="uid://dwe8brs2p3rup" path="res://Scripts/info_page.gd" id="6_21xkr"]
+[ext_resource type="Script" uid="uid://d2x5pifx5kcex" path="res://Scripts/saves.gd" id="8_344ge"]
+
+[sub_resource type="Theme" id="Theme_l064r"]
+default_font = ExtResource("1_ynf5e")
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
 font_color = Color(1, 0, 0, 1)
@@ -18,6 +23,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_l064r")
 script = ExtResource("1_bo1nx")
 
 [node name="TabContainer" type="TabContainer" parent="." unique_id=1961110247]
@@ -27,7 +33,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 5
+current_tab = 8
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -263,6 +269,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
+visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 5
@@ -279,7 +286,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -394,14 +401,6 @@ item_count = 1
 popup/item_0/text = "Area..."
 popup/item_0/id = 0
 
-[node name="TypeFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=1187889595]
-layout_mode = 2
-focus_mode = 1
-selected = 0
-item_count = 1
-popup/item_0/text = "Location Type..."
-popup/item_0/id = 0
-
 [node name="PositionContainer" type="FoldableContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=2015373869]
 layout_mode = 2
 folded = true
@@ -436,6 +435,14 @@ script = ExtResource("5_kry3j")
 text = "Center:"
 metadata/_custom_type_script = "uid://blhmfcrwuh8kj"
 
+[node name="TypeFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=1187889595]
+layout_mode = 2
+focus_mode = 1
+selected = 0
+item_count = 1
+popup/item_0/text = "Location Type..."
+popup/item_0/id = 0
+
 [node name="LogicFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=47395043]
 layout_mode = 2
 focus_mode = 1
@@ -460,6 +467,17 @@ popup/item_0/id = 0
 popup/item_1/text = "Found Locs"
 popup/item_1/id = 1
 popup/item_2/text = "Not Found Locs"
+popup/item_2/id = 2
+
+[node name="ScoutableFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=887430335]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Scoutable..."
+popup/item_0/id = 0
+popup/item_1/text = "Can Scout"
+popup/item_1/id = 1
+popup/item_2/text = "Cannot Scout"
 popup/item_2/id = 2
 
 [node name="GoalOption" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1195380631]
@@ -570,6 +588,155 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 7
 
+[node name="Saves" type="Control" parent="TabContainer" unique_id=672664825]
+layout_mode = 2
+script = ExtResource("8_344ge")
+metadata/_tab_index = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Saves" unique_id=1791160555]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AsState" type="HBoxContainer" parent="TabContainer/Saves/VBoxContainer" unique_id=1553225497]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StateSave" type="Panel" parent="TabContainer/Saves/VBoxContainer/AsState" unique_id=592335120]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TabContainer/Saves/VBoxContainer/AsState/StateSave" unique_id=1889151448]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Save as State"
+horizontal_alignment = 1
+
+[node name="StateLoad" type="Panel" parent="TabContainer/Saves/VBoxContainer/AsState" unique_id=1832944010]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TabContainer/Saves/VBoxContainer/AsState/StateLoad" unique_id=1888495630]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Load as State"
+horizontal_alignment = 1
+
+[node name="AsSaveFile" type="HBoxContainer" parent="TabContainer/Saves/VBoxContainer" unique_id=392888348]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FileSave" type="Panel" parent="TabContainer/Saves/VBoxContainer/AsSaveFile" unique_id=449172034]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TabContainer/Saves/VBoxContainer/AsSaveFile/FileSave" unique_id=1152290888]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Save as Save File"
+horizontal_alignment = 1
+
+[node name="FileLoad" type="Panel" parent="TabContainer/Saves/VBoxContainer/AsSaveFile" unique_id=1550976220]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TabContainer/Saves/VBoxContainer/AsSaveFile/FileLoad" unique_id=453273103]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Load as Save File"
+horizontal_alignment = 1
+
+[node name="Lists" type="VBoxContainer" parent="TabContainer/Saves" unique_id=984965099]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="State" type="Panel" parent="TabContainer/Saves/Lists" unique_id=1427433492]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="V" type="VBoxContainer" parent="TabContainer/Saves/Lists/State" unique_id=185295562]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Scroll" type="ScrollContainer" parent="TabContainer/Saves/Lists/State/V" unique_id=9265367]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Saves/Lists/State/V/Scroll" unique_id=1083431003]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="NewButton" type="Button" parent="TabContainer/Saves/Lists/State/V" unique_id=29455274]
+layout_mode = 2
+text = "As New..."
+
+[node name="DeleteButton" type="CheckButton" parent="TabContainer/Saves/Lists/State/V" unique_id=1065053438]
+layout_mode = 2
+text = "Delete Mode"
+alignment = 1
+
+[node name="File" type="Panel" parent="TabContainer/Saves/Lists" unique_id=825569550]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="V" type="VBoxContainer" parent="TabContainer/Saves/Lists/File" unique_id=252615507]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Scroll" type="ScrollContainer" parent="TabContainer/Saves/Lists/File/V" unique_id=905846006]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Saves/Lists/File/V/Scroll" unique_id=194057870]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1
 anchors_preset = 3
@@ -664,16 +831,19 @@ text = "Skip (I know what I'm doing)"
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Rotation" to="TabContainer/Map" method="_on_rotation_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/IconStyle" to="TabContainer/Map" method="_on_icon_style_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption" to="TabContainer/Map" method="_on_shape_option_item_selected"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius" to="TabContainer/Map" method="_on_circle_radius_value_changed"]
 [connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition" to="TabContainer/Map" method="_on_circle_position_value_changed"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter" to="TabContainer/Map" method="_on_logic_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/CheckedFilter" to="TabContainer/Map" method="_on_checked_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/ScoutableFilter" to="TabContainer/Map" method="_on_scoutable_filter_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/GoalOption" to="." method="_on_goal_option_item_selected"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/+" to="TabContainer/Map" method="_on_plus_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/R" to="TabContainer/Map" method="_on_reset_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/-" to="TabContainer/Map" method="_on_minus_pressed"]
 [connection signal="tab_close_pressed" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="close_tab"]
 [connection signal="tab_selected" from="TabContainer/Info/VBoxContainer/TabBar" to="TabContainer/Info" method="select_tab"]
+[connection signal="pressed" from="TabContainer/Saves/Lists/State/V/NewButton" to="TabContainer/Saves" method="_on_new_state_pressed"]
+[connection signal="toggled" from="TabContainer/Saves/Lists/State/V/DeleteButton" to="TabContainer/Saves" method="_on_delete_state_button_toggled"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]

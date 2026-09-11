@@ -22,6 +22,8 @@ const MAP_IMAGE_X_POSITIONS: Dictionary[String, Dictionary] = {
 	},
 }
 
+var old_size: Vector2
+
 @onready var shape_option: OptionButton = $MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption
 
 @onready var map_node: Node2D = $SubViewportContainer/SubViewport/Node2D
@@ -29,13 +31,16 @@ const MAP_IMAGE_X_POSITIONS: Dictionary[String, Dictionary] = {
 
 func _process(_delta: float) -> void:
 	var viewport_size := get_viewport_rect().size
-	$SubViewportContainer/SubViewport.size = viewport_size - Vector2(0, 31)
-	$ScrollContainer.size.x = viewport_size.x
-	$ScrollContainer/PanelContainer.custom_minimum_size.x = viewport_size.x
-	
-	map_node.get_node("Camera2D").clamp_zoom()
-	$"ZoomBox/+".disabled = map_node.get_node("Camera2D").zoom >= Vector2(20, 20)
-	$"ZoomBox/-".disabled = map_node.get_node("Camera2D").zoom <= Vector2(0.5, 0.5)
+	if viewport_size != old_size:
+		$SubViewportContainer/SubViewport.size = viewport_size - Vector2(0, 31)
+		$ScrollContainer.size.x = viewport_size.x
+		$ScrollContainer/PanelContainer.custom_minimum_size.x = viewport_size.x
+		
+		map_node.get_node("Camera2D").clamp_zoom()
+		$"ZoomBox/+".disabled = map_node.get_node("Camera2D").zoom >= Vector2(20, 20)
+		$"ZoomBox/-".disabled = map_node.get_node("Camera2D").zoom <= Vector2(0.5, 0.5)
+		
+		old_size = viewport_size
 
 
 func update_filter() -> void:
@@ -153,6 +158,18 @@ func update_filter() -> void:
 		for i in location_points:
 			if i.get_meta("panel").type != loc_type_selected:
 				hide_location_point(i)
+	
+	match $MapSettings/VBoxContainer/Filters/VBoxContainer/ScoutableFilter.selected:
+		0:
+			pass
+		1:
+			for i in location_points:
+				if not (i.get_meta("panel").serialize() in LocationPanel.SCOUTABLE_LOCS or i.get_meta("panel").loc_description.contains("Mel's Shop")):
+					hide_location_point(i)
+		2:
+			for i in location_points:
+				if i.get_meta("panel").serialize() in LocationPanel.SCOUTABLE_LOCS or i.get_meta("panel").loc_description.contains("Mel's Shop"):
+					hide_location_point(i)
 
 
 func hide_location_point(loc_point: Polygon2D) -> void:
@@ -259,3 +276,6 @@ func _on_icon_style_item_selected(index: int) -> void:
 	var icon_style = $MapSettings/VBoxContainer/IconStyle.get_item_text(index)
 	for loc_icon: LocationIcon in map_node.get_node("LocPoints").get_children():
 		loc_icon.icon_style = icon_style
+
+func _on_scoutable_filter_item_selected(_index: int) -> void:
+	update_filter()

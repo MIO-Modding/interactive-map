@@ -90,12 +90,13 @@ func set_wikitext() -> void:
 	panel.info_recieved.emit()
 
 
-func _on_amount_value_changed(value: float) -> void:
-	var amount: int = roundi(value)
-	$/root/Main.player_state.prog_items = $/root/Main.player_state.prog_items.filter(func(e): return e != item_name)
-	for i in amount:
-		$/root/Main.player_state.prog_items.append(item_name)
-	$/root/Main.update_itempool.emit()
+func _on_amount_value_changed(_value: float) -> void:
+	pass
+	#var amount: int = roundi(value)
+	#$/root/Main.player_state.prog_items = $/root/Main.player_state.prog_items.filter(func(e): return e != item_name)
+	#for i in amount:
+		#$/root/Main.player_state.prog_items.append(item_name)
+	#$/root/Main.update_itempool.emit()
 
 
 func _on_toggle_toggled(toggled_on: bool) -> void:

@@ -20,7 +20,7 @@ func close_tab(tab: int) -> void:
 	$VBoxContainer/Tabs.get_child(tab).queue_free()
 	$VBoxContainer/TabBar.remove_tab(tab)
 	
-	if $VBoxContainer/Tabs.get_child_count() <= 0:
+	if $VBoxContainer/Tabs.get_child_count() <= 1:
 		var page := InfoPage.new()
 		page.name = "Main"
 		page.text = """
@@ -33,7 +33,7 @@ This feature is in no way finished."""
 
 
 func add_page(feature_info: FeaturePanel) -> void:
-	await add_page_node(await create_page(feature_info))
+	add_page_node(await create_page(feature_info))
 	var index: int = $VBoxContainer/Tabs.get_child_count() - 1
 	$VBoxContainer/TabBar.current_tab = index
 	select_tab(index)
@@ -54,6 +54,6 @@ func create_page(feature_info: FeaturePanel) -> InfoPage:
 
 func add_page_node(page: InfoPage) -> void:
 	@warning_ignore("redundant_await")
-	$VBoxContainer/TabBar.add_tab(await page.feature_panel.get_pagename())
+	$VBoxContainer/TabBar.add_tab(str(page.name))
 	$VBoxContainer/Tabs.add_child(page)
 	page.update()
