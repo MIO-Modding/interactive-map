@@ -259,6 +259,8 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 	room_requirements_sheet = []
 	
 	assert(KIND_MAXES.has(kind))
+	if body.is_empty():
+		return
 	fill_sheet(kind, body, KIND_MAXES[kind])
 	
 	match kind:
