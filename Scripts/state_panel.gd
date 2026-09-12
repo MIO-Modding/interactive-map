@@ -9,6 +9,15 @@ class_name StatePanel extends PanelContainer
 			if get_child_count() > 0:
 				$H/Name.text = v
 
+var file_name: String:
+	set(v):
+		if v.is_empty():
+			print(text)
+		
+		get_saves_tab().remove_meta_file(self)
+		file_name = v
+		get_saves_tab().make_meta_file(self)
+
 var is_save_panel := false
 
 var save_index: int:
@@ -19,9 +28,21 @@ var save_index: int:
 				$H/OrderLabel.text = "#%d" % (v + 1)
 				$H/OrderLabel.self_modulate = Color.GOLDENROD if v < 3 else Color.WHITE
 				
+				if v < 3:
+					if file_name != "slot_%d" % v and not file_name.is_empty():
+						file_name = "slot_%d" % v
+				elif file_name.contains("slot_") and file_name.length() == 6:
+					if file_name != text and not file_name.is_empty():
+						file_name = text
+						get_saves_tab().update_display()
+				else:
+					get_saves_tab().make_meta_file(self)
+				
 				await get_tree().process_frame
 				$H/MoveDown.disabled = v >= get_parent().get_child_count() - 1
 				$H/MoveUp.disabled = v <= 0
+
+var in_mio_dir := false
 
 
 func _init() -> void:
@@ -78,15 +99,23 @@ func delete_file() -> void:
 
 func move_up() -> void:
 	save_index -= 1
+	if save_index < 3:
+		get_saves_tab().set_slot(save_index, text)
 	var displacing: StatePanel = get_parent().get_child(save_index)
 	displacing.save_index += 1
+	if displacing.save_index < 3:
+		get_saves_tab().set_slot(displacing.save_index, displacing.text)
 	get_parent().move_child(self, save_index)
 
 
 func move_down() -> void:
 	save_index += 1
+	if save_index < 3:
+		get_saves_tab().set_slot(save_index, text)
 	var displacing: StatePanel = get_parent().get_child(save_index)
 	displacing.save_index -= 1
+	if displacing.save_index < 3:
+		get_saves_tab().set_slot(displacing.save_index, displacing.text)
 	get_parent().move_child(self, save_index)
 
 

@@ -20,6 +20,7 @@ func _ready() -> void:
 	
 	Globals.main.finished_requesting.connect(update_display)
 	mio_saves_path = find_mio_saves_path()
+	set_slot(0, "og_slot_0")
 
 
 func update_display() -> void:
@@ -39,9 +40,11 @@ func update_display() -> void:
 	
 	if not OS.has_feature("web") and not mio_saves_path.is_empty():
 		var all_files: Array[String] = get_mio_saves()
-		#for i in range(3):
-			#if all_files.has("slot_%d" % i):
-				#pass # make metadata
+		for i in range(3):
+			if all_files.has("slot_%d" % i) and not all_files.has("og_slot_%d" % i):
+				overwrite_file("og_slot_%d" % i, "slot_%d" % i)
+				all_files.append("og_slot_%d" % i)
+			all_files.erase("slot_%d" % i)
 		
 		var all_saves: Array[StatePanel]
 		all_saves.assign($Lists/File/V/Scroll/VBoxContainer.get_children())
@@ -57,15 +60,38 @@ func update_display() -> void:
 			all_files.sort_custom(func(str1: String, str2: String): return str1.naturalnocasecmp_to(str2) < 0)
 		
 		var start_index = 0
-		for i in range(3).map(func(e): return "slot_%d" % e):
+		for i in range(3).map(func(e): return "og_slot_%d" % e):
 			if all_files.has(i):
 				start_index += 1
 		
-		for file_name in all_files:
+		#var metas: Array[String]
+		#metas.assign(Array(DirAccess.get_files_at(METADATA_PATH.trim_suffix("%s.dat"))).map(func(e): return e.trim_suffix(".dat")))
+		#
+		#var metadata: Dictionary[String, Dictionary]
+		#for i in metas:
+			#metadata[i] = JSON.parse_string(FileAccess.open(METADATA_PATH % i, FileAccess.READ).get_as_text())
+		
+		#var all_names = metadata.values().map(func(e): return e["name"])
+		
+		for file_name: String in all_files:
+			
 			var state_panel := await StatePanel.new()
 			
+			#if file_name in metadata:
+				#var data: Dictionary
+				#if file_name.trim_prefix("og_") in metadata and not file_name in metadata:
+					#data = metadata[file_name.trim_prefix("og_")]
+				#else:
+					#data = metadata[file_name]
+				#
+				#state_panel.file_name = file_name
+				#state_panel.text = data["name"]
+				#state_panel.in_mio_dir = data["in_mio_dir"]
+				#state_panel.save_index = data["index"]
+			#else:
+			
 			if all_saves.is_empty():
-				if range(3).map(func(e): return "slot_%d" % e).has(file_name):
+				if range(3).map(func(e): return "og_slot_%d" % e).has(file_name):
 					state_panel.save_index = file_name[-1].to_int()
 				else:
 					state_panel.save_index = start_index
@@ -75,9 +101,16 @@ func update_display() -> void:
 					if i.text == file_name:
 						state_panel.save_index = i.save_index
 			
+			state_panel.file_name = file_name
+			#if file_name.length() == 6:
+				#file_name = file_name.replace("slot_", "og_slot_")
 			state_panel.text = file_name
+			state_panel.in_mio_dir = true
+			
+			#make_meta_file(state_panel)
+			
 			state_panel.is_save_panel = true
-			state_panel.call_deferred("toggle_delete", $Lists/State/V/DeleteButton.button_pressed)
+			state_panel.call_deferred("change_mode", $Lists/File/V/ModeOption.selected)
 			state_panel.call_deferred("set", "save_index", state_panel.save_index)
 			$Lists/File/V/Scroll/VBoxContainer.add_child(state_panel)
 		
@@ -224,8 +257,65 @@ func load_save(file_name: String) -> Main.PlayerState:
 	return state
 
 
+## Intended to only be used on save file [StatePanel]s
 func make_meta_file(from: StatePanel) -> void:
-	pass
+	var data: Dictionary = {
+		"index": from.save_index,
+		"name": from.text,
+		"file_name": from.file_name,
+		"in_mio_dir": from.in_mio_dir
+	}
+	
+	var file := FileAccess.open(METADATA_PATH % from.file_name, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+
+
+func remove_meta_file(from: StatePanel) -> void:
+	DirAccess.remove_absolute(METADATA_PATH % from.file_name)
+
+
+func overwrite_file(old_save: String, new_save: String) -> void:
+	var data: String
+	data = FileAccess.open(mio_saves_path % new_save, FileAccess.READ).get_as_text()
+	var new_file := FileAccess.open(mio_saves_path % old_save, FileAccess.WRITE)
+	new_file.store_string(data)
+
+
+func set_slot(index: int, file_name: String) -> void:
+	if not FileAccess.file_exists(SAVES_FOLDER + "/slot_assignments.dat"):
+		FileAccess.open(SAVES_FOLDER + "/slot_assignments.dat", FileAccess.WRITE).store_string(JSON.stringify(range(3).map(func(e): return "og_slot_%d" % e)))
+	
+	var file = FileAccess.open(SAVES_FOLDER + "/slot_assignments.dat", FileAccess.READ)
+	var data: Array = JSON.parse_string(file.get_as_text())
+	data[index] = file_name
+	file.close()
+	file = FileAccess.open(SAVES_FOLDER + "/slot_assignments.dat", FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+	
+	await get_tree().process_frame
+	update_slot_mappings()
+
+
+func update_slot_mappings() -> void:
+	var file = FileAccess.open(SAVES_FOLDER + "/slot_assignments.dat", FileAccess.READ)
+	var data: Array = JSON.parse_string(file.get_as_text())
+	
+	for i in range(3):
+		overwrite_file("slot_%d" % i, data[i])
+
+
+func reset_slot_mappings() -> void:
+	FileAccess.open(SAVES_FOLDER + "/slot_assignments.dat", FileAccess.WRITE).store_string(JSON.stringify(range(3).map(func(e): return "og_slot_%d" % e)))
+	await get_tree().process_frame
+	update_slot_mappings()
+
+
+func convert_to_og(slot: String) -> String:
+	if slot.begins_with("slot_") and slot[-1].is_valid_int() and slot.length() == 6:
+		return "og_" + slot
+	else:
+		return slot
 
 
 func _on_new_state_pressed() -> void:
