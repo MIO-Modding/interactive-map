@@ -528,6 +528,7 @@ func update_reachable() -> void:
 		update_loc_group_labels()
 
 
+## Updates the location group labels for mel and capucine
 func update_loc_group_labels() -> void:
 	var group_labels: Node2D = get_node("TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocGroupLabels")
 	group_labels.get_node("Mel").self_modulate = get_location_panel("HUB_hub_shop: Buy from Mel's Shop (Maintenance Hack)").modulate
@@ -536,7 +537,7 @@ func update_loc_group_labels() -> void:
 	for i in range(1, 4):
 		group_labels.get_node("MelLabels/Scrap%d" % i).self_modulate = LEVEL_COLORS[await theoretical_logic("HUB_hub_shop", "Mel Freed and %d Scrapling%s" % [i, "" if i == 1 else "s"])]
 	
-	group_labels.get_node("Capucine").self_modulate = LEVEL_COLORS[await theoretical_logic("LQ_ruins_hall_C1", "True")]
+	group_labels.get_node("Capucine").self_modulate = LEVEL_COLORS[await theoretical_logic("LQ_ruins_hall_C1", "BOSS:VINE")]
 
 
 ## Returns all reachable locations
@@ -653,6 +654,22 @@ func loc_in_logic(loc_panel: LocationPanel, override_logic_kind := LogicLevels.N
 ## If the [param string_list] contains only empty strings
 func is_empty_string_list(string_list: Array[String]) -> bool:
 	return "".join(string_list).is_empty()
+
+
+## The logic level that a location in room [param room_id] with intended logic [param logic_string] would have
+func theoretical_logic(room_id: String, logic_string: String) -> LogicLevels:
+	var parsed: Callable = await TransitionPanel.string_to_logic(logic_string, "intended", self)
+	if not parsed.call():
+		return LogicLevels.NONE
+	else:
+		if reachable_rooms.has(room_id):
+			return LogicLevels.INTENDED_LOGIC
+		elif simple_reachable_rooms.has(room_id):
+			return LogicLevels.SIMPLE_SKIPS
+		elif advanced_reachable_rooms.has(room_id):
+			return LogicLevels.ADVANCED_SKIPS
+		else:
+			return LogicLevels.NONE
 
 
 ## Get the position a point should be drawn on the map in different wheel rotations
@@ -1137,7 +1154,7 @@ class PlayerState:
 	## Serializes the [param loc], in manual form. [br]
 	## This form is [member LocationPanel.room_id]--([member LocationPanel.vanilla_item])
 	static func get_manual_serialized(loc: LocationPanel) -> String:
-		var result: Stringt
+		var result: String
 		var room: String = loc.room_id
 		var item: String = loc.vanilla_item
 		if loc.vanilla_item.contains("Capucined"):
