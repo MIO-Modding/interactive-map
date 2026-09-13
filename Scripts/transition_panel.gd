@@ -111,9 +111,7 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 		if from_type == "intended":
 			return func(): return true
 		else:
-			if not node.is_inside_tree():
-				await node.tree_entered
-			await node.get_tree().process_frame
+			await Globals.get_tree().process_frame
 			var getting: String = "%s_logic" % heirarchy[heirarchy.find(from_type) - 1]
 			if getting in node:
 				return node.get(getting)
