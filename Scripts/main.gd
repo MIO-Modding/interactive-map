@@ -445,8 +445,9 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					loc_panel.simple_string = combine_logic_strings(loc_panel.simple_string, row[columns["Requirements (Medium)"]])
 				loc_panel.intended_string = combine_logic_strings(loc_panel.intended_string, row[columns["Requirements (Easy/Intended)"]])
 			
+			await get_tree().process_frame
 			update_reachable()
-			for i in range(4):
+			for i in range(3):
 				await get_tree().process_frame
 			update_map()
 			update_itempool.connect(update_map)
