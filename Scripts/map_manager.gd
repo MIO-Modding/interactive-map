@@ -48,8 +48,9 @@ func update_filter() -> void:
 	var room_panels = map_node.get_node("Panels").get_children()
 	var transition_lines = map_node.get_node("Lines").get_children()
 	var location_points = map_node.get_node("LocPoints").get_children()
+	var location_lines = map_node.get_node("LocLines").get_children()
 	
-	for i in room_points + transition_lines + location_points + map_node.get_node("LocLines").get_children():
+	for i in room_points + transition_lines + location_points + location_lines:
 		i.show()
 	
 	var region_index: int = $MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.selected
@@ -189,6 +190,7 @@ func _on_reset_pressed() -> void:
 
 
 func _on_room_points_toggled(toggled_on: bool) -> void:
+	map_node.get_node("LocLines").visible = toggled_on and $MapSettings/VBoxContainer/Locations.button_pressed
 	map_node.get_node("Points").visible = toggled_on
 
 
@@ -197,8 +199,9 @@ func _on_transitions_toggled(toggled_on: bool) -> void:
 
 
 func _on_locations_toggled(toggled_on: bool) -> void:
-	map_node.get_node("LocLines").visible = toggled_on
+	map_node.get_node("LocLines").visible = toggled_on and $MapSettings/VBoxContainer/RoomPoints.button_pressed
 	map_node.get_node("LocPoints").visible = toggled_on
+	map_node.get_node("LocGroupLabels").visible = toggled_on
 
 
 func _on_area_filter_item_selected(_index: int) -> void:
@@ -268,6 +271,11 @@ func _on_map_image_type_item_selected(index: int) -> void:
 			map_node.get_node("Textures").show()
 			map_node.get_node("Skeleton").hide()
 
+
+func _on_icon_style_item_selected(index: int) -> void:
+	var icon_style = $MapSettings/VBoxContainer/IconStyle.get_item_text(index)
+	for loc_icon: LocationIcon in map_node.get_node("LocPoints").get_children():
+		loc_icon.icon_style = icon_style
 
 func _on_scoutable_filter_item_selected(_index: int) -> void:
 	update_filter()
