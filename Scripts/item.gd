@@ -81,7 +81,7 @@ func update() -> void:
 
 func set_wikitext() -> void:
 	panel.wikitext = BASE_WIKITEXT % [
-		item_name, (("(%s)" % save_entry) if not save_entry.is_empty() else ""),
+		item_name, (("(%s)" % Globals.fix_underscores(save_entry)) if not save_entry.is_empty() else ""),
 		Globals.fix_underscores(room), Globals.main.get_room_panel(room).region_name,
 		ItemClassifications.find_key(classification).capitalize(),
 		notes

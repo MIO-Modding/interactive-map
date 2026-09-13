@@ -777,6 +777,7 @@ func update_map() -> void:
 			elif advanced_reachable_locations.has(loc_panel):
 				reachable_color = TransitionPanel.LOGIC_LEVEL_COLORS["advanced"]
 		point.self_modulate = reachable_color
+		point.scale = Vector2.ONE * clampf(((35.0 - map_node.get_node("Camera2D").zoom.x) / 25.0), 0.4, 1.0)
 		loc_panel.modulate = reachable_color
 		point.name = loc_panel.room_id + ": " + loc_panel.loc_description
 		if loc_panel.room_id == "ST_security_secret_S1":
