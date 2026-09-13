@@ -19,7 +19,9 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion and not Input.is_action_pressed("mouse1"):
+		return
+	if event is InputEventJoypadMotion:
 		return
 	
 	var previous_zoom: Vector2 = zoom

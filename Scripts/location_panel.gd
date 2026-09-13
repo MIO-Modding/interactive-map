@@ -6,6 +6,7 @@ const BASE_WIKITEXT: String = """
 
 This location is in %s (%s), found %s.
 Its type is %s, and it usually has %s.
+It is %sscoutable.
 
 ### Vanilla Item
 Item Name: %s
@@ -13,6 +14,10 @@ Save Flag: %s
 Type: %s
 
 ### Logic
+Intended: %s
+Simple Skips: %s
+Advanced Skips: %s
+#### Computerized Logic
 Intended: %s
 Simple Skips: %s
 Advanced Skips: %s
@@ -34,6 +39,7 @@ const SCOUTABLE_LOCS: Array[String] = [
 	"ST_cuves_hook_P9: Right Crucible",
 	"ST_cuves_main_P1: Talk to samsk in the Tube after both Data Reports",
 	"HUB_hub_asma_P1: Talk to the Eye after 12 Candles",
+	"ST_tube_vanilla_S1: Next to the Elevator",
 ]
 
 
@@ -130,8 +136,10 @@ func get_wikitext() -> String:
 		Globals.fix_underscores(room_id), loc_description, region_name,
 		Globals.fix_underscores(room_id), region_name, decapitalize(loc_description),
 		type, vanilla_item,
+		("" if SCOUTABLE_LOCS.has(serialize()) else "not "),
 		vanilla_item, Globals.fix_underscores(save_flag), type,
 		Globals.fix_underscores(intended_string), Globals.fix_underscores(simple_string), Globals.fix_underscores(advanced_string),
+		TransitionPanel.comp_info_string(intended_string), TransitionPanel.comp_info_string(simple_string), TransitionPanel.comp_info_string(advanced_string),
 		("Yes" if checked else "No"),
 		str(coords),
 		notes

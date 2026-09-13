@@ -15,6 +15,10 @@ This transition goes from %s (%s) to %s (%s).
 Intended: %s
 Simple Skips: %s
 Advanced Skips: %s
+#### Computerized Logic
+Intended: %s
+Simple Skips: %s
+Advanced Skips: %s
 
 ### Door
 State: %s
@@ -120,37 +124,47 @@ static func string_to_logic(string: String, from_type: String, node: Node) -> Ca
 	elif string == "False":
 		return func(): return false
 	else:
-		string = string.replace("(", "{ ").replace(")", " }").replace(" and ", " && ").replace(" or ", " || ").replace("glide", "sail")
-		for i in ["airstall", "crystal_stall", "ground_pogo", "enemy_pogo", "pogo_jump", "enemy_pogos"]:
-			string = string.replace(i, "slash")
-		string = string.replace("Meet Mel", "Find Mel")
-		string = string.replace("hairpin_launch", "hairpin").replace("slope_boost", "True")
-		string = string.replace("e_dodge", "{ dodge && TRINKET:BETTER_DODGE }")
-		string = string.replace("latency", "TRINKET:FAST_RECOVERY")
-		string = string.replace("defrag_pogo", "{ slash && TRINKET:ORB_RECOVERY && TRINKET:FAST_RECOVERY }").replace("defrag", "TRINKET:ORB_RECOVERY")
-		string = string.replace("sail_stall", "{ slash && sail }").replace("strider_triple", "striders")
-		string = string.replace("splodge", "{ dodge && TRINKET:ORB_BLOCK }")
-		string = string.replace("shairpin", "{ slash && hairpin && TRINKET:HOOK_SLASH }")
-		string = string.replace("pain_conv", "TRINKET:KINETIC_CONVERSION")
-		string = string.replace("hazard_striders", "striders").replace("wall_climb", "{ slash && dodge }")
-		string = string.replace("hazard_respawn", "True")
-		string = string.replace("super_spring", "True")
-		string = string.replace("laser_skip", "slash")
-		string = string.replace("flower_warp", "slash")
-		string = string.replace("enemy_lure", "True")
-		string = string.replace("harvester", "{ harvester && slash }").replace("slingshot", "{ slingshot && slash }")
-		string = string.replace("flowing_steps", "{ striders && flowing_steps }").replace("striders", "{ striders || flowing_steps }")
-		string = string.replace("{ striders || flowing_steps } & flowing_steps", "striders & flowing_steps")
-		string = string.replace("CHEST_KEY:0-5", "{ CHEST_KEY:0 && CHEST_KEY:1 && CHEST_KEY:2 && CHEST_KEY:3 && CHEST_KEY:4 && CHEST_KEY:5 }")
-		string = string.replace("Find Mel && Mel Freed", "Mel Freed").replace("Mel Freed", "Find Mel && Mel Freed")
-		string = string.replace("1 Scrapling", "{ Find Sin || Find Cos || Find Tan }")
-		string = string.replace("2 Scraplings", "{ { Find Sin && Find Cos } || { Find Sin && Find Tan } || { Find Cos && Find Tan } }")
-		string = string.replace("3 Scraplings", "{ Find Sin && Find Cos && Find Tan }")
-		string = string.replace("attack", "{ slash || { hairpin && TRINKET:CARLO_HOOK } || { hairpin && TRINKET:DECOY } || { glide && TRINKET:GLIDE_STATIC } }") # TODO
-		
-		return await parse_logic(string, node)
+		return await parse_logic(computerize_logic_string(string), node)
 	
 	return func(): return false
+
+
+static func computerize_logic_string(string: String) -> String:
+	string = string.replace("(", "{ ").replace(")", " }").replace(" and ", " && ").replace(" or ", " || ").replace("glide", "sail")
+	for i in ["airstall", "crystal_stall", "ground_pogo", "enemy_pogo", "pogo_jump", "enemy_pogos"]:
+		string = string.replace(i, "slash")
+	string = string.replace("Meet Mel", "Find Mel")
+	string = string.replace("hairpin_launch", "hairpin").replace("slope_boost", "True")
+	string = string.replace("e_dodge", "{ dodge && TRINKET:BETTER_DODGE }")
+	string = string.replace("latency", "TRINKET:FAST_RECOVERY")
+	string = string.replace("defrag_pogo", "{ slash && TRINKET:ORB_RECOVERY && TRINKET:FAST_RECOVERY }").replace("defrag", "TRINKET:ORB_RECOVERY")
+	string = string.replace("sail_stall", "{ slash && sail }").replace("strider_triple", "striders")
+	string = string.replace("splodge", "{ dodge && TRINKET:ORB_BLOCK }")
+	string = string.replace("shairpin", "{ slash && hairpin && TRINKET:HOOK_SLASH }")
+	for way in ["stroost", "striders boost", "striders_boost"]:
+		string = string.replace(way, "{ striders && dodge }")
+	string = string.replace("pain_conv", "TRINKET:KINETIC_CONVERSION")
+	string = string.replace("hazard_striders", "striders").replace("wall_climb", "{ slash && dodge }")
+	string = string.replace("hazard_respawn", "True")
+	string = string.replace("super_spring", "True")
+	string = string.replace("laser_skip", "slash")
+	string = string.replace("flower_warp", "slash")
+	string = string.replace("enemy_lure", "True")
+	string = string.replace("harvester", "{ harvester && slash }").replace("slingshot", "{ slingshot && slash }")
+	string = string.replace("flowing_steps", "{ striders && flowing_steps }").replace("striders", "{ striders || flowing_steps }")
+	string = string.replace("{ striders || flowing_steps } && flowing_steps", "striders && flowing_steps")
+	string = string.replace("CHEST_KEY:0-5", "{ CHEST_KEY:0 && CHEST_KEY:1 && CHEST_KEY:2 && CHEST_KEY:3 && CHEST_KEY:4 && CHEST_KEY:5 }")
+	string = string.replace("Find Mel && Mel Freed", "Mel Freed").replace("Mel Freed", "Find Mel && Mel Freed")
+	string = string.replace("1 Scrapling", "{ Find Sin || Find Cos || Find Tan }")
+	string = string.replace("2 Scraplings", "{ { Find Sin && Find Cos } || { Find Sin && Find Tan } || { Find Cos && Find Tan } }")
+	string = string.replace("3 Scraplings", "{ Find Sin && Find Cos && Find Tan }")
+	string = string.replace("attack", "{ slash || { hairpin && TRINKET:CARLO_HOOK } || { hairpin && TRINKET:DECOY } || { glide && TRINKET:GLIDE_STATIC } }") # TODO
+	
+	return string
+
+
+static func comp_info_string(string: String):
+	return Globals.fix_underscores(computerize_logic_string(string).replace("||", "or").replace("&&", "and"))
 
 
 static func parse_logic(logic_string: String, node: Node) -> Callable:
@@ -271,7 +285,8 @@ func get_wikitext() -> String:
 		Globals.fix_underscores(from), Globals.fix_underscores(to),
 		Globals.fix_underscores(from), Globals.main.get_room_panel(from).region_name, 
 		Globals.fix_underscores(to), Globals.main.get_room_panel(to).region_name,
-		intended_string, simple_string, advanced_string,
+		Globals.fix_underscores(intended_string), Globals.fix_underscores(simple_string), Globals.fix_underscores(advanced_string),
+		comp_info_string(intended_string), comp_info_string(simple_string), comp_info_string(advanced_string),
 		door,
 		notes
 	]

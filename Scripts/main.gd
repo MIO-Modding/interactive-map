@@ -190,6 +190,7 @@ var wheel_rotation := "0":
 	"MAP_SETTINGS>LOCATIONS": $TabContainer/Map/MapSettings/VBoxContainer/Locations,
 	"MAP_SETTINGS>MAP_IMAGE_TYPE": $TabContainer/Map/MapSettings/VBoxContainer/MapImageType,
 	"MAP_SETTINGS>MAP_ROTATION": $TabContainer/Map/MapSettings/VBoxContainer/Rotation,
+	"MAP_SETTINGS>ICON_STYLE": $TabContainer/Map/MapSettings/VBoxContainer/IconStyle,
 	
 	"FILTERS>AREA_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter,
 	"FILTERS>TYPE_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter,
