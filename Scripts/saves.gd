@@ -173,7 +173,10 @@ func find_mio_dir() -> String:
 			result += "\\" + DirAccess.get_directories_at(result)[0]
 		elif OS.has_feature("linux"):
 			result = OS.get_environment("HOME") + "/.local/share/Steam/steamapps/compatdata/1672810/pfx/drive_c/users/steamuser/AppData/Local/MIO/Saves/Steam/"
-			result += "/" + DirAccess.get_directories_at(result)[0]
+			if DirAccess.dir_exists_absolute(result):
+				result += "/" + DirAccess.get_directories_at(result)[0]
+			else:
+				return ""
 	return result
 
 
