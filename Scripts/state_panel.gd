@@ -14,9 +14,9 @@ var file_name: String:
 		if v.is_empty():
 			print(text)
 		
-		get_saves_tab().remove_meta_file(self)
+		#get_saves_tab().remove_meta_file(self)
 		file_name = v
-		get_saves_tab().make_meta_file(self)
+		#get_saves_tab().make_meta_file(self)
 
 var is_save_panel := false
 
@@ -35,8 +35,8 @@ var save_index: int:
 					if file_name != text and not file_name.is_empty():
 						file_name = text
 						get_saves_tab().update_display()
-				else:
-					get_saves_tab().make_meta_file(self)
+				#else:
+					#get_saves_tab().make_meta_file(self)
 				
 				await get_tree().process_frame
 				$H/MoveDown.disabled = v >= get_parent().get_child_count() - 1
