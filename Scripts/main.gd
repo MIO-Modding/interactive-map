@@ -185,7 +185,7 @@ var wheel_rotation := "0":
 var all_release_tags: Array[String]
 
 var non_node_preferences: Dictionary[String, Variant] = {
-	"MISC>SEEN_PATCH_NOTES": false,
+	"MISC>SEEN_PATCH_NOTES": "0.0.0",
 }
 
 ## The save keys to preference nodes
@@ -215,6 +215,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 
 func _ready() -> void:
 	$LoadingScreen.show()
+	$TabContainer.current_tab = 5
 	player_state = PlayerState.new()
 	player_state.main = self
 	update_itempool.connect(func(): update_transitions.emit())
@@ -467,9 +468,10 @@ func run_other_requests() -> void:
 	
 	await get_child(-1).request_completed
 	
-	if not non_node_preferences["MISC>SEEN_PATCH_NOTES"]:
+	if non_node_preferences["MISC>SEEN_PATCH_NOTES"] != all_release_tags[0]:
 		request_release_notes()
-		non_node_preferences["MISC>SEEN_PATCH_NOTES"] = true
+		non_node_preferences["MISC>SEEN_PATCH_NOTES"] = all_release_tags[0]
+		save_all_preferences()
 
 
 ## Requests release notes from github
