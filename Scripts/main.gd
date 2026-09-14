@@ -182,6 +182,12 @@ var wheel_rotation := "0":
 		wheel_rotation = v
 		rotation_changed.emit()
 
+var all_release_tags: Array[String]
+
+var non_node_preferences: Dictionary[String, Variant] = {
+	"MISC>SEEN_PATCH_NOTES": false,
+}
+
 ## The save keys to preference nodes
 @onready var preferences_to_save: Dictionary[String, Control] = {
 	"MAP_SETTINGS>DOUBLE_CLICK_CHECK": $TabContainer/Map/MapSettings/VBoxContainer/DoubleChecker,
@@ -252,6 +258,8 @@ func _ready() -> void:
 			i.pressed.connect(save_all_preferences)
 		elif i is OptionButton:
 			i.item_selected.connect(save_all_preferences.unbind(1))
+	
+	finished_requesting.connect(run_other_requests, CONNECT_ONE_SHOT)
 
 
 ## Requests all the sheet data and loads it when it arrives
@@ -451,6 +459,51 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				await get_tree().process_frame
 			update_map()
 			update_itempool.connect(update_map)
+
+
+## Requests the other info needed
+func run_other_requests() -> void:
+	request_all_releases()
+	
+	await get_child(-1).request_completed
+	
+	if not non_node_preferences["MISC>SEEN_PATCH_NOTES"]:
+		request_release_notes()
+		non_node_preferences["MISC>SEEN_PATCH_NOTES"] = true
+
+
+## Requests release notes from github
+func request_release_notes(target_release := "latest") -> void:
+	if target_release != "latest" and not target_release.contains("tag/"):
+		target_release = "tag/" + target_release
+	get_child(-1).request_completed.connect(on_release_notes_recieved, CONNECT_ONE_SHOT)
+	get_child(-1).request("https://api.github.com/repos/MIO-Modding/interactive-map/releases/" + target_release)
+
+
+## Opens an info page for a release
+func on_release_notes_recieved(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	var text := body.get_string_from_utf8()
+	var json: Dictionary = JSON.parse_string(text)
+	
+	var page := InfoPage.new()
+	page.text = json["body"]
+	page.name = page.text.get_slice("**", 1)
+	$TabContainer/Info.add_page_node(page)
+	$TabContainer/Info.select_last_page()
+
+
+## Requests a list of all releases from github
+func request_all_releases() -> void:
+	get_child(-1).request_completed.connect(on_releases_recieved, CONNECT_ONE_SHOT)
+	get_child(-1).request("https://api.github.com/repos/MIO-Modding/interactive-map/releases?per_page=100")
+
+
+## Sets [member all_release_tags] with the info from github
+func on_releases_recieved(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	var text := body.get_string_from_utf8()
+	var list: Array = JSON.parse_string(text)
+	list = list.map(func(e): return e["html_url"].get_slice("/tag/", 1))
+	all_release_tags.assign(list)
 
 
 ## Fills a sheet with data from [param body], limiting the amount of columns to [param cap]
@@ -988,6 +1041,8 @@ func save_all_preferences() -> void:
 	var result: Dictionary[String, Variant]
 	for i in preferences_to_save:
 		result[i] = get_preference(i)
+	for i in non_node_preferences:
+		result[i] = non_node_preferences[i]
 	var stringified: String = JSON.stringify(result)
 	stringified = stringified.replace(",", ",\n\t").replace("{", "{\n\t").replace("}", "\n}")
 	file.store_string(stringified)
@@ -995,6 +1050,9 @@ func save_all_preferences() -> void:
 
 ## Gets the preference value with the given [param key]
 func get_preference(key: String) -> Variant:
+	if non_node_preferences.has(key):
+		return non_node_preferences[key]
+	
 	var node: Control = preferences_to_save[key]
 	if node is CheckBox or node is CheckButton:
 		return node.button_pressed
@@ -1016,13 +1074,17 @@ func load_preferences() -> void:
 	var stringified: String = FileAccess.get_file_as_string("user://Data/prefs.dat")
 	stringified = stringified.replace("\n}", "}").replace("{\n\t", "{").replace(",\n\t", ",")
 	var data: Dictionary = JSON.parse_string(stringified)
-	for i in preferences_to_save:
+	for i in non_node_preferences.merged(preferences_to_save):
 		if data.has(i):
 			set_preference(i, data[i])
 
 
 ## Sets the preference at [param entry] with [param value]
 func set_preference(entry: String, value: Variant) -> void:
+	if non_node_preferences.has(entry):
+		non_node_preferences[entry] = value
+		return
+	
 	var node: Control = preferences_to_save[entry]
 	if node is CheckBox or node is CheckButton:
 		node.button_pressed = value
