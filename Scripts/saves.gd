@@ -182,6 +182,10 @@ func find_mio_dir() -> String:
 
 func find_mio_saves_path() -> String:
 	var result := find_mio_dir()
+	if result.is_empty():
+		return ""
+	if not DirAccess.dir_exists_absolute(result):
+		return ""
 	if OS.has_feature("windows"):
 		result += "\\%s.save"
 	elif OS.has_feature("linux"):
