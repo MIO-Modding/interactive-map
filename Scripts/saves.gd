@@ -190,7 +190,10 @@ func find_mio_saves_path() -> String:
 
 
 func get_mio_saves() -> Array[String]:
-	var result: Array[String]
+	var result: Array[String] = []
+	if mio_saves_path.is_empty():
+		return result
+	
 	var folder := DirAccess.open(mio_saves_path.trim_suffix("%s.save"))
 	
 	if folder:
@@ -216,6 +219,9 @@ func save_save(_state: Main.PlayerState, file_name: String = "") -> void:
 
 
 func load_save(file_name: String) -> Main.PlayerState:
+	if mio_saves_path.is_empty():
+		return null
+	
 	var state := Main.PlayerState.new()
 	var file := FileAccess.open(mio_saves_path.replace("\\", "/") % file_name, FileAccess.READ)
 	var contents: String = file.get_as_text()
