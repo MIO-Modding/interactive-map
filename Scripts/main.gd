@@ -11,22 +11,6 @@ signal finished_requesting
 ## Emitted when [member wheel_rotation] is set
 signal rotation_changed
 
-## The levels of logic used
-enum LogicLevels {
-	NONE, ## Out of logic (ool)
-	INTENDED_LOGIC, ## The player is intended in the game to be able to reach this room/location.
-	SIMPLE_SKIPS, ## The player can preform simple skips to be able to reach this room/location.
-	ADVANCED_SKIPS, ## The player can preform advanced skips to be able to reach this room/location.
-}
-
-## The associated colors for [enum LogicLevels]
-const LEVEL_COLORS: Dictionary[LogicLevels, Color] = {
-	LogicLevels.NONE: Color.WHITE,
-	LogicLevels.INTENDED_LOGIC: Color.GREEN,
-	LogicLevels.SIMPLE_SKIPS: Color.YELLOW,
-	LogicLevels.ADVANCED_SKIPS: Color(1.0, 0.5, 0.0),
-}
-
 ## The links to the csv exports for the sheets
 const DATA_LINKS: Dictionary[String, String] = {
 	"room requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=2144568902&single=true&output=csv",
@@ -146,7 +130,7 @@ var highlight_rows_in_logic := true
 ## Wether to highlight rows of sheets that are reachable
 var highlight_reachable_rows := true
 ## The current logic kind, used to calculate reachable locations/items
-var logic_kind: LogicLevels = LogicLevels.INTENDED_LOGIC
+var logic_kind: LogicLevel.LogicLevels = LogicLevel.LogicLevels.INTENDED_LOGIC
 
 ## Intended reachable rooms
 var reachable_rooms: Array[String]
@@ -568,18 +552,18 @@ func combine_logic_strings(string1: String, string2: String) -> String:
 	return "(%s) and (%s)" % [string1, string2]
 
 
-## Updates all reachable locations and items for each [enum LogicLevels]
+## Updates all reachable locations and items for each [enum LogicLevel.LogicLevels]
 func update_reachable() -> void:
-	logic_kind = LogicLevels.INTENDED_LOGIC
+	logic_kind = LogicLevel.LogicLevels.INTENDED_LOGIC
 	reachable_rooms = get_reachable()
 	reachable_locations = get_reachable_locations(reachable_rooms)
-	logic_kind = LogicLevels.SIMPLE_SKIPS
+	logic_kind = LogicLevel.LogicLevels.SIMPLE_SKIPS
 	simple_reachable_rooms = get_reachable()
 	simple_reachable_locations = get_reachable_locations(simple_reachable_rooms)
-	logic_kind = LogicLevels.ADVANCED_SKIPS
+	logic_kind = LogicLevel.LogicLevels.ADVANCED_SKIPS
 	advanced_reachable_rooms = get_reachable()
 	advanced_reachable_locations = get_reachable_locations(advanced_reachable_rooms)
-	logic_kind = LogicLevels.INTENDED_LOGIC
+	logic_kind = LogicLevel.LogicLevels.INTENDED_LOGIC
 	
 	if not $TabContainer/LocationRequirements/VBoxContainer.get_children().is_empty():
 		await get_tree().process_frame
@@ -594,9 +578,9 @@ func update_loc_group_labels() -> void:
 	group_labels.get_node("MelLabels/Init").self_modulate = group_labels.get_node("Mel").self_modulate
 	group_labels.get_node("MelLabels/Gratitude").self_modulate = group_labels.get_node("Mel").self_modulate
 	for i in range(1, 4):
-		group_labels.get_node("MelLabels/Scrap%d" % i).self_modulate = LEVEL_COLORS[await theoretical_logic("HUB_hub_shop", "Mel Freed and %d Scrapling%s" % [i, "" if i == 1 else "s"])]
+		group_labels.get_node("MelLabels/Scrap%d" % i).self_modulate = LogicLevel.LEVEL_COLORS[await theoretical_logic("HUB_hub_shop", "Mel Freed and %d Scrapling%s" % [i, "" if i == 1 else "s"])]
 	
-	group_labels.get_node("Capucine").self_modulate = LEVEL_COLORS[await theoretical_logic("LQ_ruins_hall_C1", "BOSS:VINE")]
+	group_labels.get_node("Capucine").self_modulate = LogicLevel.LEVEL_COLORS[await theoretical_logic("LQ_ruins_hall_C1", "BOSS:VINE")]
 
 
 ## Returns all reachable locations
@@ -647,42 +631,42 @@ func get_room_connections(room: String) -> Array[String]:
 
 
 ## Returns the harder logic between the two
-func get_higher_logic(logic1: LogicLevels, logic2: LogicLevels) -> LogicLevels:
-	return maxi(logic1, logic2) as LogicLevels
+func get_higher_logic(logic1: LogicLevel.LogicLevels, logic2: LogicLevel.LogicLevels) -> LogicLevel.LogicLevels:
+	return maxi(logic1, logic2) as LogicLevel.LogicLevels
 
 
 ## Gets the [enum LogicLevels] for [param panel]
-func get_logic(panel: TransitionPanel) -> LogicLevels:
+func get_logic(panel: TransitionPanel) -> LogicLevel.LogicLevels:
 	if panel.intended_logic.call():
-		return LogicLevels.INTENDED_LOGIC
+		return LogicLevel.LogicLevels.INTENDED_LOGIC
 	
 	if panel.simple_string != "-":
 		if panel.simple_logic.call():
-			return LogicLevels.SIMPLE_SKIPS
+			return LogicLevel.LogicLevels.SIMPLE_SKIPS
 		if panel.advanced_logic.call():
-			return LogicLevels.ADVANCED_SKIPS
+			return LogicLevel.LogicLevels.ADVANCED_SKIPS
 	
-	return LogicLevels.NONE
+	return LogicLevel.LogicLevels.NONE
 
 
 ## If the [param panel]'s logic is completable with the current logic kind (can override with [param override_logic_kind]
-func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevels.NONE) -> bool:
+func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevel.LogicLevels.NONE) -> bool:
 	if panel.door == "Wrong Side":
 		return false
 	
 	if panel.intended_logic.call():
 		return true
 	
-	if override_logic_kind == LogicLevels.NONE:
+	if override_logic_kind == LogicLevel.LogicLevels.NONE:
 		override_logic_kind = logic_kind
 	
 	if panel.simple_string != "-":
-		if override_logic_kind != LogicLevels.INTENDED_LOGIC:
+		if override_logic_kind != LogicLevel.LogicLevels.INTENDED_LOGIC:
 			if panel.simple_logic.call():
 				return true
 	
 	if panel.advanced_string != "-":
-		if override_logic_kind == LogicLevels.ADVANCED_SKIPS:
+		if override_logic_kind == LogicLevel.LogicLevels.ADVANCED_SKIPS:
 			if panel.advanced_logic.call():
 				return true
 	
@@ -690,20 +674,20 @@ func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevels.NONE) -
 
 
 ## If the [param loc_panel]'s logic is completable with the current logic kind (can override with [param override_logic_kind]
-func loc_in_logic(loc_panel: LocationPanel, override_logic_kind := LogicLevels.NONE) -> bool:
+func loc_in_logic(loc_panel: LocationPanel, override_logic_kind := LogicLevel.LogicLevels.NONE) -> bool:
 	if loc_panel.intended_logic.call():
 		return true
 	
-	if override_logic_kind == LogicLevels.NONE:
+	if override_logic_kind == LogicLevel.LogicLevels.NONE:
 		override_logic_kind = logic_kind
 	
 	if loc_panel.simple_string != "-":
-		if override_logic_kind != LogicLevels.INTENDED_LOGIC:
+		if override_logic_kind != LogicLevel.LogicLevels.INTENDED_LOGIC:
 			if loc_panel.simple_logic.call():
 				return true
 	
 	if loc_panel.advanced_string != "-":
-		if override_logic_kind == LogicLevels.ADVANCED_SKIPS:
+		if override_logic_kind == LogicLevel.LogicLevels.ADVANCED_SKIPS:
 			if loc_panel.advanced_logic.call():
 				return true
 	
@@ -716,19 +700,19 @@ func is_empty_string_list(string_list: Array[String]) -> bool:
 
 
 ## The logic level that a location in room [param room_id] with intended logic [param logic_string] would have
-func theoretical_logic(room_id: String, logic_string: String) -> LogicLevels:
+func theoretical_logic(room_id: String, logic_string: String) -> LogicLevel.LogicLevels:
 	var parsed: Callable = await TransitionPanel.string_to_logic(logic_string, "intended", self)
 	if not parsed.call():
-		return LogicLevels.NONE
+		return LogicLevel.LogicLevels.NONE
 	else:
 		if reachable_rooms.has(room_id):
-			return LogicLevels.INTENDED_LOGIC
+			return LogicLevel.LogicLevels.INTENDED_LOGIC
 		elif simple_reachable_rooms.has(room_id):
-			return LogicLevels.SIMPLE_SKIPS
+			return LogicLevel.LogicLevels.SIMPLE_SKIPS
 		elif advanced_reachable_rooms.has(room_id):
-			return LogicLevels.ADVANCED_SKIPS
+			return LogicLevel.LogicLevels.ADVANCED_SKIPS
 		else:
-			return LogicLevels.NONE
+			return LogicLevel.LogicLevels.NONE
 
 
 ## Get the position a point should be drawn on the map in different wheel rotations
@@ -974,24 +958,24 @@ func update_go_mode() -> void:
 	if player_state.ap_prog_items.has(event):
 		Archipelago.set_client_status(AP.ClientStatus.CLIENT_GOAL)
 	
-	var level: LogicLevels
+	var level: LogicLevel.LogicLevels
 	if reachable_locations.has(panel):
-		level = LogicLevels.INTENDED_LOGIC
+		level = LogicLevel.LogicLevels.INTENDED_LOGIC
 	elif simple_reachable_locations.has(panel):
-		level = LogicLevels.SIMPLE_SKIPS
+		level = LogicLevel.LogicLevels.SIMPLE_SKIPS
 	elif advanced_reachable_locations.has(panel):
-		level = LogicLevels.ADVANCED_SKIPS
+		level = LogicLevel.LogicLevels.ADVANCED_SKIPS
 	else:
-		level = LogicLevels.NONE
+		level = LogicLevel.LogicLevels.NONE
 	
-	if level == LogicLevels.NONE:
+	if level == LogicLevel.LogicLevels.NONE:
 		go_mode = false
 		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.text = "NO GO MODE"
 		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.label_settings.font_color = Color.RED
 	else:
 		go_mode = true
 		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.text = "GO MODE"
-		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.label_settings.font_color = LEVEL_COLORS[level]
+		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.label_settings.font_color = LogicLevel.LEVEL_COLORS[level]
 
 
 ## Gets the [TransitionPanel] for the room [param from] going into [param to]

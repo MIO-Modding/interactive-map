@@ -83,9 +83,9 @@ func update() -> void:
 			await get_tree().process_frame
 			if $/root/Main.reachable_rooms.has(from) and $/root/Main.in_logic(self):
 				modulate = LOGIC_LEVEL_COLORS["intended"]
-			elif $/root/Main.simple_reachable_rooms.has(from) and $/root/Main.in_logic(self, Main.LogicLevels.SIMPLE_SKIPS):
+			elif $/root/Main.simple_reachable_rooms.has(from) and $/root/Main.in_logic(self, LogicLevel.LogicLevels.SIMPLE_SKIPS):
 				modulate = LOGIC_LEVEL_COLORS["simple"]
-			elif $/root/Main.advanced_reachable_rooms.has(from) and $/root/Main.in_logic(self, Main.LogicLevels.ADVANCED_SKIPS):
+			elif $/root/Main.advanced_reachable_rooms.has(from) and $/root/Main.in_logic(self, LogicLevel.LogicLevels.ADVANCED_SKIPS):
 				modulate = LOGIC_LEVEL_COLORS["advanced"]
 			else:
 				modulate = Color.WHITE
