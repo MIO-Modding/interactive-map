@@ -3,3 +3,5 @@ A todo list:
 - Add saving save files
 - ~~Add setting what save files are slots 0, 1, and 2~~
 - Add getting save files from nested folders
+- Make it look more mio-like
+- Implement the logic system changes
