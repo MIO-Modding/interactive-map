@@ -158,7 +158,7 @@ static func computerize_logic_string(string: String) -> String:
 	string = string.replace("1 Scrapling", "{ Find Sin || Find Cos || Find Tan }")
 	string = string.replace("2 Scraplings", "{ { Find Sin && Find Cos } || { Find Sin && Find Tan } || { Find Cos && Find Tan } }")
 	string = string.replace("3 Scraplings", "{ Find Sin && Find Cos && Find Tan }")
-	string = string.replace("attack", "{ slash || { hairpin && TRINKET:CARLO_HOOK } || { hairpin && TRINKET:DECOY } || { glide && TRINKET:GLIDE_STATIC } }") # TODO
+	string = string.replace("attack", "{ slash || { hairpin && TRINKET:CARLO_HOOK } || { hairpin && TRINKET:DECOY } || { sail && TRINKET:GLIDE_STATIC } }") # TODO
 	
 	return string
 
