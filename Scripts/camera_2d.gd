@@ -53,7 +53,9 @@ func _input(event: InputEvent) -> void:
 			
 			if Input.is_action_just_pressed("copy"):
 				DisplayServer.clipboard_set(get_mouse_pos_string())
-	
+
+
+func _process(_delta: float) -> void:
 	map_node.get_node("MousePos").text = get_mouse_pos_string() + "\nCtrl+Shift+C to copy"
 
 

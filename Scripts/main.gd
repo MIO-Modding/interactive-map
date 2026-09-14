@@ -630,11 +630,6 @@ func get_room_connections(room: String) -> Array[String]:
 	return result
 
 
-## Returns the harder logic between the two
-func get_higher_logic(logic1: LogicLevel.LogicLevels, logic2: LogicLevel.LogicLevels) -> LogicLevel.LogicLevels:
-	return maxi(logic1, logic2) as LogicLevel.LogicLevels
-
-
 ## Gets the [enum LogicLevels] for [param panel]
 func get_logic(panel: TransitionPanel) -> LogicLevel.LogicLevels:
 	if panel.intended_logic.call():
@@ -701,7 +696,7 @@ func is_empty_string_list(string_list: Array[String]) -> bool:
 
 ## The logic level that a location in room [param room_id] with intended logic [param logic_string] would have
 func theoretical_logic(room_id: String, logic_string: String) -> LogicLevel.LogicLevels:
-	var parsed: Callable = await TransitionPanel.string_to_logic(logic_string, "intended", self)
+	var parsed: Callable = await LogicLevel.string_to_logic(logic_string, "intended", self)
 	if not parsed.call():
 		return LogicLevel.LogicLevels.NONE
 	else:

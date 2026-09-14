@@ -71,17 +71,17 @@ var save_flag: String:
 var intended_string: String:
 	set(v):
 		intended_string = v
-		intended_logic = await TransitionPanel.string_to_logic(v, "intended", self)
+		intended_logic = await LogicLevel.string_to_logic(v, "intended", self)
 		$HBoxContainer/Intended.text = v
 var simple_string: String:
 	set(v):
 		simple_string = v
-		simple_logic = await TransitionPanel.string_to_logic(v, "simple", self)
+		simple_logic = await LogicLevel.string_to_logic(v, "simple", self)
 		$HBoxContainer/Simple.text = v
 var advanced_string: String:
 	set(v):
 		advanced_string = v
-		advanced_logic = await TransitionPanel.string_to_logic(v, "advanced", self)
+		advanced_logic = await LogicLevel.string_to_logic(v, "advanced", self)
 		$HBoxContainer/Advanced.text = v
 
 var intended_logic: Callable
