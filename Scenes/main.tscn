@@ -773,12 +773,12 @@ popup/item_1/id = 1
 popup/item_2/text = "Set Index"
 popup/item_2/id = 2
 
-[node name="SoloRando" type="Control" parent="TabContainer" unique_id=1884829303]
+[node name="Rando" type="Control" parent="TabContainer" unique_id=1884829303]
 layout_mode = 2
 script = ExtResource("10_hptm8")
 metadata/_tab_index = 9
 
-[node name="SplitContainer" type="SplitContainer" parent="TabContainer/SoloRando" unique_id=897625586]
+[node name="SplitContainer" type="SplitContainer" parent="TabContainer/Rando" unique_id=897625586]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -786,16 +786,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Options" type="ScrollContainer" parent="TabContainer/SoloRando/SplitContainer" unique_id=1761117087]
+[node name="Options" type="ScrollContainer" parent="TabContainer/Rando/SplitContainer" unique_id=1761117087]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Control" type="Control" parent="TabContainer/SoloRando/SplitContainer/Options" unique_id=1275690345]
+[node name="Control" type="Control" parent="TabContainer/Rando/SplitContainer/Options" unique_id=1275690345]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="TabContainer/SoloRando/SplitContainer/Options/Control" unique_id=72569150]
+[node name="Label" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=72569150]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -808,7 +808,7 @@ theme_override_font_sizes/font_size = 30
 text = "Options"
 horizontal_alignment = 1
 
-[node name="GridContainer" type="GridContainer" parent="TabContainer/SoloRando/SplitContainer/Options/Control" unique_id=175565060]
+[node name="GridContainer" type="GridContainer" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=175565060]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -820,26 +820,53 @@ offset_bottom = 82.0
 grow_horizontal = 2
 columns = 2
 
-[node name="NameLabel" type="Label" parent="TabContainer/SoloRando/SplitContainer/Options/Control/GridContainer" unique_id=1321032783]
+[node name="NameLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1321032783]
 layout_mode = 2
 text = "Player Name:"
 
-[node name="Name" type="LineEdit" parent="TabContainer/SoloRando/SplitContainer/Options/Control/GridContainer" unique_id=1661221384]
+[node name="Name" type="LineEdit" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1661221384]
 layout_mode = 2
 text = "mio_player"
 
-[node name="LogicLabel" type="Label" parent="TabContainer/SoloRando/SplitContainer/Options/Control/GridContainer" unique_id=1110468907]
+[node name="LogicLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1110468907]
 layout_mode = 2
 text = "Logic Level:"
 
-[node name="Logic" type="OptionButton" parent="TabContainer/SoloRando/SplitContainer/Options/Control/GridContainer" unique_id=2039714319]
+[node name="Logic" type="OptionButton" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=2039714319]
 layout_mode = 2
 selected = 0
 item_count = 1
 popup/item_0/text = "No Logic"
 popup/item_0/id = 0
 
-[node name="DownloadButton" type="Button" parent="TabContainer/SoloRando/SplitContainer/Options/Control" unique_id=1599237516]
+[node name="SlashLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=504169975]
+layout_mode = 2
+text = "Randomize Slash:"
+
+[node name="Slash" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=435705119]
+layout_mode = 2
+
+[node name="EndingLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=24932574]
+layout_mode = 2
+text = "Ending:"
+
+[node name="Ending" type="OptionButton" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=806537850]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Ati Ending"
+popup/item_0/id = 0
+popup/item_1/text = "Shii Ending"
+popup/item_1/id = 1
+
+[node name="DeathLinkLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1040450994]
+layout_mode = 2
+text = "DeathLink:"
+
+[node name="DeathLink" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=181033379]
+layout_mode = 2
+
+[node name="DownloadButton" type="Button" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=1599237516]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -853,11 +880,11 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Download"
 
-[node name="Play" type="ScrollContainer" parent="TabContainer/SoloRando/SplitContainer" unique_id=1687706043]
+[node name="Play" type="ScrollContainer" parent="TabContainer/Rando/SplitContainer" unique_id=1687706043]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Control" type="Control" parent="TabContainer/SoloRando/SplitContainer/Play" unique_id=86555568]
+[node name="Control" type="Control" parent="TabContainer/Rando/SplitContainer/Play" unique_id=86555568]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -974,5 +1001,5 @@ text = "Skip (I know what I'm doing)"
 [connection signal="pressed" from="TabContainer/Saves/Lists/State/V/NewButton" to="TabContainer/Saves" method="_on_new_state_pressed"]
 [connection signal="toggled" from="TabContainer/Saves/Lists/State/V/DeleteButton" to="TabContainer/Saves" method="_on_delete_state_button_toggled"]
 [connection signal="item_selected" from="TabContainer/Saves/Lists/File/V/ModeOption" to="TabContainer/Saves" method="_on_mode_option_item_selected"]
-[connection signal="pressed" from="TabContainer/SoloRando/SplitContainer/Options/Control/DownloadButton" to="TabContainer/SoloRando" method="_on_download_button_pressed"]
+[connection signal="pressed" from="TabContainer/Rando/SplitContainer/Options/Control/DownloadButton" to="TabContainer/Rando" method="_on_download_button_pressed"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]

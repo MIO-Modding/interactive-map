@@ -20,7 +20,10 @@ game: %s
 """
 
 @onready var option_nodes: Dictionary[String, Control] = {
-	"logic_level": $SplitContainer/Options/Control/GridContainer/Logic
+	"logic_level": $SplitContainer/Options/Control/GridContainer/Logic,
+	"randomize_slash": $SplitContainer/Options/Control/GridContainer/Slash,
+	"goal": $SplitContainer/Options/Control/GridContainer/Ending,
+	"death_link": $SplitContainer/Options/Control/GridContainer/DeathLink,
 }
 
 
@@ -62,6 +65,10 @@ func get_current_options() -> Dictionary[String, String]:
 		match option_nodes[i].get_class():
 			"OptionButton":
 				result[i] = option_nodes[i].get_item_text(option_nodes[i].selected).to_lower()
+			"CheckBox":
+				result[i] = str(option_nodes[i].button_pressed)
+			"CheckButton":
+				result[i] = str(option_nodes[i].button_pressed)
 	return result
 
 
