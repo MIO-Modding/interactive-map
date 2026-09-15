@@ -170,3 +170,7 @@ func _on_download_button_pressed() -> void:
 	if OS.has_feature("web"):
 		var json := FileAccess.get_file_as_string(YAML_FILE_PATH % text)
 		JavaScriptBridge.download_buffer(json.to_utf8_buffer(), text + ".yaml")
+
+
+func _on_start_pressed() -> void:
+	start_rando()
