@@ -31,8 +31,6 @@ game: %s
 func _ready() -> void:
 	get_parent().get_node("Saves").validate_folders(YAML_FILE_PATH.trim_suffix("%s.yaml"))
 	get_viewport().size_changed.connect(update_alignment)
-	await Globals.main.finished_requesting
-	start_rando()
 
 
 func update_alignment() -> void:
