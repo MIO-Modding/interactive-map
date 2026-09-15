@@ -170,6 +170,18 @@ func update_filter() -> void:
 			for i in location_points:
 				if i.get_meta("panel").serialize() in LocationPanel.SCOUTABLE_LOCS or i.get_meta("panel").loc_description.contains("Mel's Shop"):
 					hide_location_point(i)
+	
+	if Archipelago.is_ap_connected():
+		var hint_locs := Globals.main.get_hint_locs()
+		match $MapSettings/VBoxContainer/Filters/VBoxContainer/HintedFilter.selected:
+			1:
+				for i in location_points:
+					if not hint_locs.has(i.get_meta("panel").serialize()):
+						hide_location_point(i)
+			2:
+				for i in location_points:
+					if hint_locs.has(i.get_meta("panel").serialize()):
+						hide_location_point(i)
 
 
 func hide_location_point(loc_point: Polygon2D) -> void:
@@ -277,5 +289,10 @@ func _on_icon_style_item_selected(index: int) -> void:
 	for loc_icon: LocationIcon in map_node.get_node("LocPoints").get_children():
 		loc_icon.icon_style = icon_style
 
+
 func _on_scoutable_filter_item_selected(_index: int) -> void:
+	update_filter()
+
+
+func _on_hinted_filter_item_selected(_index: int) -> void:
 	update_filter()

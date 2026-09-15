@@ -235,7 +235,7 @@ func _ready() -> void:
 	preferences_to_save["ARCHIPELAGO>ADDRESS"] = content_box.get_node("IP_Box")
 	preferences_to_save["ARCHIPELAGO>PORT"] = content_box.get_node("Port_Box")
 	preferences_to_save["ARCHIPELAGO>SLOT_NAME"] = content_box.get_node("Slot_Box")
-	preferences_to_save["ARCHIPELAGO>ADDRESS"] = checkbox
+	preferences_to_save["ARCHIPELAGO>IS_MANUAL"] = checkbox
 	
 	request_data()
 	
@@ -802,6 +802,7 @@ func update_map() -> void:
 			continue
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.add_child(line)
 	
+	var hint_locs := get_hint_locs()
 	var taken_positions: Array[Vector2i]
 	for loc_panel: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
 		var room_panel: RoomPanel = get_room_panel(loc_panel.room_id)
@@ -873,7 +874,7 @@ func update_map() -> void:
 			line.add_point(room_panel.point_node.position)
 		line.add_point(point.position)
 		
-		if loc_panel.region_name == "Mel's Shop" || loc_panel.region_name == "Capucine":
+		if loc_panel.region_name == "Mel's Shop" or loc_panel.region_name == "Capucine":
 			line.default_color.a = 0
 		
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocLines.add_child(line)
@@ -882,8 +883,25 @@ func update_map() -> void:
 		point.set_meta("line", line)
 		if is_location_event(loc_panel):
 			point.self_modulate = Color.REBECCA_PURPLE
+		elif Archipelago.is_ap_connected():
+			if hint_locs.has(loc_panel.serialize()):
+				point.self_modulate = Color.LIGHT_SEA_GREEN
 	
 	$TabContainer/Map.update_filter()
+
+
+func get_hint_locs() -> Array[String]:
+	var result: Array[String] = []
+	if not Archipelago.is_ap_connected():
+		return result
+	var game_data := Archipelago.conn.get_gamedata_for_player(-1)
+	for i in Archipelago.conn.hints:
+		var i_name: String
+		i_name = game_data.get_loc_name(i.item.loc_id)
+		if Globals.is_manual:
+			i_name = PlayerState.get_manual_loc_node(i_name).serialize()
+		result.append(i_name)
+	return result
 
 
 ## If the [param loc_panel] is an event location
@@ -1044,6 +1062,9 @@ func get_preference(key: String) -> Variant:
 		return non_node_preferences[key]
 	
 	var node: Control = preferences_to_save[key]
+	if node == null:
+		printerr("Node for %s is null" % key)
+		return ""
 	if node is CheckBox or node is CheckButton:
 		return node.button_pressed
 	elif node is OptionButton:
@@ -1086,7 +1107,6 @@ func set_preference(entry: String, value: Variant) -> void:
 	elif node is LineEdit:
 		node.text = value
 		node.text_changed.emit(value)
-		node.text_submitted.emit(value)
 
 
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
