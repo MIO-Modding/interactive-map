@@ -165,9 +165,17 @@ func hint_popup(item: NetworkItem) -> void:
 
 
 func _on_checked_toggled(toggled_on: bool) -> void:
+	if serialize() == ": ":
+		return
+	var panel := Globals.main.get_location_panel(serialize())
 	checked = toggled_on
 	if Archipelago.is_ap_connected():
-		Globals.check_location(Globals.main.get_location_panel(serialize()), toggled_on)
+		Globals.check_location(panel, toggled_on)
+	elif Globals.is_solo_rando and not Main.player_state.checked_locations.has(panel):
+		print(serialize())
+		var item: String = Main.player_state.rando_assignments[serialize()]
+		Main.player_state.rando_prog_items.append(item)
+		Globals.trigger_popup("Received item: %s" % item, Color.GREEN, false, true)
 	if point_node == null:
 		modulate = Color(0.232, 0.566, 0.61) if toggled_on else original_color
 	Main.player_state.check_location_serialized(serialize(), not toggled_on)

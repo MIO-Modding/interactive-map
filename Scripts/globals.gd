@@ -11,6 +11,8 @@ var queued_refresh := false
 
 var is_manual := false
 
+var is_solo_rando := false
+
 
 func _ready() -> void:
 	main = get_node("/root/Main")
@@ -194,3 +196,11 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 
 func fix_underscores(input: String) -> String:
 	return input.replace("_", "\\_")
+
+
+func capitalize_first(input: String) -> String:
+	var split: Array[String]
+	split.assign(Array(input.split(" ")))
+	for i in range(split.size()):
+		split[i] = split[i].capitalize()
+	return " ".join(split)

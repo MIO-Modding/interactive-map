@@ -187,6 +187,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"FILTERS>LOGIC_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter,
 	"FILTERS>CHECKED_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/CheckedFilter,
 	"FILTERS>SCOUTABLE_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/ScoutableFilter,
+	"FILTERS>HINTED_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/HintedFilter,
 	
 	"CTRL_PANEL>HIGHLIGHT": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle,
 	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,

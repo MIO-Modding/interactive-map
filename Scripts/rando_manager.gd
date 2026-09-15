@@ -1,6 +1,7 @@
 class_name RandoManager extends Control
 
 
+
 const YAML_FILE_PATH := "user://Data/Players/%s.yaml"
 
 const YAML_FILE_LAYOUT := """name: %s
@@ -30,6 +31,8 @@ game: %s
 func _ready() -> void:
 	get_parent().get_node("Saves").validate_folders(YAML_FILE_PATH.trim_suffix("%s.yaml"))
 	get_viewport().size_changed.connect(update_alignment)
+	await Globals.main.finished_requesting
+	start_rando()
 
 
 func update_alignment() -> void:
@@ -76,6 +79,90 @@ func save_yaml(contents_string: String, file_name: String) -> void:
 	var file := FileAccess.open(YAML_FILE_PATH % file_name, FileAccess.WRITE)
 	file.store_string(contents_string)
 	file.close()
+
+
+func load_yaml(file_name: String) -> Dictionary[String, String]:
+	var result: Dictionary[String, String]
+	if not FileAccess.file_exists(YAML_FILE_PATH % file_name):
+		return result
+	var file := FileAccess.open(YAML_FILE_PATH % file_name, FileAccess.READ)
+	var text := file.get_as_text()
+	if text.is_empty():
+		return result
+	text = text.get_slice("Manual_MIO_Samwell:", 1)
+	var split: Array[String]
+	split.assign(Array(text.split("\n  ")))
+	for i in split:
+		var key_val_split: Array[String]
+		key_val_split.assign(Array(i.split(": ")))
+		result[key_val_split[0]] = key_val_split[1]
+	return result
+
+
+func read_yaml_data(data: Dictionary[String, String]) -> Dictionary[String, Variant]:
+	var result: Dictionary[String, Variant]
+	for i in option_nodes:
+		match option_nodes[i].get_class():
+			"OptionButton":
+				result[i] = Globals.capitalize_first(data[i])
+			"CheckBox":
+				result[i] = data[i] == "true"
+			"CheckButton":
+				result[i] = data[i] == "true"
+	return result
+
+
+func generate(from_yaml := "", state := Main.player_state) -> void:
+	var data: Dictionary[String, Variant]
+	if from_yaml.is_empty():
+		data = read_yaml_data(get_current_options())
+	else:
+		data = read_yaml_data(load_yaml(from_yaml))
+	
+	var location_assignments: Dictionary[String, String]
+	var available_prog_items: Array[String]
+	var available_useful_items: Array[String]
+	var available_filler_items: Array[String]
+	var available_locs: Array[String]
+	
+	for item: Item in %ItemPool.get_children():
+		var list_to_add: Array[String]
+		if item.type == Item.ItemTypes.EVENT:
+			continue
+		match item.classification:
+			Item.ItemClassifications.PROGRESSION:
+				list_to_add = available_prog_items
+			Item.ItemClassifications.USEFUL:
+				list_to_add = available_useful_items
+			_:
+				list_to_add = available_filler_items
+		for i in range(item.max_amount):
+			list_to_add.append(item.item_name)
+	for loc: LocationPanel in $"../LocationRequirements/VBoxContainer".get_children():
+		available_locs.append(loc.serialize())
+	
+	if data.logic_level == "No Logic":
+		while not available_locs.is_empty():
+			var current_loc: String = available_locs.pick_random()
+			var current_item: String
+			for i in [available_prog_items, available_useful_items, available_filler_items]:
+				if not i.is_empty():
+					current_item = i.pick_random()
+					i.erase(current_item)
+					break
+			if current_item == "":
+				current_item = "Crystallised Nacre"
+			location_assignments[current_loc] = current_item
+			available_locs.erase(current_loc)
+		
+		state.rando_assignments = location_assignments
+
+
+func start_rando(from_yaml := "") -> void:
+	generate(from_yaml)
+	for i in Main.player_state.rando_assignments:
+		print(i + ": " + Main.player_state.rando_assignments[i])
+	Globals.is_solo_rando = true
 
 
 func _on_download_button_pressed() -> void:
