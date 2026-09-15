@@ -201,7 +201,6 @@ func _ready() -> void:
 	$LoadingScreen.show()
 	$TabContainer.current_tab = 5
 	player_state = PlayerState.new()
-	player_state.main = self
 	update_itempool.connect(func(): update_transitions.emit())
 	update_itempool.connect(update_reachable)
 	rotation_changed.connect(update_map)
@@ -1140,13 +1139,14 @@ func _on_deathlink_send_pressed() -> void:
 class PlayerState:
 	## Class for holding items given by the client, received from archipelago, and checked locations
 	
-	## Reference to main
-	var main: Main
 	
 	## Items given from the client
 	var prog_items: Array[String] = []
 	## Items received from archipelago
 	var ap_prog_items: Array[String] = []
+	## Items given from a solo rando
+	var rando_prog_items: Array[String] = []
+	
 	## Checked [LocationPanel]s
 	var checked_locations: Array[LocationPanel]
 	
@@ -1190,7 +1190,7 @@ class PlayerState:
 	
 	
 	func full_itemset() -> Array[String]:
-		return Globals.main.player_state.prog_items + Globals.main.player_state.ap_prog_items
+		return Globals.main.player_state.prog_items + Globals.main.player_state.ap_prog_items + Globals.main.player_state.rando_prog_items
 	
 	
 	## Serializes the [param loc], adding its 
@@ -1257,12 +1257,12 @@ class PlayerState:
 	func check_location_serialized(serial: String, uncheck := false) -> void:
 		if not checked_locations_serialized().has(serial):
 			if not uncheck:
-				checked_locations.append(main.get_location_panel(serial))
+				checked_locations.append(Globals.main.get_location_panel(serial))
 				
-				for i in main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
+				for i in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
 					i.update()
 		elif uncheck:
-			checked_locations.erase(main.get_location_panel(serial))
+			checked_locations.erase(Globals.main.get_location_panel(serial))
 			
-			for i in main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
+			for i in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
 				i.update()
