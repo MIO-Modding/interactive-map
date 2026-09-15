@@ -194,6 +194,10 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	
 	"ARCHIPELAGO>PERSISTANT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
 	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
+	"ARCHIPELAGO>ADDRESS": null,
+	"ARCHIPELAGO>PORT": null,
+	"ARCHIPELAGO>SLOT_NAME": null,
+	"ARCHIPELAGO>IS_MANUAL": null,
 }
 
 
@@ -228,6 +232,10 @@ func _ready() -> void:
 	content_box.move_child(label, 8)
 	content_box.add_child(checkbox)
 	content_box.move_child(checkbox, 9)
+	preferences_to_save["ARCHIPELAGO>ADDRESS"] = content_box.get_node("IP_Box")
+	preferences_to_save["ARCHIPELAGO>PORT"] = content_box.get_node("Port_Box")
+	preferences_to_save["ARCHIPELAGO>SLOT_NAME"] = content_box.get_node("Slot_Box")
+	preferences_to_save["ARCHIPELAGO>ADDRESS"] = checkbox
 	
 	request_data()
 	
@@ -242,6 +250,8 @@ func _ready() -> void:
 			i.pressed.connect(save_all_preferences)
 		elif i is OptionButton:
 			i.item_selected.connect(save_all_preferences.unbind(1))
+		elif i is LineEdit:
+			i.text_changed.connect(save_all_preferences.unbind(1))
 	
 	finished_requesting.connect(run_other_requests, CONNECT_ONE_SHOT)
 
@@ -1038,6 +1048,8 @@ func get_preference(key: String) -> Variant:
 		return node.button_pressed
 	elif node is OptionButton:
 		return node.selected
+	elif node is LineEdit:
+		return node.text
 	else:
 		printerr("Unrecognised node for %s" % node.get_path())
 	return ""
@@ -1071,6 +1083,10 @@ func set_preference(entry: String, value: Variant) -> void:
 	elif node is OptionButton:
 		node.select(value)
 		node.item_selected.emit(value)
+	elif node is LineEdit:
+		node.text = value
+		node.text_changed.emit(value)
+		node.text_submitted.emit(value)
 
 
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
@@ -1146,6 +1162,8 @@ class PlayerState:
 	var ap_prog_items: Array[String] = []
 	## Items given from a solo rando
 	var rando_prog_items: Array[String] = []
+	
+	var rando_assignments: Dictionary[String, String]
 	
 	## Checked [LocationPanel]s
 	var checked_locations: Array[LocationPanel]
