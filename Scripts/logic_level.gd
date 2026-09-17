@@ -110,6 +110,7 @@ static func computerize_logic_string(logic_string: String) -> String:
 	logic_string = logic_string.replace("2 Scraplings", "{ { Find Sin && Find Cos } || { Find Sin && Find Tan } || { Find Cos && Find Tan } }")
 	logic_string = logic_string.replace("3 Scraplings", "{ Find Sin && Find Cos && Find Tan }")
 	logic_string = logic_string.replace("attack", "{ slash || { hairpin && TRINKET:CARLO_HOOK } || { hairpin && TRINKET:DECOY } || { sail && TRINKET:GLIDE_STATIC } }") # TODO
+	logic_string = logic_string.replace("striders", "strider").replace("strider", "striders")
 	
 	return logic_string
 

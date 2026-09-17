@@ -121,7 +121,12 @@ func generate(from_yaml := "", state := Main.player_state) -> void:
 	var available_prog_items: Array[String]
 	var available_useful_items: Array[String]
 	var available_filler_items: Array[String]
+	var all_locs: Array[String]
 	var available_locs: Array[String]
+	var locs_left: Array[String]
+	var all_rooms: Array[String]
+	var available_rooms: Array[String]
+	var rooms_left: Array[String]
 	
 	for item: Item in %ItemPool.get_children():
 		var list_to_add: Array[String]
@@ -137,29 +142,123 @@ func generate(from_yaml := "", state := Main.player_state) -> void:
 		for i in range(item.max_amount):
 			list_to_add.append(item.item_name)
 	for loc: LocationPanel in $"../LocationRequirements/VBoxContainer".get_children():
-		available_locs.append(loc.serialize())
+		all_locs.append(loc.serialize())
+	for room: RoomPanel in $"../Map/SubViewportContainer/SubViewport/Node2D/Panels".get_children():
+		all_rooms.append(room.room_id)
 	
-	if data.logic_level == "No Logic":
-		while not available_locs.is_empty():
-			var current_loc: String = available_locs.pick_random()
-			var current_item: String
-			for i in [available_prog_items, available_useful_items, available_filler_items]:
-				if not i.is_empty():
-					current_item = i.pick_random()
-					i.erase(current_item)
-					break
-			if current_item == "":
-				current_item = "Crystallised Nacre"
-			location_assignments[current_loc] = current_item
-			available_locs.erase(current_loc)
-		
-		state.rando_assignments = location_assignments
+	match data.logic_level:
+		"No Logic":
+			available_locs.assign(all_locs)
+			while not available_locs.is_empty():
+				var current_loc: String = available_locs.pick_random()
+				var current_item: String
+				for i in [available_prog_items, available_useful_items, available_filler_items]:
+					if not i.is_empty():
+						current_item = i.pick_random()
+						i.erase(current_item)
+						break
+				if current_item == "":
+					current_item = "Crystallised Nacre"
+				location_assignments[current_loc] = current_item
+				available_locs.erase(current_loc)
+		"Intended Logic":
+			var old_state := Main.player_state
+			Main.player_state = Main.PlayerState.new()
+			if not data.randomize_slash:
+				Main.player_state.prog_items.assign(["Slash"])
+			available_rooms.assign(Globals.main.get_reachable())
+			available_locs.assign(Globals.main.get_reachable_locations(available_rooms).map(func(e): return e.serialize()))
+			if not data.randomize_slash:
+				available_locs.erase("ST_security_fall_P1: Starting Item (Slash)")
+			rooms_left.assign(all_rooms.filter(func(e): return not e in available_rooms))
+			locs_left.assign(all_locs)#.filter(func(e): return not e in available_locs))
+			
+			while not available_locs.is_empty():
+				await get_tree().process_frame
+				print(available_locs)
+				calculate_next_sphere(location_assignments, available_rooms, rooms_left, locs_left, 
+					available_prog_items, available_useful_items, available_filler_items)
+			
+			Main.player_state = old_state
+			print(available_rooms)
+			print(available_locs)
+			pass #available_locs = 
+	
+	state.rando_assignments = location_assignments
+
+
+func calculate_next_sphere(loc_assignments: Dictionary[String, String], available_rooms: Array[String], 
+		rooms_left: Array[String], locs_left: Array[String], 
+		prog_items_left: Array[String], useful_items_left: Array[String], filler_items_left: Array[String]) -> void:
+	
+	var new_available_rooms: Array[String]
+	for transition: TransitionPanel in $"../TransitionRequirements/VBoxContainer".get_children():
+		if transition.from in available_rooms and transition.to in rooms_left:
+			if transition.intended_logic.call():
+				new_available_rooms.append(transition.to)
+				rooms_left.erase(transition.to)
+	available_rooms += new_available_rooms
+	var new_available_locs: Array[String]
+	for location: LocationPanel in $"../LocationRequirements/VBoxContainer".get_children():
+		var serialized := location.serialize()
+		if serialized in locs_left:
+			if location.intended_logic.call():
+				new_available_locs.append(serialized)
+				locs_left.erase(serialized)
+	
+	var possible_assignments := get_new_assignments(new_available_locs, prog_items_left + useful_items_left + filler_items_left)
+	var new_locs := get_theoretical_new_locs(possible_assignments.values(), available_rooms, rooms_left, locs_left)
+	while new_locs.is_empty():
+		print(new_locs)
+		possible_assignments = get_new_assignments(new_available_locs, prog_items_left + useful_items_left + filler_items_left)
+		new_locs = get_theoretical_new_locs(possible_assignments.values(), available_rooms, rooms_left, locs_left)
+	
+	for i in possible_assignments:
+		loc_assignments[i] = possible_assignments[i]
+
+
+func get_new_assignments(available_locs: Array[String], items_left: Array[String]) -> Dictionary[String, String]:
+	var result: Dictionary[String, String]
+	for i in available_locs:
+		result[i] = items_left.pick_random()
+		items_left.erase(result[i])
+	return result
+
+
+func get_theoretical_new_locs(itempool: Array[String], available_rooms: Array[String], rooms_left: Array[String], locs_left: Array[String]) -> Array[String]:
+	var old_state := Main.player_state
+	Main.player_state = Main.PlayerState.new()
+	Main.player_state.prog_items.assign(itempool)
+	
+	# copied code but idc at this point it just has to work
+	var new_available_rooms: Array[String]
+	for transition: TransitionPanel in $"../TransitionRequirements/VBoxContainer".get_children():
+		if transition.from in available_rooms and transition.to in rooms_left:
+			if transition.intended_logic.call():
+				new_available_rooms.append(transition.to)
+				rooms_left.erase(transition.to)
+	for i in new_available_rooms:
+		rooms_left.append(i)
+	available_rooms += new_available_rooms
+	var new_available_locs: Array[String]
+	for location: LocationPanel in $"../LocationRequirements/VBoxContainer".get_children():
+		var serialized := location.serialize()
+		if serialized in locs_left:
+			print(serialized)
+			if location.intended_logic.call():
+				new_available_locs.append(serialized)
+				locs_left.erase(serialized)
+	for i in new_available_locs:
+		locs_left.append(i)
+	
+	Main.player_state = old_state
+	return new_available_locs
 
 
 func start_rando(from_yaml := "") -> void:
 	generate(from_yaml)
-	for i in Main.player_state.rando_assignments:
-		print(i + ": " + Main.player_state.rando_assignments[i])
+	#for i in Main.player_state.rando_assignments:
+		#print(i + ": " + Main.player_state.rando_assignments[i])
 	Globals.is_solo_rando = true
 
 
