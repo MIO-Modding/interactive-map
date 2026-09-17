@@ -110,6 +110,294 @@ const MEL_LEVELS: Array[String] = [
 	"Mel Freed"
 ]
 
+const OVERSEER_CONNECTIONS := {
+	"HUB_hub_central_C1": {
+		"overseer_name": "N/A",
+		"connections": [
+			{
+				"overseer_name": "Celestial Bay Overseer",
+				"room": "TW_mid_scraps_P4",
+			},
+			{
+				"overseer_name": "Dwellings Overseer",
+				"room": "LQ_ruins_transi_P3",
+			},
+			{
+				"overseer_name": "City Gates Overseer",
+				"room": "LQ_city_center_C1",
+			},
+			{
+				"overseer_name": "Bell Tower Overseer",
+				"room": "GA_bou_checkpoint_C1",
+			},
+			{
+				"overseer_name": "Promenade Entrance Overseer",
+				"room": "GA_vin_hall_P2",
+			},
+		],
+	},
+	"TW_mid_scraps_P4": {
+		"overseer_name": "Celestial Bay Overseer",
+		"connections": [
+			{
+				"overseer_name": "N/A",
+				"room": "HUB_hub_central_C1",
+			},
+		],
+	},
+	"LQ_ruins_transi_P3": {
+		"overseer_name": "Dwellings Oveseer",
+		"connections": [
+			{
+				"overseer_name": "N/A",
+				"room": "HUB_hub_central_C1",
+			},
+			{
+				"overseer_name": "City Gates Overseer",
+				"room": "LQ_city_center_C1",
+			},
+		],
+	},
+	"LQ_city_center_C1": {
+		"overseer_name": "City Gates Overseer",
+		"connections": [
+			{
+				"overseer_name": "N/A",
+				"room": "HUB_hub_central_C1",
+			},
+			{
+				"overseer_name": "Dwellings Overseer",
+				"room": "LQ_ruins_transi_P3",
+			},
+			{
+				"overseer_name": "City Hall Overseer",
+				"room": "LQ_city_hall_C3",
+			},
+			{
+				"overseer_name": "Blood's Sanctum Overseer",
+				"room": "LQ_city_bridge",
+			},
+			{
+				"overseer_name": "Vaults Shuttle Overseer",
+				"room": "LQ_under_transi_C1",
+			},
+			{
+				"overseer_name": "Left Redacted Overseer",
+				"room": "ST_security_glide_P3_left",
+			},
+		],
+	},
+	"LQ_city_hall_C3": {
+		"overseer_name": "City Hall Overseer",
+		"connections": [
+			{
+				"overseer_name": "City Gates Overseer",
+				"room": "LQ_city_center_C1",
+			},
+		],
+	},
+	"LQ_under_transi_C1": {
+		"overseer_name": "Vaults Shuttle Overseer",
+		"connections": [
+			{
+				"overseer_name": "City Gates Overseer",
+				"room": "LQ_city_center_C1",
+			},
+			{
+				"overseer_name": "Left Redacted Overseer",
+				"room": "ST_security_glide_P3_left",
+			},
+		],
+	},
+	"ST_security_glide_P3_left": {
+		"overseer_name": "Left Redacted Overseer",
+		"connections": [
+			{
+				"overseer_name": "City Gates Overseer",
+				"room": "LQ_city_center_C1",
+			},
+			{
+				"overseer_name": "Blood's Sanctum Overseer",
+				"room": "LQ_city_bridge",
+			},
+			{
+				"overseer_name": "Vaults Shuttle Overseer",
+				"room": "LQ_under_transi_C1",
+			},
+		],
+	},
+	"LQ_city_bridge": {
+		"overseer_name": "Blood's Sanctum Overseer",
+		"connections": [
+			{
+				"overseer_name": "City Gates Overseer",
+				"room": "LQ_city_center_C1",
+			},
+			{
+				"overseer_name": "Left Redacted Overseer",
+				"room": "ST_security_glide_P3_left",
+			},
+			{
+				"overseer_name": "Promenade Tower Overseer",
+				"room": "GA_vin_terrace_C5",
+			},
+		],
+	},
+	"GA_vin_terrace_C5": {
+		"overseer_name": "Promenade Tower Overseer",
+		"connections": [
+			{
+				"overseer_name": "Blood's Sanctum Overseer",
+				"room": "LQ_city_bridge",
+			},
+			{
+				"overseer_name": "Right Redacted Overseer",
+				"room": "ST_security_spider_P2",
+			},
+			{
+				"overseer_name": "Promenade Entrance Overseer",
+				"room": "GA_vin_hall_P2",
+			},
+			{
+				"overseer_name": "Canopy Overseer",
+				"room": "GA_roof_suns_C2",
+			},
+			{
+				"overseer_name": "Bell Tower Overseer",
+				"room": "GA_bou_checkpoint_C1",
+			},
+		],
+	},
+	"ST_security_spider_P2": {
+		"overseer_name": "Right Redacted Overseer",
+		"connections": [
+			{
+				"overseer_name": "Promenade Tower Overseer",
+				"room": "GA_vin_terrace_C5",
+			},
+			{
+				"overseer_name": "Promenade Entrance Overseer",
+				"room": "GA_vin_hall_P2",
+			},
+		],
+	},
+	"GA_vin_hall_P2": {
+		"overseer_name": "Promenade Entrance Overseer",
+		"connections": [
+			{
+				"overseer_name": "Promenade Tower Overseer",
+				"room": "GA_vin_terrace_C5",
+			},
+			{
+				"overseer_name": "Right Redacted Overseer",
+				"room": "ST_security_spider_P2",
+			},
+			{
+				"overseer_name": "Bell Tower Overseer",
+				"room": "GA_bou_checkpoint_C1",
+			},
+			{
+				"overseer_name": "N/A",
+				"room": "HUB_hub_central_C1",
+			},
+		],
+	},
+	"GA_roof_suns_C2": {
+		"overseer_name": "Canopy Overseer",
+		"connections": [
+			{
+				"overseer_name": "Promenade Tower Overseer",
+				"room": "GA_vin_terrace_C5",
+			},
+			{
+				"overseer_name": "Bell Tower Overseer",
+				"room": "GA_bou_checkpoint_C1",
+			},
+		],
+	},
+	"GA_bou_checkpoint_C1": {
+		"overseer_name": "Bell Tower Overseer",
+		"connections": [
+			{
+				"overseer_name": "N/A",
+				"room": "HUB_hub_central_C1",
+			},
+			{
+				"overseer_name": "Canopy Overseer",
+				"room": "GA_roof_suns_C2",
+			},
+			{
+				"overseer_name": "Promenade Tower Overseer",
+				"room": "GA_vin_terrace_C5",
+			},
+			{
+				"overseer_name": "Promenade Entrance Overseer",
+				"room": "GA_vin_hall_P2",
+			},
+		],
+	},
+	"ST_tube_hub_P1": {
+		"overseer_name": "Vaults Overseer",
+		"connections": [
+			{
+				"overseer_name": "Manufactory Overseer",
+				"room": "ST_tube_factory_P1",
+			},
+			{
+				"overseer_name": "Crucible Overseer",
+				"room": "ST_cuves_main_P2",
+			},
+			{
+				"overseer_name": "Lab Overseer",
+				"room": "ST_pearl_halyn_P5",
+			},
+		],
+	},
+	"ST_tube_factory_P1": {
+		"overseer_name": "Manufactory Overseer",
+		"connections": [
+			{
+				"overseer_name": "Vaults Overseer",
+				"room": "ST_tube_hub_P1",
+			},
+			{
+				"overseer_name": "Crucible Overseer",
+				"room": "ST_cuves_main_P2",
+			},
+		],
+	},
+	"ST_cuves_main_P2": {
+		"overseer_name": "Crucible Overseer",
+		"connections": [
+			{
+				"overseer_name": "Vaults Overseer",
+				"room": "ST_tube_hub_P1",
+			},
+			{
+				"overseer_name": "Manufactory Overseer",
+				"room": "ST_tube_factory_P1",
+			},
+			{
+				"overseer_name": "Lab Overseer",
+				"room": "ST_pearl_halyn_P5",
+			},
+		],
+	},
+	"ST_pearl_halyn_P5": {
+		"overseer_name": "",
+		"connections": [
+			{
+				"overseer_name": "Vaults Overseer",
+				"room": "ST_tube_hub_P1",
+			},
+			{
+				"overseer_name": "Crucible Overseer",
+				"room": "ST_cuves_main_P2",
+			},
+		],
+	},
+}
+
 
 ## The state of this player, including items given through this client and items received through archipelago.
 static var player_state: PlayerState
@@ -637,6 +925,13 @@ func get_room_connections(room: String) -> Array[String]:
 			if in_logic(i):
 				if not result.has(i.to):
 					result.append(i.to)
+	
+	if room in OVERSEER_CONNECTIONS and (room == "HUB_hub_central_C1" or player_state.full_itemset().has(OVERSEER_CONNECTIONS[room]["overseer_name"])):
+		var overseer_paths = OVERSEER_CONNECTIONS[room]["connections"]
+		for path in overseer_paths:
+			if path["overseer_name"] == "N/A" or player_state.full_itemset().has(path["overseer_name"]):
+				if not result.has(path["room"]):
+					result.append(path["room"])
 	return result
 
 
@@ -1087,6 +1382,8 @@ func load_preferences() -> void:
 	
 	var stringified: String = FileAccess.get_file_as_string("user://Data/prefs.dat")
 	stringified = stringified.replace("\n}", "}").replace("{\n\t", "{").replace(",\n\t", ",")
+	if stringified == "":
+		stringified = "{}"
 	var data: Dictionary = JSON.parse_string(stringified)
 	for i in non_node_preferences.merged(preferences_to_save):
 		if data.has(i):
