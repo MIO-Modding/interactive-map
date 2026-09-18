@@ -167,22 +167,23 @@ func generate(from_yaml := "", state := Main.player_state) -> void:
 			if not data.randomize_slash:
 				Main.player_state.prog_items.assign(["Slash"])
 			available_rooms.assign(Globals.main.get_reachable())
-			available_locs.assign(Globals.main.get_reachable_locations(available_rooms).map(func(e): return e.serialize()))
-			if not data.randomize_slash:
-				available_locs.erase("ST_security_fall_P1: Starting Item (Slash)")
-			rooms_left.assign(all_rooms.filter(func(e): return not e in available_rooms))
-			locs_left.assign(all_locs)#.filter(func(e): return not e in available_locs))
-			
-			while not available_locs.is_empty():
-				await get_tree().process_frame
-				print(available_locs)
-				calculate_next_sphere(location_assignments, available_rooms, rooms_left, locs_left, 
-					available_prog_items, available_useful_items, available_filler_items)
-			
+			#available_locs.assign(Globals.main.get_reachable_locations(available_rooms).map(func(e): return e.serialize()))
+			#if not data.randomize_slash:
+				#available_locs.erase("ST_security_fall_P1: Starting Item (Slash)")
+			#rooms_left.assign(all_rooms.filter(func(e): return not e in available_rooms))
+			#locs_left.assign(all_locs)#.filter(func(e): return not e in available_locs))
+			#
+			#while not available_locs.is_empty():
+				#await get_tree().process_frame
+				#print(available_locs)
+				#calculate_next_sphere(location_assignments, available_rooms, rooms_left, locs_left, 
+					#available_prog_items, available_useful_items, available_filler_items)
+			#
 			Main.player_state = old_state
-			print(available_rooms)
-			print(available_locs)
-			pass #available_locs = 
+			#print(available_rooms)
+			#print(available_locs)
+			#pass #available_locs = 
+			fill(available_rooms, all_rooms, all_locs, available_prog_items, available_useful_items, available_filler_items)
 	
 	state.rando_assignments = location_assignments
 
@@ -253,6 +254,33 @@ func get_theoretical_new_locs(itempool: Array[String], available_rooms: Array[St
 	
 	Main.player_state = old_state
 	return new_available_locs
+
+
+func fill(starting_rooms: Array[String], 
+		rooms_left: Array[String], locs_left: Array[String], 
+		prog_items_left: Array[String], useful_items_left: Array[String], filler_items_left: Array[String]) -> void:
+	
+	var assignment: Dictionary[String, String]
+	var state := Main.PlayerState.new()
+	var old_state := Main.player_state
+	Main.player_state = state
+	state.prog_items = prog_items_left
+	
+	while not prog_items_left.is_empty():
+		var current_progs: Array[String]
+		for i in range(20):
+			var current_prog = prog_items_left.pick_random()
+			prog_items_left.erase(current_prog)
+			current_progs.append(current_prog)
+		rooms_left = Globals.main.get_reachable()
+		locs_left.assign(Globals.main.get_reachable_locations(rooms_left).map(func(e): return e.serialize()).filter(func(e): return not e in assignment))
+		for i in range(20):
+			var current_loc = locs_left.pick_random()
+			assignment[current_loc] = current_progs[i]
+	print(assignment)
+	
+	
+	Main.player_state = old_state
 
 
 func start_rando(from_yaml := "") -> void:

@@ -1,0 +1,216 @@
+[gd_scene format=3 uid="uid://bqq4im2mmmlhy"]
+
+[ext_resource type="Theme" uid="uid://bfeplfv3kvgmc" path="res://Sprites/ui/main_theme.tres" id="1_ph50u"]
+
+[sub_resource type="Theme" id="Theme_5mvfg"]
+
+[node name="ThemeTest" type="Control" unique_id=1615285724]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ph50u")
+metadata/_edit_lock_ = true
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1188382473]
+z_index = -2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.14901961, 0.15294118, 0.16078432, 1)
+
+[node name="Label" type="Label" parent="." unique_id=119700535]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 104.0
+offset_right = 96.0
+offset_bottom = 127.0
+text = "label"
+
+[node name="Button" type="Button" parent="." unique_id=904560100]
+layout_mode = 0
+offset_left = 209.0
+offset_top = 90.0
+offset_right = 217.0
+offset_bottom = 98.0
+text = "reg button"
+
+[node name="Button2" type="Button" parent="." unique_id=1726202771]
+layout_mode = 0
+offset_left = 239.0
+offset_top = 261.0
+offset_right = 307.0
+offset_bottom = 285.0
+disabled = true
+text = "disabled"
+
+[node name="Button3" type="Button" parent="." unique_id=590488565]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 208.0
+offset_right = 472.0
+offset_bottom = 232.0
+text = "flat"
+flat = true
+
+[node name="CheckButton" type="CheckButton" parent="." unique_id=220211028]
+layout_mode = 0
+offset_left = 49.0
+offset_top = 275.0
+offset_right = 169.0
+offset_bottom = 299.0
+theme = SubResource("Theme_5mvfg")
+text = "check"
+
+[node name="CheckBox" type="CheckBox" parent="." unique_id=1074840049]
+layout_mode = 0
+offset_left = 65.0
+offset_top = 327.0
+offset_right = 85.0
+offset_bottom = 351.0
+text = "check box"
+
+[node name="OptionButton" type="OptionButton" parent="." unique_id=1936832903]
+layout_mode = 0
+offset_left = 424.0
+offset_top = 345.0
+offset_right = 444.0
+offset_bottom = 365.0
+selected = 0
+item_count = 3
+popup/item_0/text = "Option 1"
+popup/item_0/id = 0
+popup/item_1/text = "Option 2"
+popup/item_1/id = 1
+popup/item_2/text = "Longer Option"
+popup/item_2/id = 2
+
+[node name="LineEdit" type="LineEdit" parent="." unique_id=755302243]
+layout_mode = 0
+offset_left = 598.0
+offset_top = 232.0
+offset_right = 941.0
+offset_bottom = 256.0
+placeholder_text = "Lineedit Placeholder"
+
+[node name="TextEdit" type="TextEdit" parent="." unique_id=1618008726]
+layout_mode = 0
+offset_left = 616.0
+offset_top = 315.0
+offset_right = 857.0
+offset_bottom = 433.0
+placeholder_text = "Textedit
+
+Placeholder"
+
+[node name="SpinBox" type="SpinBox" parent="." unique_id=858001612]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 530.0
+offset_right = 302.0
+offset_bottom = 554.0
+
+[node name="VScrollBar" type="VScrollBar" parent="." unique_id=1812688175]
+layout_mode = 0
+offset_left = 1076.0
+offset_top = 286.0
+offset_right = 1101.0
+offset_bottom = 398.0
+
+[node name="HScrollBar" type="HScrollBar" parent="." unique_id=1324943070]
+layout_mode = 0
+offset_left = 909.0
+offset_top = 329.0
+offset_right = 1042.0
+offset_bottom = 337.0
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=588291775]
+layout_mode = 0
+offset_left = 272.0
+offset_top = 605.0
+offset_right = 540.0
+offset_bottom = 625.0
+value = 36.0
+
+[node name="ProgressBar2" type="ProgressBar" parent="." unique_id=927027390]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 560.0
+offset_right = 608.0
+offset_bottom = 583.0
+value = 36.0
+show_percentage = false
+
+[node name="HSlider" type="HSlider" parent="." unique_id=2036257331]
+layout_mode = 0
+offset_left = 608.0
+offset_top = 104.0
+offset_right = 908.0
+offset_bottom = 120.0
+value = 46.0
+
+[node name="VSlider" type="VSlider" parent="." unique_id=1142444295]
+layout_mode = 0
+offset_left = 1016.0
+offset_top = 16.0
+offset_right = 1032.0
+offset_bottom = 186.0
+value = 46.0
+
+[node name="TabBar" type="TabBar" parent="." unique_id=1239547912]
+layout_mode = 0
+offset_left = 85.0
+offset_top = 17.0
+offset_right = 941.0
+offset_bottom = 36.0
+current_tab = 0
+tab_count = 4
+tab_0/title = "Tab 1"
+tab_1/title = "Tab 2"
+tab_2/title = "Disabled Tab"
+tab_2/disabled = true
+tab_3/title = "Another Tab"
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1743560175]
+layout_mode = 0
+offset_left = 78.0
+offset_top = 435.0
+offset_right = 118.0
+offset_bottom = 475.0
+
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1737712500]
+layout_mode = 0
+offset_left = 678.0
+offset_top = 499.0
+offset_right = 1042.0
+offset_bottom = 605.0
+current_tab = 0
+tab_2/disabled = true
+
+[node name="Tab1" type="Label" parent="TabContainer" unique_id=1052238264]
+layout_mode = 2
+text = "It's A TabContainer"
+metadata/_tab_index = 0
+
+[node name="Tab2" type="Label" parent="TabContainer" unique_id=458772750]
+visible = false
+layout_mode = 2
+text = "It's A TabContainer"
+metadata/_tab_index = 1
+
+[node name="DisabledTab" type="Label" parent="TabContainer" unique_id=466963746]
+visible = false
+layout_mode = 2
+text = "It's A TabContainer"
+metadata/_tab_index = 2
+
+[node name="AnotherTab" type="Label" parent="TabContainer" unique_id=247417268]
+visible = false
+layout_mode = 2
+text = "It's A TabContainer"
+metadata/_tab_index = 3

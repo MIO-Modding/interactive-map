@@ -107,6 +107,13 @@ var point_node: LocationIcon
 var original_color: Color
 
 
+func _init() -> void:
+	await tree_entered
+	for i in get_child(0).get_children():
+		if i is Label:
+			i.add_theme_color_override("font_color", Color.WHITE)
+
+
 func update() -> void:
 	if Main.player_state.checked_locations.has(self):
 		modulate = Color(0.232, 0.566, 0.61)

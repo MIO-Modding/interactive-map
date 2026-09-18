@@ -53,6 +53,13 @@ Logical Center: %s
 """
 
 
+func _init() -> void:
+	await tree_entered
+	for i in get_child(0).get_children():
+		if i is Label:
+			i.add_theme_color_override("font_color", Color.WHITE)
+
+
 func update() -> void:
 	var main: Main = $/root/Main
 	if main.highlight_reachable_rows:
