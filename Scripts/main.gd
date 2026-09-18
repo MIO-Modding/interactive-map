@@ -317,7 +317,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					var panel: RoomPanel = preload("res://Scenes/room_panel.tscn").instantiate()
 					panel.region_name = row[columns["Region Name"]]
 					panel.room_id = row[columns["Room ID"]]
-					panel.connected_rooms.assign(row[columns["Connected Rooms"]].split(", ") as Array)
+					panel.connected_rooms.assign(Array(row[columns["Connected Rooms"]].split(", ")))
 					if not row[columns["Room Coordinates (logical center)"]].is_empty():
 						panel.logical_coords = str_to_var("Vector2i" + row[columns["Room Coordinates (logical center)"]])
 					panel.logical_coords_description = row[columns["Center Description"]]

@@ -77,6 +77,13 @@ var notes: String:
 		$HBoxContainer/Notes.text = v
 
 
+func _init() -> void:
+	await tree_entered
+	for i in get_child(0).get_children():
+		if i is Label:
+			i.add_theme_color_override("font_color", Color.WHITE)
+
+
 func update() -> void:
 	if $/root/Main.highlight_rows_in_logic:
 		if $/root/Main.highlight_reachable_rows:
