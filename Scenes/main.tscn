@@ -31,7 +31,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 9
+current_tab = 5
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -279,7 +279,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
-visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 5
@@ -296,7 +295,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -351,6 +350,10 @@ layout_mode = 2
 focus_mode = 1
 button_pressed = true
 text = "Locations"
+
+[node name="MapIcons" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=941201915]
+layout_mode = 2
+text = "Map Icons"
 
 [node name="Label" type="Label" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1245158274]
 layout_mode = 2
@@ -782,6 +785,7 @@ popup/item_2/text = "Set Index"
 popup/item_2/id = 2
 
 [node name="Rando" type="Control" parent="TabContainer" unique_id=1884829303]
+visible = false
 layout_mode = 2
 script = ExtResource("10_hptm8")
 metadata/_tab_index = 9
@@ -1003,6 +1007,7 @@ text = "Skip (I know what I'm doing)"
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/RoomPoints" to="TabContainer/Map" method="_on_room_points_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Locations" to="TabContainer/Map" method="_on_locations_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/MapIcons" to="TabContainer/Map" method="_on_map_icons_toggled"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/MapImageType" to="TabContainer/Map" method="_on_map_image_type_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Rotation" to="TabContainer/Map" method="_on_rotation_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/IconStyle" to="TabContainer/Map" method="_on_icon_style_item_selected"]

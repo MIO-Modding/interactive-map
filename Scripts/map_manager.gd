@@ -296,3 +296,7 @@ func _on_scoutable_filter_item_selected(_index: int) -> void:
 
 func _on_hinted_filter_item_selected(_index: int) -> void:
 	update_filter()
+
+
+func _on_map_icons_toggled(toggled_on: bool) -> void:
+	map_node.get_node("Icons").visible = toggled_on

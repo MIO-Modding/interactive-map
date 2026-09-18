@@ -102,6 +102,9 @@ const MAP_ICON_TEXTURES: Dictionary[String, Texture2D] = {
 	"Tremor": preload("res://Sprites/map-icons/MAP_MARK_2.png"),
 	"Voice": preload("res://Sprites/map-icons/VOICE_ASMA.png"),
 	"Default": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
+	"Network Gate": preload("res://Sprites/map-icons/MAP_CHECKPOINT.png"),
+	"Crystalliser": preload("res://Sprites/map-icons/MAP_ALAMBIC.png"),
+	"Nacre Fountain": preload("res://Sprites/map-icons/MAP_FOUNTAIN.png"),
 }
 
 const MEL_LEVELS: Array[String] = [
@@ -477,6 +480,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					"region": row[columns["Region Name"]],
 					"room": row[columns["Room ID"]],
 					"description": row[columns["Description of Location"]],
+					"coordinates": str_to_var("Vector2i" + row[columns["Location Coordinates"]]),
 					"name": row[columns["Vanilla Location Reward"]],
 					"flag": row[columns["Flag"]],
 					"intended": row[columns["Intended Logic"]],
@@ -505,6 +509,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 						"overseer_name": overseer_connections[connected_room]["overseer_name"],
 						"room": connected_room,
 					})
+			update_map()
 			
 
 
@@ -799,7 +804,7 @@ func update_map() -> void:
 	await get_tree().process_frame
 	var map_node: Node2D = $TabContainer/Map/SubViewportContainer/SubViewport/Node2D
 	
-	for i in ["Points", "Lines", "LocPoints", "LocLines"].map(func(e): return map_node.get_node(e).get_children()):
+	for i in ["Points", "Lines", "LocPoints", "LocLines", "Icons"].map(func(e): return map_node.get_node(e).get_children()):
 		for node: Node in i:
 			node.free()
 	
@@ -946,6 +951,20 @@ func update_map() -> void:
 		elif Archipelago.is_ap_connected():
 			if hint_locs.has(loc_panel.serialize()):
 				point.self_modulate = Color.LIGHT_SEA_GREEN
+	
+	for component in non_location_components:
+		var icon := preload("res://Scenes/map_icon.tscn").instantiate()
+		if component["type"] in MAP_ICON_TEXTURES:
+			icon.texture = MAP_ICON_TEXTURES[component["type"]]
+		else:
+			icon.texture = MAP_ICON_TEXTURES["Default"]
+			
+		var temp_point: Vector2i = get_rotated_position(component["coordinates"])
+		icon.position = Vector2(temp_point) / 5 * Vector2(1, -1)
+		
+		icon.name = component["room"] + "-" + component["name"]
+		
+		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Icons.add_child(icon)
 	
 	$TabContainer/Map.update_filter()
 
