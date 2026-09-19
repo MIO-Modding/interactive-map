@@ -160,8 +160,9 @@ func send_deathlink(cause: String) -> void:
 			Archipelago.conn.send_deathlink(cause)
 
 
-func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_item := false) -> void:
+func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_item := false, other_buttons: Array[Button] = []) -> void:
 	var popup := PanelContainer.new()
+	var delete_popup: Callable = func(): popup.queue_free()
 	var container := HBoxContainer.new()
 	popup.add_child(container)
 	var label := Label.new()
@@ -181,13 +182,16 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 	if (is_item and main.persistant_items) or persistant:
 		var button := Button.new()
 		button.text = "Dismiss" if persistant else "Added?"
-		button.pressed.connect(func(): popup.queue_free(), CONNECT_ONE_SHOT)
+		button.pressed.connect(delete_popup, CONNECT_ONE_SHOT)
 		container.add_child(button)
+	for i in other_buttons:
+		i.pressed.connect(delete_popup, CONNECT_ONE_SHOT)
+		container.add_child(i)
 	main.get_node("VBoxContainer").add_child(popup)
 	
 	print_rich("[color=%s]%s[/color]" % [label.label_settings.font_color.to_html(false), text])
 	
-	if is_item and main.persistant_items:
+	if (is_item and main.persistant_items) or persistant or not other_buttons.is_empty():
 		return
 	await get_tree().create_timer(3).timeout
 	if is_instance_valid(popup):

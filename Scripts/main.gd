@@ -482,8 +482,10 @@ func on_release_notes_recieved(_result: int, _response_code: int, _headers: Pack
 	var json: Dictionary = JSON.parse_string(text)
 	
 	var page := InfoPage.new()
-	page.text = json["body"]
+	page.text = "**Mio Interactive Map" + json["body"].trim_prefix("**")
 	page.name = page.text.get_slice("**", 1)
+	if is_version_less(ProjectSettings.get_setting("application/config/version"), non_node_preferences["MISC>SEEN_PATCH_NOTES"]):
+		page.text += "\n\nThis version is more recent than the one you have installed, you should update to it."
 	$TabContainer/Info.add_page_node(page)
 	$TabContainer/Info.select_last_page()
 
@@ -500,6 +502,19 @@ func on_releases_recieved(_result: int, _response_code: int, _headers: PackedStr
 	var list: Array = JSON.parse_string(text)
 	list = list.map(func(e): return e["html_url"].get_slice("/tag/", 1))
 	all_release_tags.assign(list)
+
+
+func is_version_less(target_version: String, compared_to: String) -> bool:
+	var target_values: Array[int]
+	var compared_values: Array[int]
+	target_values.assign(Array(target_version.split(".")).map(func(e): return e.to_int()))
+	compared_values.assign(Array(compared_to.split(".")).map(func(e): return e.to_int()))
+	for i in range(3):
+		if target_values[i] < compared_values[i]:
+			return true
+		elif target_values[i] > compared_values[i]:
+			return false
+	return false
 
 
 ## Fills a sheet with data from [param body], limiting the amount of columns to [param cap]
