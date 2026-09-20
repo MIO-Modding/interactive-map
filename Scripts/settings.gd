@@ -12,11 +12,17 @@ func _ready() -> void:
 	for tab: Control in get_parent().get_children():
 		var toggle := CheckButton.new()
 		toggle.text = str(tab.name)
-		toggle.toggled.connect(tab_toggle_toggled.bind(tab.get_index()))
 		toggle.button_pressed = true
+		toggle.toggled.connect(tab_toggle_toggled.bind(tab.get_index()))
+		toggle.toggled.connect(Globals.main.save_all_preferences.unbind(1))
 		if tab == self:
 			toggle.disabled = true
 		$ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer.add_child(toggle)
+	
+	#await Globals.main.finished_requesting
+	var temp: Array[String]
+	temp.assign(PRESETS[0])
+	choose_tab_set(temp)
 
 
 func tab_toggle_toggled(toggled_on: bool, tab_idx: int) -> void:
@@ -25,7 +31,7 @@ func tab_toggle_toggled(toggled_on: bool, tab_idx: int) -> void:
 
 func toggle_tab_with_set(toggled_on: bool, tab_idx: int) -> void:
 	tab_toggle_toggled(toggled_on, tab_idx)
-	$ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer.get_child(tab_idx + 1).button_pressed = toggled_on
+	$ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer.get_child(tab_idx + 1).set_pressed_no_signal(toggled_on)
 
 
 func toggle_all_shown_tabs(toggled_on: bool) -> void:

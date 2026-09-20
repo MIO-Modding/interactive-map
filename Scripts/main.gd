@@ -485,7 +485,7 @@ func on_release_notes_recieved(_result: int, _response_code: int, _headers: Pack
 	var json: Dictionary = JSON.parse_string(text)
 	
 	var page := InfoPage.new()
-	page.text = "**Mio Interactive Map" + json["body"].trim_prefix("**")
+	page.text = "**Mio Interactive Map " + json["body"].trim_prefix("**")
 	page.name = page.text.get_slice("**", 1)
 	if is_version_less(ProjectSettings.get_setting("application/config/version"), non_node_preferences["MISC>SEEN_PATCH_NOTES"]):
 		page.text += "\n\nThis version is more recent than the one you have installed, you should update to it."
