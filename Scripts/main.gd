@@ -199,10 +199,13 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"ARCHIPELAGO>PORT": null,
 	"ARCHIPELAGO>SLOT_NAME": null,
 	"ARCHIPELAGO>IS_MANUAL": null,
+	
+	"SETTINGS>VISIBLE_TABS": $TabContainer/Settings,
 }
 
 
 func _ready() -> void:
+	add_scrollbar_backgrounds()
 	$LoadingScreen.show()
 	$TabContainer.current_tab = 5
 	player_state = PlayerState.new()
@@ -1087,6 +1090,11 @@ func get_preference(key: String) -> Variant:
 		return node.selected
 	elif node is LineEdit:
 		return node.text
+	elif node == $TabContainer/Settings:
+		var settings_key := key.get_slice(">", 1)
+		match settings_key:
+			"VISIBLE_TABS":
+				return $TabContainer/Settings.get_visible_tabs()
 	else:
 		printerr("Unrecognised node for %s" % node.get_path())
 	return ""
@@ -1123,6 +1131,19 @@ func set_preference(entry: String, value: Variant) -> void:
 	elif node is LineEdit:
 		node.text = value
 		node.text_changed.emit(value)
+	elif node == $TabContainer/Settings:
+		var typed: Array[String]
+		typed.assign(value)
+		node.choose_tab_set(typed)
+
+
+func add_scrollbar_backgrounds() -> void:
+	var stylebox := StyleBoxFlat.new()
+	stylebox.bg_color = Color("00000066")
+	stylebox.border_color = stylebox.bg_color
+	for i: ScrollContainer in get_child(0).get_children().filter(func(e): return e is ScrollContainer):
+		i.get_h_scroll_bar().add_theme_stylebox_override("scroll", stylebox)
+		i.get_v_scroll_bar().add_theme_stylebox_override("scroll", stylebox)
 
 
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:

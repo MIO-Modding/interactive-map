@@ -45,6 +45,12 @@ func choose_tab_set(set_list: Array[String]) -> void:
 		toggle_tab_by_name(true, i)
 
 
+func get_visible_tabs() -> Array[String]:
+	var result: Array[String]
+	result.assign(range(get_parent().get_tab_count()).filter(func(e): return not get_parent().is_tab_hidden(e)).map(func(e): return str(get_parent().get_child(e).name)))
+	return result
+
+
 func _on_file_loc_pressed() -> void:
 	if not OS.has_feature("web"):
 		OS.shell_open(ProjectSettings.globalize_path("user://Data/"))
@@ -60,3 +66,4 @@ func _on_set_preset_item_selected(index: int) -> void:
 			var list: Array[String]
 			list.assign(PRESETS[index - 2])
 			choose_tab_set(list)
+	Globals.main.save_all_preferences()

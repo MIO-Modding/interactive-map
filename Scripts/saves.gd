@@ -181,7 +181,7 @@ func clear_state() -> void:
 
 
 func set_temp_state() -> void:
-	save_save(Main.player_state, "temp")
+	save_state(Main.player_state, "temp")
 
 
 func remove_temp_state() -> void:
