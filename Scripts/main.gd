@@ -118,8 +118,6 @@ const MEL_LEVELS: Array[String] = [
 
 var overseer_connections = {}
 
-var non_location_components = [] # TODO: draw these on the map
-
 
 ## The state of this player, including items given through this client and items received through archipelago.
 static var player_state: PlayerState
@@ -475,32 +473,36 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				if skip_first:
 					skip_first = false
 					continue
+					
+				var panel: LocationPanel = preload("res://Scenes/location_panel.tscn").instantiate()
 				
-				var component = {
-					"region": row[columns["Region Name"]],
-					"room": row[columns["Room ID"]],
-					"description": row[columns["Description of Location"]],
-					"coordinates": str_to_var("Vector2i" + row[columns["Location Coordinates"]]),
-					"name": row[columns["Vanilla Location Reward"]],
-					"flag": row[columns["Flag"]],
-					"intended": row[columns["Intended Logic"]],
-					"simple": row[columns["Simple Skips"]],
-					"advanced": row[columns["Advanced Skips"]],
-					"remarks": row[columns["Remarks"]],
-					"type": row[columns["Location Category"]],
-					"nacre": row[columns["Nacre Amount"]],
-				}
-				non_location_components.append(component)
+				panel.region_name = row[columns["Region Name"]]
+				panel.room_id = row[columns["Room ID"]]
+				panel.loc_description = row[columns["Description of Location"]]
+				if row[columns["Location Coordinates"]] == "N/A":
+					panel.coords = Vector2i.ZERO
+				else:
+					panel.coords = str_to_var("Vector2i" + row[columns["Location Coordinates"]])
+				panel.vanilla_item = row[columns["Vanilla Location Reward"]]
+				panel.save_flag = row[columns["Flag"]]
+				panel.intended_string = row[columns["Intended Logic"]]
+				panel.simple_string = row[columns["Simple Skips"]]
+				panel.advanced_string = row[columns["Advanced Skips"]]
+				panel.notes = row[columns["Remarks"]]
+				panel.type = row[columns["Location Category"]]
 				
-				if component["type"] == "Network Gate":
-					if not (component["name"].contains("Pit") or component["name"].contains("Library")):
-						overseer_connections[component["room"]] = {
-							"overseer_name": component["name"].replace("Network Gate", "Overseer"),
-							"checkpoint_flag": component["flag"],
+				$TabContainer/NonLocationComponents/VBoxContainer.add_child(panel)
+				
+				if panel.type == "Network Gate":
+					if not (panel.vanilla_item.contains("Pit") or panel.vanilla_item.contains("Library")):
+						overseer_connections[panel.room_id] = {
+							"overseer_name": panel.vanilla_item.replace("Network Gate", "Overseer"),
+							"checkpoint_flag": panel.save_flag,
 							"connected_checkpoints": row[columns["Connected Checkpoints"]].split(","),
 							"connections": [],
+							"location_panel": panel,
 						}
-						checkpoint_rooms[component["flag"]] = component["room"]
+						checkpoint_rooms[panel.save_flag] = panel.room_id
 						
 			for room in overseer_connections.keys():
 				for connected in overseer_connections[room]["connected_checkpoints"]:
@@ -697,11 +699,12 @@ func get_room_connections(room: String) -> Array[String]:
 					result.append(i.to)
 	
 	if room in overseer_connections and (room == "HUB_hub_central_C1" or player_state.full_itemset().has(overseer_connections[room]["overseer_name"])):
-		var overseer_paths = overseer_connections[room]["connections"]
-		for path in overseer_paths:
-			if path["overseer_name"] == "N/A" or player_state.full_itemset().has(path["overseer_name"]):
-				if not result.has(path["room"]):
-					result.append(path["room"])
+		if loc_in_logic(overseer_connections[room]["location_panel"]):
+			var overseer_paths = overseer_connections[room]["connections"]
+			for path in overseer_paths:
+				if path["overseer_name"] == "N/A" or player_state.full_itemset().has(path["overseer_name"]):
+					if not result.has(path["room"]):
+						result.append(path["room"])
 	return result
 
 
@@ -953,20 +956,20 @@ func update_map() -> void:
 			if hint_locs.has(loc_panel.serialize()):
 				point.self_modulate = Color.LIGHT_SEA_GREEN
 	
-	for component in non_location_components:
+	for panel: LocationPanel in $TabContainer/NonLocationComponents/VBoxContainer.get_children():
 		var icon := preload("res://Scenes/map_icon.tscn").instantiate()
-		if component["type"] in MAP_ICON_TEXTURES:
-			icon.texture = MAP_ICON_TEXTURES[component["type"]]
+		if panel.type in MAP_ICON_TEXTURES:
+			icon.texture = MAP_ICON_TEXTURES[panel.type]
 		else:
 			icon.texture = MAP_ICON_TEXTURES["Default"]
 		
-		if component["type"] == "Network Gate":
+		if panel.type == "Network Gate":
 			icon.scale = Vector2.ONE * 0.075
 		
-		var temp_point: Vector2i = get_rotated_position(component["coordinates"])
+		var temp_point: Vector2i = get_rotated_position(panel.coords)
 		icon.position = Vector2(temp_point) / 5 * Vector2(1, -1)
 		
-		icon.name = component["room"] + "-" + component["name"]
+		icon.name = panel.room_id + "-" + panel.vanilla_item
 		
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Icons.add_child(icon)
 	
