@@ -104,7 +104,7 @@ const MAP_ICON_TEXTURES: Dictionary[String, Texture2D] = {
 	"Default": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
 	"Network Gate": preload("res://Sprites/map-icons/MAP_CHECKPOINT.png"),
 	"Crystalliser": preload("res://Sprites/map-icons/MAP_ALAMBIC.png"),
-	"Nacre Fountain": preload("res://Sprites/map-icons/MAP_FOUNTAIN.png"),
+	"Nacre Basin": preload("res://Sprites/map-icons/MAP_FOUNTAIN.png"),
 }
 
 const MEL_LEVELS: Array[String] = [
