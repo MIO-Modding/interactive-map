@@ -509,6 +509,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 						"overseer_name": overseer_connections[connected_room]["overseer_name"],
 						"room": connected_room,
 					})
+			
 			update_map()
 			
 
@@ -958,7 +959,10 @@ func update_map() -> void:
 			icon.texture = MAP_ICON_TEXTURES[component["type"]]
 		else:
 			icon.texture = MAP_ICON_TEXTURES["Default"]
-			
+		
+		if component["type"] == "Network Gate":
+			icon.scale = Vector2.ONE * 0.075
+		
 		var temp_point: Vector2i = get_rotated_position(component["coordinates"])
 		icon.position = Vector2(temp_point) / 5 * Vector2(1, -1)
 		
