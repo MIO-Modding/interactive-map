@@ -1205,8 +1205,8 @@ func load_preferences() -> void:
 	
 	var stringified: String = FileAccess.get_file_as_string("user://Data/prefs.dat")
 	stringified = stringified.replace("\n}", "}").replace("{\n\t", "{").replace(",\n\t", ",")
-	if stringified == "":
-		stringified = "{}"
+	if stringified.is_empty():
+		return
 	var data: Dictionary = JSON.parse_string(stringified)
 	for i in non_node_preferences.merged(preferences_to_save):
 		if data.has(i):
@@ -1304,6 +1304,11 @@ func _on_double_checker_toggled(toggled_on: bool) -> void:
 
 func _on_deathlink_send_pressed() -> void:
 	Globals.send_deathlink($TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink/Cause.text)
+
+
+func _on_fast_travel_unlock_toggled(toggled_on: bool) -> void:
+	overseers_unlock_fast_travel = toggled_on
+	update_itempool.emit()
 
 
 class PlayerState:
@@ -1457,8 +1462,3 @@ class PlayerState:
 			
 			for i in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
 				i.update()
-
-
-func _on_fast_travel_unlock_toggled(toggled_on: bool) -> void:
-	overseers_unlock_fast_travel = toggled_on
-	update_itempool.emit()
