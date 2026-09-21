@@ -4,7 +4,7 @@ extends Control
 const PRESETS: Array[Array] = [
 	["PlayerState", "Map", "Info", "Saves"],
 	["PlayerState", "Map", "Info", "ArchipelagoClient", "Saves", "Rando"],
-	["RoomRequirements", "Items", "TransitionRequirements", "LocationRequirements"],
+	["RoomRequirements", "Items", "TransitionRequirements", "LocationRequirements", "NonLocationComponents"],
 ]
 
 

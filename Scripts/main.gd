@@ -721,10 +721,9 @@ func get_room_connections(room: String) -> Array[String]:
 				if not result.has(i.to):
 					result.append(i.to)
 	
-	if overseers_unlock_fast_travel \
-		and room in overseer_connections \
-		and (room == "HUB_hub_central_C1" or player_state.full_itemset().has(overseer_connections[room]["overseer_name"])) \
-		and loc_in_logic(overseer_connections[room]["location_panel"]):
+	if overseers_unlock_fast_travel and room in overseer_connections:
+		if ((room == "HUB_hub_central_C1" or player_state.full_itemset().has(overseer_connections[room]["overseer_name"]))
+				and loc_in_logic(overseer_connections[room]["location_panel"])):
 			var overseer_paths = overseer_connections[room]["connections"]
 			for path in overseer_paths:
 				if path["overseer_name"] == "N/A" or player_state.full_itemset().has(path["overseer_name"]):
