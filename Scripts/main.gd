@@ -918,7 +918,10 @@ func get_hint_locs() -> Array[String]:
 		var i_name: String
 		i_name = game_data.get_loc_name(i.item.loc_id)
 		if Globals.is_manual:
-			i_name = PlayerState.get_manual_loc_node(i_name).serialize()
+			var node: LocationPanel = PlayerState.get_manual_loc_node(i_name)
+			if node == null:
+				continue
+			i_name = node.serialize()
 		result.append(i_name)
 	return result
 
@@ -1307,7 +1310,17 @@ class PlayerState:
 			room = "LQ_ruins_hall_C1"
 		for i: LocationPanel in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
 			if i.room_id == room:
-				if loc_name.contains("Crystalli"):
+				if loc_name.contains("Crystalli") and i.vanilla_item.contains("Crystalli"):
+					if loc_name.contains("Nacre_"):
+						if i.loc_description.contains("Left"):
+							return i
+						elif i.loc_description.contains("Right"):
+							return i
+						elif i.loc_description == "Above a Door":
+							return i
+						elif i.loc_description == "In the Middle of the Room":
+							return i
+					
 					if i.vanilla_item.contains("Crystallised Nacre") or i.vanilla_item.contains("Crystallized Nacre"):
 						return i
 				elif i.vanilla_item.containsn(item):
