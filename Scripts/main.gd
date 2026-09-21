@@ -1279,7 +1279,7 @@ class PlayerState:
 	
 	## Serializes the [param loc], in manual form. [br]
 	## This form is [member LocationPanel.room_id]--([member LocationPanel.vanilla_item])
-	static func get_manual_serialized(loc: LocationPanel) -> String:
+	static func get_manual_serialized(loc: LocationPanel, fix_crystallised := false) -> String:
 		var result: String
 		var room: String = loc.room_id
 		var item: String = loc.vanilla_item
@@ -1287,6 +1287,15 @@ class PlayerState:
 			room = "Capucine"
 		if loc.vanilla_item.contains("Crystallized Nacre") or loc.vanilla_item.contains("Crystallised Nacre"):
 			item = "Crystallised Nacre"
+			if fix_crystallised:
+				if loc.loc_description.contains("Left") and loc.room_id == "LQ_under_mast_C1":
+					item = item.replace("Nacre", "Nacre_left")
+				elif loc.loc_description.contains("Right") and loc.room_id == "LQ_under_mast_C1":
+					item = item.replace("Nacre", "Nacre_right")
+				elif loc.loc_description == "Above a Door":
+					item = item.replace("Nacre", "Nacre_lower")
+				elif loc.loc_description == "In the Middle of the Room":
+					item = item.replace("Nacre", "Nacre_upper")
 		
 		result = "%s--(%s)" % [room, item]
 		return result

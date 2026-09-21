@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://dwe8brs2p3rup" path="res://Scripts/info_page.gd" id="6_21xkr"]
 [ext_resource type="Script" uid="uid://d2x5pifx5kcex" path="res://Scripts/saves.gd" id="8_344ge"]
 [ext_resource type="Script" uid="uid://c281t12mtvbdb" path="res://Scripts/rando_manager.gd" id="10_hptm8"]
+[ext_resource type="Script" uid="uid://t08vd4w5yt3s" path="res://Scripts/exclude_locations_checkbox.gd" id="11_6iyac"]
 [ext_resource type="Script" uid="uid://b6dcedlxkrppa" path="res://Scripts/settings.gd" id="11_d1ilt"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
@@ -32,7 +33,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 10
+current_tab = 9
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -783,7 +784,6 @@ popup/item_2/text = "Set Index"
 popup/item_2/id = 2
 
 [node name="Rando" type="Control" parent="TabContainer" unique_id=1884829303]
-visible = false
 layout_mode = 2
 script = ExtResource("10_hptm8")
 metadata/_tab_index = 9
@@ -879,6 +879,15 @@ text = "DeathLink:"
 [node name="DeathLink" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=181033379]
 layout_mode = 2
 
+[node name="CrystalNacreLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1234321250]
+layout_mode = 2
+text = "Exclude Crystallized Nacre:"
+
+[node name="CrystalNacre" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1659049427]
+layout_mode = 2
+script = ExtResource("11_6iyac")
+exclude_type = "Nacre"
+
 [node name="DownloadButton" type="Button" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=1599237516]
 layout_mode = 1
 anchors_preset = 7
@@ -915,6 +924,7 @@ grow_horizontal = 2
 text = "Play Rando"
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
+visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 10
