@@ -10,6 +10,9 @@
 [ext_resource type="Script" uid="uid://dwe8brs2p3rup" path="res://Scripts/info_page.gd" id="6_21xkr"]
 [ext_resource type="Script" uid="uid://d2x5pifx5kcex" path="res://Scripts/saves.gd" id="8_344ge"]
 [ext_resource type="Script" uid="uid://c281t12mtvbdb" path="res://Scripts/rando_manager.gd" id="10_hptm8"]
+[ext_resource type="Script" uid="uid://t08vd4w5yt3s" path="res://Scripts/exclude_locations_checkbox.gd" id="11_6iyac"]
+[ext_resource type="Script" uid="uid://b6dcedlxkrppa" path="res://Scripts/settings.gd" id="11_d1ilt"]
+[ext_resource type="Script" uid="uid://cda2554826lcj" path="res://Scripts/start_inventory_checkbox.gd" id="12_fdnlq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
 font_color = Color(1, 0, 0, 1)
@@ -887,6 +890,25 @@ text = "DeathLink:"
 [node name="DeathLink" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=181033379]
 layout_mode = 2
 
+[node name="CrystalNacreLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1234321250]
+layout_mode = 2
+text = "Exclude Crystallized Nacre:"
+
+[node name="CrystalNacre" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1659049427]
+layout_mode = 2
+script = ExtResource("11_6iyac")
+exclude_type = "Nacre"
+
+[node name="OverseersLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=287914872]
+layout_mode = 2
+text = "Exclude Overseers:"
+
+[node name="Overseers" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=892187819]
+layout_mode = 2
+script = ExtResource("12_fdnlq")
+start_type = "OVERSEER"
+exclude_type = "Overseer"
+
 [node name="DownloadButton" type="Button" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=1599237516]
 layout_mode = 1
 anchors_preset = 7
@@ -922,14 +944,60 @@ offset_bottom = 32.0
 grow_horizontal = 2
 text = "Play Rando"
 
-[node name="NonLocationComponents" type="ScrollContainer" parent="TabContainer" unique_id=1812573804]
+[node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
 visible = false
 layout_mode = 2
+script = ExtResource("11_d1ilt")
 metadata/_tab_index = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/NonLocationComponents" unique_id=251925185]
+[node name="FileLoc" type="Button" parent="TabContainer/Settings" unique_id=3260642]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -8.0
+offset_bottom = 8.0
+grow_horizontal = 0
+text = "Open File Location"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings" unique_id=1865609048]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/ScrollContainer" unique_id=146631574]
 layout_mode = 2
-alignment = 2
+
+[node name="Header" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=169727833]
+layout_mode = 2
+text = "All Settings"
+
+[node name="ShownTabsFoldable" type="FoldableContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=1495584182]
+layout_mode = 2
+folded = true
+title = "Shown Tabs"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable" unique_id=1784359798]
+visible = false
+layout_mode = 2
+
+[node name="SetPreset" type="OptionButton" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer" unique_id=509146646]
+layout_mode = 2
+selected = 0
+item_count = 5
+popup/item_0/text = "All"
+popup/item_0/id = 0
+popup/item_1/text = "None"
+popup/item_1/id = 1
+popup/item_2/text = "Basic"
+popup/item_2/id = 2
+popup/item_3/text = "Archipelago"
+popup/item_3/id = 3
+popup/item_4/text = "Sheets"
+popup/item_4/id = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1
@@ -1048,4 +1116,6 @@ text = "Skip (I know what I'm doing)"
 [connection signal="item_selected" from="TabContainer/Saves/Lists/File/V/ModeOption" to="TabContainer/Saves" method="_on_mode_option_item_selected"]
 [connection signal="pressed" from="TabContainer/Rando/SplitContainer/Options/Control/DownloadButton" to="TabContainer/Rando" method="_on_download_button_pressed"]
 [connection signal="pressed" from="TabContainer/Rando/SplitContainer/Play/Control/Start" to="TabContainer/Rando" method="_on_start_pressed"]
+[connection signal="pressed" from="TabContainer/Settings/FileLoc" to="TabContainer/Settings" method="_on_file_loc_pressed"]
+[connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer/SetPreset" to="TabContainer/Settings" method="_on_set_preset_item_selected"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]

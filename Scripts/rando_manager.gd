@@ -12,10 +12,8 @@ game: %s
   accessibility: full
   local_items: []
   non_local_items: []
-  start_inventory: {}
   start_hints: []
   start_location_hints: []
-  exclude_locations: []
   priority_locations: []
   start_inventory_from_pool: {}%s
 """
@@ -25,6 +23,8 @@ game: %s
 	"randomize_slash": $SplitContainer/Options/Control/GridContainer/Slash,
 	"goal": $SplitContainer/Options/Control/GridContainer/Ending,
 	"death_link": $SplitContainer/Options/Control/GridContainer/DeathLink,
+	"exclude_locations_nacre": $SplitContainer/Options/Control/GridContainer/CrystalNacre,
+	"start_inventory_overseers": $SplitContainer/Options/Control/GridContainer/Overseers,
 }
 
 
@@ -62,14 +62,24 @@ static func join_dictionary(dict: Dictionary[String, String], key_to_value: Stri
 
 func get_current_options() -> Dictionary[String, String]:
 	var result: Dictionary[String, String]
+	var exclude_locations: Array[String]
+	var start_inventory: Dictionary[String, int]
 	for i in option_nodes:
 		match option_nodes[i].get_class():
 			"OptionButton":
 				result[i] = option_nodes[i].get_item_text(option_nodes[i].selected).to_lower()
 			"CheckBox":
-				result[i] = str(option_nodes[i].button_pressed)
+				if option_nodes[i] is StartInventoryCheckBox:
+					exclude_locations.append_array(option_nodes[i].get_all_exclusions())
+					start_inventory.merge(option_nodes[i].get_entire_pool())
+				if option_nodes[i] is ExcludeLocationsCheckBox:
+					exclude_locations.append_array(option_nodes[i].get_all_exclusions())
+				else:
+					result[i] = str(option_nodes[i].button_pressed)
 			"CheckButton":
 				result[i] = str(option_nodes[i].button_pressed)
+	result["exclude_locations"] = ExcludeLocationsCheckBox.convert_to_entry(exclude_locations)
+	result["start_inventory"] = StartInventoryCheckBox.convert_to_dict_entry(start_inventory)
 	return result
 
 
@@ -123,10 +133,10 @@ func generate(from_yaml := "", state := Main.player_state) -> void:
 	var available_filler_items: Array[String]
 	var all_locs: Array[String]
 	var available_locs: Array[String]
-	var locs_left: Array[String]
+	var _locs_left: Array[String]
 	var all_rooms: Array[String]
 	var available_rooms: Array[String]
-	var rooms_left: Array[String]
+	var _rooms_left: Array[String]
 	
 	for item: Item in %ItemPool.get_children():
 		var list_to_add: Array[String]
@@ -256,9 +266,9 @@ func get_theoretical_new_locs(itempool: Array[String], available_rooms: Array[St
 	return new_available_locs
 
 
-func fill(starting_rooms: Array[String], 
+func fill(_starting_rooms: Array[String], 
 		rooms_left: Array[String], locs_left: Array[String], 
-		prog_items_left: Array[String], useful_items_left: Array[String], filler_items_left: Array[String]) -> void:
+		prog_items_left: Array[String], _useful_items_left: Array[String], _filler_items_left: Array[String]) -> void:
 	
 	var assignment: Dictionary[String, String]
 	var state := Main.PlayerState.new()

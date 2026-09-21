@@ -4,16 +4,12 @@ extends Camera2D
 signal zoom_changed(value: float)
 
 var pos_last_frame: Vector2
-var double_click_timer := Timer.new()
 
 @onready var map_node: Control = get_parent().get_parent().get_parent().get_parent()
 @onready var draw_node: Node2D = $"../DrawNode"
 
 
 func _ready() -> void:
-	double_click_timer.wait_time = 0.5
-	double_click_timer.one_shot = true
-	add_child(double_click_timer)
 	pos_last_frame = get_viewport().get_mouse_position()
 	draw_node.draw.connect(update_shape_visualization)
 
@@ -40,12 +36,8 @@ func _input(event: InputEvent) -> void:
 			if zoom != previous_zoom:
 				position = get_global_mouse_position() - ((get_global_mouse_position() - position) * (previous_zoom / zoom))
 			
-			if Input.is_action_just_pressed("mouse1"):
-				run_click(not double_click_timer.is_stopped())
-				if double_click_timer.is_stopped():
-					double_click_timer.start(0.5)
-				else:
-					double_click_timer.stop()
+			if Input.is_action_just_pressed("mouse1") and event.is_action("mouse1"):
+				run_click(event.double_click)
 				pos_last_frame = get_viewport().get_mouse_position()
 			if Input.is_action_pressed("mouse1"):
 				position = position + ((pos_last_frame - get_viewport().get_mouse_position()) / zoom.x)

@@ -7,18 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://b5a8vpd8uka6h" path="res://Sprites/ui/toggle_switched.svg" id="2_5mvfg"]
 [ext_resource type="Texture2D" uid="uid://6mrwmwpyscne" path="res://Sprites/ui/incrament_h.png" id="2_52chh"]
 [ext_resource type="Texture2D" uid="uid://bakh1xlnhl6u4" path="res://Sprites/ui/incrament.png" id="2_m0k6t"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fw15l"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.1, 0.1, 0.1, 0.3)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
+[ext_resource type="Texture2D" uid="uid://bxov6vyhdoolp" path="res://Sprites/ui/down_arrow.svg" id="5_aq34m"]
+[ext_resource type="Texture2D" uid="uid://3ex7nfooxtq7" path="res://Sprites/ui/up_arrow.svg" id="6_cyjwx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ph50u"]
 bg_color = Color(0, 0, 0, 0.4)
@@ -258,6 +248,16 @@ content_margin_top = 0.0
 content_margin_right = 0.0
 content_margin_bottom = 0.0
 
+[sub_resource type="DPITexture" id="DPITexture_l38w8"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"8\" height=\"8\"><circle cx=\"4\" cy=\"4\" r=\"1.5\" fill=\"#b2b2b2\" fill-opacity=\".25\"/></svg>
+"
+
+[sub_resource type="DPITexture" id="DPITexture_aq34m"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"8\" height=\"8\"><path fill=\"#b2b2b2\" fill-opacity=\".25\" d=\"M6 0v8h2V0zM1 0a1 1 0 0 0-.693 1.705L2.6 3.998.307 6.291A1 1 0 0 0 1.72 7.705l3-3a1 1 0 0 0 0-1.414l-3-3A1 1 0 0 0 1 0z\"/></svg>
+"
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cyjwx"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mw5vy"]
 content_margin_left = 4.0
 content_margin_top = 4.0
@@ -292,7 +292,7 @@ Button/constants/h_separation = 4
 Button/constants/icon_max_width = 0
 Button/constants/outline_size = 0
 Button/font_sizes/font_size = 16
-Button/styles/disabled = SubResource("StyleBoxFlat_fw15l")
+Button/styles/disabled = SubResource("StyleBoxFlat_ph50u")
 Button/styles/focus = SubResource("StyleBoxFlat_ph50u")
 Button/styles/hover = SubResource("StyleBoxFlat_ph50u")
 Button/styles/normal = SubResource("StyleBoxFlat_ph50u")
@@ -334,7 +334,7 @@ LineEdit/colors/clear_button_color = Color(0.875, 0.875, 0.875, 1)
 LineEdit/colors/clear_button_color_pressed = Color(1, 1, 1, 1)
 LineEdit/colors/font_color = Color(0.9411765, 0.83137256, 0.5019608, 1)
 LineEdit/colors/font_outline_color = Color(0, 0, 0, 1)
-LineEdit/colors/font_placeholder_color = Color(0.94, 0.91650003, 0.84599996, 1)
+LineEdit/colors/font_placeholder_color = Color(0.9411765, 0.91764706, 0.84705883, 1)
 LineEdit/colors/font_selected_color = Color(1, 1, 1, 1)
 LineEdit/colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
 LineEdit/colors/selection_color = Color(0.78039217, 0.5647059, 0.8235294, 1)
@@ -352,6 +352,14 @@ ProgressBar/colors/font_color = Color(1, 1, 1, 1)
 ProgressBar/constants/outline_size = 4
 ProgressBar/styles/background = SubResource("StyleBoxFlat_5mvfg")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_l38w8")
+SpinBox/icons/down = ExtResource("5_aq34m")
+SpinBox/icons/down_disabled = ExtResource("5_aq34m")
+SpinBox/icons/down_hover = ExtResource("5_aq34m")
+SpinBox/icons/down_pressed = ExtResource("5_aq34m")
+SpinBox/icons/up = ExtResource("6_cyjwx")
+SpinBox/icons/up_disabled = ExtResource("6_cyjwx")
+SpinBox/icons/up_hover = ExtResource("6_cyjwx")
+SpinBox/icons/up_pressed = ExtResource("6_cyjwx")
 TabBar/colors/drop_mark_color = Color(1, 1, 1, 1)
 TabBar/colors/font_disabled_color = Color(0.9411765, 0.83137256, 0.5019608, 0.5019608)
 TabBar/colors/font_hovered_color = Color(0.9411765, 0.92941177, 0.89411765, 1)
@@ -409,6 +417,29 @@ TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_iucsc")
 TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_2jeip")
 TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_iucsc")
 TabContainer/styles/tabbar_background = SubResource("StyleBoxEmpty_wtvyb")
+TextEdit/colors/background_color = Color(0, 0, 0, 0)
+TextEdit/colors/caret_background_color = Color(0, 0, 0, 1)
+TextEdit/colors/caret_color = Color(0.9411765, 0.83137256, 0.5019608, 1)
+TextEdit/colors/current_line_color = Color(0.25, 0.25, 0.26, 0.8)
+TextEdit/colors/font_color = Color(0.9411765, 0.83137256, 0.5019608, 1)
+TextEdit/colors/font_outline_color = Color(0, 0, 0, 1)
+TextEdit/colors/font_placeholder_color = Color(0.9411765, 0.91764706, 0.84705883, 1)
+TextEdit/colors/font_readonly_color = Color(0.9411765, 0.91764706, 0.84705883, 1)
+TextEdit/colors/font_selected_color = Color(0, 0, 0, 0)
+TextEdit/colors/search_result_border_color = Color(0.3, 0.3, 0.3, 0.4)
+TextEdit/colors/search_result_color = Color(0.3, 0.3, 0.3, 1)
+TextEdit/colors/selection_color = Color(0.78039217, 0.5647059, 0.8235294, 1)
+TextEdit/colors/word_highlighted_color = Color(0.5, 0.5, 0.5, 0.25)
+TextEdit/constants/caret_width = 1
+TextEdit/constants/line_spacing = 4
+TextEdit/constants/outline_size = 0
+TextEdit/constants/wrap_offset = 10
+TextEdit/font_sizes/font_size = 16
+TextEdit/icons/space = SubResource("DPITexture_l38w8")
+TextEdit/icons/tab = SubResource("DPITexture_aq34m")
+TextEdit/styles/focus = SubResource("StyleBoxEmpty_cyjwx")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_ph50u")
+TextEdit/styles/read_only = SubResource("StyleBoxFlat_ph50u")
 VScrollBar/icons/decrement = ExtResource("1_mw5vy")
 VScrollBar/icons/decrement_highlight = ExtResource("1_mw5vy")
 VScrollBar/icons/decrement_pressed = ExtResource("1_mw5vy")

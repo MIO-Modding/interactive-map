@@ -21,6 +21,17 @@ func _ready() -> void:
 	Globals.main.finished_requesting.connect(update_display)
 	mio_saves_path = find_mio_saves_path()
 	set_slot(0, "og_slot_0")
+	
+	if OS.has_feature("web"):
+		var window = JavaScriptBridge.get_interface("window")
+		window.onbeforeunload = set_temp_state
+	else:
+		Globals.main.tree_exiting.connect(set_temp_state)
+	
+	if state_exists("temp"):
+		var button := Button.new()
+		button.pressed.connect(load_state.bind("temp"), CONNECT_ONE_SHOT)
+		Globals.main.finished_requesting.connect(Globals.trigger_popup.bind("Load the temporary player state?", Color.AQUA, true, false, [button]))
 
 
 func update_display() -> void:
@@ -127,6 +138,10 @@ func validate_folders(path: String) -> void:
 			DirAccess.make_dir_absolute(current_path)
 
 
+func state_exists(file_name: String) -> bool:
+	return FileAccess.file_exists(STATE_PATH % file_name)
+
+
 func save_state(state: Main.PlayerState, file_name: String = "") -> void:
 	if file_name.is_empty():
 		file_name = "state" + str($Lists/State/V/Scroll/VBoxContainer.get_child_count() + 1)
@@ -163,6 +178,14 @@ func delete_state(state_name: String) -> void:
 func clear_state() -> void:
 	Main.player_state.checked_locations = []
 	Main.player_state.prog_items = []
+
+
+func set_temp_state() -> void:
+	save_state(Main.player_state, "temp")
+
+
+func remove_temp_state() -> void:
+	delete_state("temp")
 
 
 func find_mio_dir() -> String:

@@ -215,10 +215,12 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"ARCHIPELAGO>SLOT_NAME": null,
 	"ARCHIPELAGO>IS_MANUAL": null,
 	
+	"SETTINGS>VISIBLE_TABS": $TabContainer/Settings,
 }
 
 
 func _ready() -> void:
+	add_scrollbar_backgrounds()
 	$LoadingScreen.show()
 	$TabContainer.current_tab = 5
 	player_state = PlayerState.new()
@@ -548,8 +550,10 @@ func on_release_notes_recieved(_result: int, _response_code: int, _headers: Pack
 	var json: Dictionary = JSON.parse_string(text)
 	
 	var page := InfoPage.new()
-	page.text = json["body"]
+	page.text = "**Mio Interactive Map " + json["body"].trim_prefix("**")
 	page.name = page.text.get_slice("**", 1)
+	if is_version_less(ProjectSettings.get_setting("application/config/version"), non_node_preferences["MISC>SEEN_PATCH_NOTES"]):
+		page.text += "\n\nThis version is more recent than the one you have installed, you should update to it."
 	$TabContainer/Info.add_page_node(page)
 	$TabContainer/Info.select_last_page()
 
@@ -566,6 +570,19 @@ func on_releases_recieved(_result: int, _response_code: int, _headers: PackedStr
 	var list: Array = JSON.parse_string(text)
 	list = list.map(func(e): return e["html_url"].get_slice("/tag/", 1))
 	all_release_tags.assign(list)
+
+
+func is_version_less(target_version: String, compared_to: String) -> bool:
+	var target_values: Array[int]
+	var compared_values: Array[int]
+	target_values.assign(Array(target_version.split(".")).map(func(e): return e.to_int()))
+	compared_values.assign(Array(compared_to.split(".")).map(func(e): return e.to_int()))
+	for i in range(3):
+		if target_values[i] < compared_values[i]:
+			return true
+		elif target_values[i] > compared_values[i]:
+			return false
+	return false
 
 
 ## Fills a sheet with data from [param body], limiting the amount of columns to [param cap]
@@ -993,7 +1010,10 @@ func get_hint_locs() -> Array[String]:
 		var i_name: String
 		i_name = game_data.get_loc_name(i.item.loc_id)
 		if Globals.is_manual:
-			i_name = PlayerState.get_manual_loc_node(i_name).serialize()
+			var node: LocationPanel = PlayerState.get_manual_loc_node(i_name)
+			if node == null:
+				continue
+			i_name = node.serialize()
 		result.append(i_name)
 	return result
 
@@ -1165,6 +1185,11 @@ func get_preference(key: String) -> Variant:
 		return node.selected
 	elif node is LineEdit:
 		return node.text
+	elif node == $TabContainer/Settings:
+		var settings_key := key.get_slice(">", 1)
+		match settings_key:
+			"VISIBLE_TABS":
+				return $TabContainer/Settings.get_visible_tabs()
 	else:
 		printerr("Unrecognised node for %s" % node.get_path())
 	return ""
@@ -1203,6 +1228,19 @@ func set_preference(entry: String, value: Variant) -> void:
 	elif node is LineEdit:
 		node.text = value
 		node.text_changed.emit(value)
+	elif node == $TabContainer/Settings:
+		var typed: Array[String]
+		typed.assign(value)
+		node.choose_tab_set(typed)
+
+
+func add_scrollbar_backgrounds() -> void:
+	var stylebox := StyleBoxFlat.new()
+	stylebox.bg_color = Color("00000066")
+	stylebox.border_color = stylebox.bg_color
+	for i: ScrollContainer in get_child(0).get_children().filter(func(e): return e is ScrollContainer):
+		i.get_h_scroll_bar().add_theme_stylebox_override("scroll", stylebox)
+		i.get_v_scroll_bar().add_theme_stylebox_override("scroll", stylebox)
 
 
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
@@ -1335,7 +1373,7 @@ class PlayerState:
 	
 	## Serializes the [param loc], in manual form. [br]
 	## This form is [member LocationPanel.room_id]--([member LocationPanel.vanilla_item])
-	static func get_manual_serialized(loc: LocationPanel) -> String:
+	static func get_manual_serialized(loc: LocationPanel, fix_crystallised := false) -> String:
 		var result: String
 		var room: String = loc.room_id
 		var item: String = loc.vanilla_item
@@ -1343,6 +1381,15 @@ class PlayerState:
 			room = "Capucine"
 		if loc.vanilla_item.contains("Crystallized Nacre") or loc.vanilla_item.contains("Crystallised Nacre"):
 			item = "Crystallised Nacre"
+			if fix_crystallised:
+				if loc.loc_description.contains("Left") and loc.room_id == "LQ_under_mast_C1":
+					item = item.replace("Nacre", "Nacre_left")
+				elif loc.loc_description.contains("Right") and loc.room_id == "LQ_under_mast_C1":
+					item = item.replace("Nacre", "Nacre_right")
+				elif loc.loc_description == "Above a Door":
+					item = item.replace("Nacre", "Nacre_lower")
+				elif loc.loc_description == "In the Middle of the Room":
+					item = item.replace("Nacre", "Nacre_upper")
 		
 		result = "%s--(%s)" % [room, item]
 		return result
@@ -1366,7 +1413,17 @@ class PlayerState:
 			room = "LQ_ruins_hall_C1"
 		for i: LocationPanel in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
 			if i.room_id == room:
-				if loc_name.contains("Crystalli"):
+				if loc_name.contains("Crystalli") and i.vanilla_item.contains("Crystalli"):
+					if loc_name.contains("Nacre_"):
+						if i.loc_description.contains("Left"):
+							return i
+						elif i.loc_description.contains("Right"):
+							return i
+						elif i.loc_description == "Above a Door":
+							return i
+						elif i.loc_description == "In the Middle of the Room":
+							return i
+					
 					if i.vanilla_item.contains("Crystallised Nacre") or i.vanilla_item.contains("Crystallized Nacre"):
 						return i
 				elif i.vanilla_item.containsn(item):
