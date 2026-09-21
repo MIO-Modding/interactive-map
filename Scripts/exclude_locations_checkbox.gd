@@ -16,7 +16,9 @@ static func convert_to_entry(value: Array[String]) -> String:
 
 
 func get_all_exclusions() -> Array[String]:
-	var result: Array[String]
+	var result: Array[String] = []
+	if not button_pressed:
+		return result
 	result.assign(exclude_list)
 	
 	for loc: LocationPanel in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():

@@ -12,7 +12,6 @@ game: %s
   accessibility: full
   local_items: []
   non_local_items: []
-  start_inventory: {}
   start_hints: []
   start_location_hints: []
   priority_locations: []
@@ -25,6 +24,7 @@ game: %s
 	"goal": $SplitContainer/Options/Control/GridContainer/Ending,
 	"death_link": $SplitContainer/Options/Control/GridContainer/DeathLink,
 	"exclude_locations_nacre": $SplitContainer/Options/Control/GridContainer/CrystalNacre,
+	"start_inventory_overseers": $SplitContainer/Options/Control/GridContainer/Overseers,
 }
 
 
@@ -63,11 +63,15 @@ static func join_dictionary(dict: Dictionary[String, String], key_to_value: Stri
 func get_current_options() -> Dictionary[String, String]:
 	var result: Dictionary[String, String]
 	var exclude_locations: Array[String]
+	var start_inventory: Dictionary[String, int]
 	for i in option_nodes:
 		match option_nodes[i].get_class():
 			"OptionButton":
 				result[i] = option_nodes[i].get_item_text(option_nodes[i].selected).to_lower()
 			"CheckBox":
+				if option_nodes[i] is StartInventoryCheckBox:
+					exclude_locations.append_array(option_nodes[i].get_all_exclusions())
+					start_inventory.merge(option_nodes[i].get_entire_pool())
 				if option_nodes[i] is ExcludeLocationsCheckBox:
 					exclude_locations.append_array(option_nodes[i].get_all_exclusions())
 				else:
@@ -75,6 +79,7 @@ func get_current_options() -> Dictionary[String, String]:
 			"CheckButton":
 				result[i] = str(option_nodes[i].button_pressed)
 	result["exclude_locations"] = ExcludeLocationsCheckBox.convert_to_entry(exclude_locations)
+	result["start_inventory"] = StartInventoryCheckBox.convert_to_dict_entry(start_inventory)
 	return result
 
 

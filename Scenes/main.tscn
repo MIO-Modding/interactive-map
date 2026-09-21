@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://c281t12mtvbdb" path="res://Scripts/rando_manager.gd" id="10_hptm8"]
 [ext_resource type="Script" uid="uid://t08vd4w5yt3s" path="res://Scripts/exclude_locations_checkbox.gd" id="11_6iyac"]
 [ext_resource type="Script" uid="uid://b6dcedlxkrppa" path="res://Scripts/settings.gd" id="11_d1ilt"]
+[ext_resource type="Script" uid="uid://cda2554826lcj" path="res://Scripts/start_inventory_checkbox.gd" id="12_fdnlq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
 font_color = Color(1, 0, 0, 1)
@@ -887,6 +888,16 @@ text = "Exclude Crystallized Nacre:"
 layout_mode = 2
 script = ExtResource("11_6iyac")
 exclude_type = "Nacre"
+
+[node name="OverseersLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=287914872]
+layout_mode = 2
+text = "Exclude Overseers:"
+
+[node name="Overseers" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=892187819]
+layout_mode = 2
+script = ExtResource("12_fdnlq")
+start_type = "OVERSEER"
+exclude_type = "Overseer"
 
 [node name="DownloadButton" type="Button" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=1599237516]
 layout_mode = 1
