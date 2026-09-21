@@ -35,8 +35,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 current_tab = 4
-tab_10/disabled = true
-tab_10/hidden = true
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -998,6 +996,14 @@ popup/item_3/text = "Archipelago"
 popup/item_3/id = 3
 popup/item_4/text = "Sheets"
 popup/item_4/id = 4
+
+[node name="NonLocationComponents" type="ScrollContainer" parent="TabContainer" unique_id=857972723]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 11
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/NonLocationComponents" unique_id=444952109]
+layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1
