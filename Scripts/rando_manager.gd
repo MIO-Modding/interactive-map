@@ -100,7 +100,9 @@ func load_yaml(file_name: String) -> Dictionary[String, String]:
 	text = text.get_slice("Manual_MIO_Samwell:", 1)
 	var split: Array[String]
 	split.assign(Array(text.split("\n  ")))
-	for i in split:
+	for i: String in split: #TODO fix with exclude locs and start inv
+		if i.begins_with("- "):
+			pass
 		var key_val_split: Array[String]
 		key_val_split.assign(Array(i.split(": ")))
 		result[key_val_split[0]] = key_val_split[1]
