@@ -141,6 +141,9 @@ var highlight_rows_in_logic := true
 var highlight_reachable_rows := true
 ## The current logic kind, used to calculate reachable locations/items
 var logic_kind: LogicLevel.LogicLevels = LogicLevel.LogicLevels.INTENDED_LOGIC
+## Whether receiving an overseer unlocks fast travel to its gate
+var overseers_unlock_fast_travel := false
+
 
 ## Intended reachable rooms
 var reachable_rooms: Array[String]
@@ -191,6 +194,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"MAP_SETTINGS>MAP_IMAGE_TYPE": $TabContainer/Map/MapSettings/VBoxContainer/MapImageType,
 	"MAP_SETTINGS>MAP_ROTATION": $TabContainer/Map/MapSettings/VBoxContainer/Rotation,
 	"MAP_SETTINGS>ICON_STYLE": $TabContainer/Map/MapSettings/VBoxContainer/IconStyle,
+	"MAP_SETTINGS>MAP_ICONS": $TabContainer/Map/MapSettings/VBoxContainer/MapIcons,
 	
 	"FILTERS>AREA_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter,
 	"FILTERS>TYPE_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter,
@@ -202,6 +206,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"CTRL_PANEL>HIGHLIGHT": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle,
 	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,
 	"CTRL_PANEL>STARTING_ROOM": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation,
+	"CTRL_PANEL>FAST_TRAVEL_UNLOCK": $TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock,
 	
 	"ARCHIPELAGO>PERSISTANT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
 	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
@@ -209,6 +214,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"ARCHIPELAGO>PORT": null,
 	"ARCHIPELAGO>SLOT_NAME": null,
 	"ARCHIPELAGO>IS_MANUAL": null,
+	
 }
 
 
@@ -698,8 +704,10 @@ func get_room_connections(room: String) -> Array[String]:
 				if not result.has(i.to):
 					result.append(i.to)
 	
-	if room in overseer_connections and (room == "HUB_hub_central_C1" or player_state.full_itemset().has(overseer_connections[room]["overseer_name"])):
-		if loc_in_logic(overseer_connections[room]["location_panel"]):
+	if overseers_unlock_fast_travel \
+		and room in overseer_connections \
+		and (room == "HUB_hub_central_C1" or player_state.full_itemset().has(overseer_connections[room]["overseer_name"])) \
+		and loc_in_logic(overseer_connections[room]["location_panel"]):
 			var overseer_paths = overseer_connections[room]["connections"]
 			for path in overseer_paths:
 				if path["overseer_name"] == "N/A" or player_state.full_itemset().has(path["overseer_name"]):
@@ -1392,3 +1400,8 @@ class PlayerState:
 			
 			for i in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
 				i.update()
+
+
+func _on_fast_travel_unlock_toggled(toggled_on: bool) -> void:
+	overseers_unlock_fast_travel = toggled_on
+	update_itempool.emit()

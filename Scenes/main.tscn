@@ -31,7 +31,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 5
+current_tab = 4
 tab_10/disabled = true
 tab_10/hidden = true
 
@@ -72,7 +72,6 @@ layout_mode = 2
 alignment = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
@@ -168,6 +167,10 @@ popup/item_0/text = "Random"
 popup/item_0/id = 0
 popup/item_1/text = "ST_security_fall_P1"
 popup/item_1/id = 1
+
+[node name="FastTravelUnlock" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=1927096789]
+layout_mode = 2
+text = "Overseers unlock fast travel"
 
 [node name="ItemsPanel" type="PanelContainer" parent="TabContainer/PlayerState" unique_id=603864817]
 layout_mode = 1
@@ -281,6 +284,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
+visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 5
@@ -297,7 +301,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -1008,6 +1012,7 @@ text = "Skip (I know what I'm doing)"
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/AllButton" to="." method="_on_all_button_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/GiveStartingButton" to="." method="_on_give_starting_button_pressed"]
 [connection signal="item_selected" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation" to="." method="_on_starting_location_item_selected"]
+[connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock" to="." method="_on_fast_travel_unlock_toggled"]
 [connection signal="text_changed" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Search" to="TabContainer/PlayerState/ItemsPanel" method="_on_search_text_changed"]
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/EntryOption" to="TabContainer/PlayerState/ItemsPanel" method="_on_entry_option_item_selected"]
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/TypeOption" to="TabContainer/PlayerState/ItemsPanel" method="_on_type_option_item_selected"]
