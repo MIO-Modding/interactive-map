@@ -61,6 +61,9 @@ z_index = 9
 
 [node name="LocLines" type="Node2D" parent="." unique_id=466781403]
 
+[node name="Icons" type="Node2D" parent="." unique_id=1921509772]
+visible = false
+
 [node name="LocGroupLabels" type="Node2D" parent="." unique_id=600536210]
 
 [node name="Mel" type="Label" parent="LocGroupLabels" unique_id=1602276604]

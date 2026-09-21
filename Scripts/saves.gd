@@ -31,7 +31,9 @@ func _ready() -> void:
 	if state_exists("temp"):
 		var button := Button.new()
 		button.pressed.connect(load_state.bind("temp"), CONNECT_ONE_SHOT)
-		Globals.main.finished_requesting.connect(Globals.trigger_popup.bind("Load the temporary player state?", Color.AQUA, true, false, [button]))
+		var button_array: Array[Button]
+		button_array.append(button)
+		Globals.main.finished_requesting.connect(Globals.trigger_popup.bind("Load the temporary player state?", Color.AQUA, true, false, button_array))
 
 
 func update_display() -> void:

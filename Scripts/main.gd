@@ -18,6 +18,7 @@ const DATA_LINKS: Dictionary[String, String] = {
 	"transition requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=1532215933&single=true&output=csv",
 	"location requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=0&single=true&output=csv",
 	"combat requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=760960441&single=true&output=csv",
+	"non location components": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=872985578&single=true&output=csv",
 }
 
 ## The columns used for each data set
@@ -27,6 +28,7 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"transition requirements": 8,
 	"location requirements": 13,
 	"combat requirements": 5,
+	"non location components": 15,
 }
 
 ## The transitions that are wrapped around the map for each rotation
@@ -100,6 +102,9 @@ const MAP_ICON_TEXTURES: Dictionary[String, Texture2D] = {
 	"Tremor": preload("res://Sprites/map-icons/MAP_MARK_2.png"),
 	"Voice": preload("res://Sprites/map-icons/VOICE_ASMA.png"),
 	"Default": preload("res://Sprites/map-icons/TRINKET_MISSING_ICON.png"),
+	"Network Gate": preload("res://Sprites/map-icons/MAP_CHECKPOINT.png"),
+	"Crystalliser": preload("res://Sprites/map-icons/MAP_ALAMBIC.png"),
+	"Nacre Fountain": preload("res://Sprites/map-icons/MAP_FOUNTAIN.png"),
 }
 
 const MEL_LEVELS: Array[String] = [
@@ -109,6 +114,9 @@ const MEL_LEVELS: Array[String] = [
 	"3 Scraplings",
 	"Mel Freed"
 ]
+
+
+var overseer_connections = {}
 
 
 ## The state of this player, including items given through this client and items received through archipelago.
@@ -124,6 +132,8 @@ var transition_requirements_sheet: Array[Array]
 var location_requirements_sheet: Array[Array]
 ## The values of the combat requirements sheet, as a 2D array of strings.
 var combat_requirements_sheet: Array[Array]
+## The values of the non location components sheet, as a 2D array of strings.
+var non_location_components_sheet: Array[Array]
 
 ## Wether to highlight rows of sheets that their logic can be completed
 var highlight_rows_in_logic := true
@@ -131,6 +141,9 @@ var highlight_rows_in_logic := true
 var highlight_reachable_rows := true
 ## The current logic kind, used to calculate reachable locations/items
 var logic_kind: LogicLevel.LogicLevels = LogicLevel.LogicLevels.INTENDED_LOGIC
+## Whether receiving an overseer unlocks fast travel to its gate
+var overseers_unlock_fast_travel := false
+
 
 ## Intended reachable rooms
 var reachable_rooms: Array[String]
@@ -181,6 +194,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"MAP_SETTINGS>MAP_IMAGE_TYPE": $TabContainer/Map/MapSettings/VBoxContainer/MapImageType,
 	"MAP_SETTINGS>MAP_ROTATION": $TabContainer/Map/MapSettings/VBoxContainer/Rotation,
 	"MAP_SETTINGS>ICON_STYLE": $TabContainer/Map/MapSettings/VBoxContainer/IconStyle,
+	"MAP_SETTINGS>MAP_ICONS": $TabContainer/Map/MapSettings/VBoxContainer/MapIcons,
 	
 	"FILTERS>AREA_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter,
 	"FILTERS>TYPE_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter,
@@ -192,6 +206,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"CTRL_PANEL>HIGHLIGHT": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle,
 	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,
 	"CTRL_PANEL>STARTING_ROOM": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation,
+	"CTRL_PANEL>FAST_TRAVEL_UNLOCK": $TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock,
 	
 	"ARCHIPELAGO>PERSISTANT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
 	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
@@ -457,6 +472,56 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				await get_tree().process_frame
 			update_map()
 			update_itempool.connect(update_map)
+		"non location components":
+			non_location_components_sheet = non_location_components_sheet.filter(func(e): return not e[0].is_empty())
+			var skip_first := true
+			var columns := parse_header_row(non_location_components_sheet[0])
+			var checkpoint_rooms = {}
+			for row in non_location_components_sheet:
+				if skip_first:
+					skip_first = false
+					continue
+					
+				var panel: LocationPanel = preload("res://Scenes/location_panel.tscn").instantiate()
+				
+				panel.region_name = row[columns["Region Name"]]
+				panel.room_id = row[columns["Room ID"]]
+				panel.loc_description = row[columns["Description of Location"]]
+				if row[columns["Location Coordinates"]] == "N/A":
+					panel.coords = Vector2i.ZERO
+				else:
+					panel.coords = str_to_var("Vector2i" + row[columns["Location Coordinates"]])
+				panel.vanilla_item = row[columns["Vanilla Location Reward"]]
+				panel.save_flag = row[columns["Flag"]]
+				panel.intended_string = row[columns["Intended Logic"]]
+				panel.simple_string = row[columns["Simple Skips"]]
+				panel.advanced_string = row[columns["Advanced Skips"]]
+				panel.notes = row[columns["Remarks"]]
+				panel.type = row[columns["Location Category"]]
+				
+				$TabContainer/NonLocationComponents/VBoxContainer.add_child(panel)
+				
+				if panel.type == "Network Gate":
+					if not (panel.vanilla_item.contains("Pit") or panel.vanilla_item.contains("Library")):
+						overseer_connections[panel.room_id] = {
+							"overseer_name": panel.vanilla_item.replace("Network Gate", "Overseer"),
+							"checkpoint_flag": panel.save_flag,
+							"connected_checkpoints": row[columns["Connected Checkpoints"]].split(","),
+							"connections": [],
+							"location_panel": panel,
+						}
+						checkpoint_rooms[panel.save_flag] = panel.room_id
+						
+			for room in overseer_connections.keys():
+				for connected in overseer_connections[room]["connected_checkpoints"]:
+					var connected_room = checkpoint_rooms[connected.strip_edges()]
+					overseer_connections[room]["connections"].append({
+						"overseer_name": overseer_connections[connected_room]["overseer_name"],
+						"room": connected_room,
+					})
+			
+			update_map()
+			
 
 
 ## Requests the other info needed
@@ -655,6 +720,15 @@ func get_room_connections(room: String) -> Array[String]:
 			if in_logic(i):
 				if not result.has(i.to):
 					result.append(i.to)
+	
+	if overseers_unlock_fast_travel and room in overseer_connections:
+		if ((room == "HUB_hub_central_C1" or player_state.full_itemset().has(overseer_connections[room]["overseer_name"]))
+				and loc_in_logic(overseer_connections[room]["location_panel"])):
+			var overseer_paths = overseer_connections[room]["connections"]
+			for path in overseer_paths:
+				if path["overseer_name"] == "N/A" or player_state.full_itemset().has(path["overseer_name"]):
+					if not result.has(path["room"]):
+						result.append(path["room"])
 	return result
 
 
@@ -758,7 +832,7 @@ func update_map() -> void:
 	await get_tree().process_frame
 	var map_node: Node2D = $TabContainer/Map/SubViewportContainer/SubViewport/Node2D
 	
-	for i in ["Points", "Lines", "LocPoints", "LocLines"].map(func(e): return map_node.get_node(e).get_children()):
+	for i in ["Points", "Lines", "LocPoints", "LocLines", "Icons"].map(func(e): return map_node.get_node(e).get_children()):
 		for node: Node in i:
 			node.free()
 	
@@ -905,6 +979,23 @@ func update_map() -> void:
 		elif Archipelago.is_ap_connected():
 			if hint_locs.has(loc_panel.serialize()):
 				point.self_modulate = Color.LIGHT_SEA_GREEN
+	
+	for panel: LocationPanel in $TabContainer/NonLocationComponents/VBoxContainer.get_children():
+		var icon := preload("res://Scenes/map_icon.tscn").instantiate()
+		if panel.type in MAP_ICON_TEXTURES:
+			icon.texture = MAP_ICON_TEXTURES[panel.type]
+		else:
+			icon.texture = MAP_ICON_TEXTURES["Default"]
+		
+		if panel.type == "Network Gate":
+			icon.scale = Vector2.ONE * 0.075
+		
+		var temp_point: Vector2i = get_rotated_position(panel.coords)
+		icon.position = Vector2(temp_point) / 5 * Vector2(1, -1)
+		
+		icon.name = panel.room_id + "-" + panel.vanilla_item
+		
+		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Icons.add_child(icon)
 	
 	$TabContainer/Map.update_filter()
 
@@ -1113,6 +1204,8 @@ func load_preferences() -> void:
 	
 	var stringified: String = FileAccess.get_file_as_string("user://Data/prefs.dat")
 	stringified = stringified.replace("\n}", "}").replace("{\n\t", "{").replace(",\n\t", ",")
+	if stringified.is_empty():
+		return
 	var data: Dictionary = JSON.parse_string(stringified)
 	for i in non_node_preferences.merged(preferences_to_save):
 		if data.has(i):
@@ -1210,6 +1303,11 @@ func _on_double_checker_toggled(toggled_on: bool) -> void:
 
 func _on_deathlink_send_pressed() -> void:
 	Globals.send_deathlink($TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink/Cause.text)
+
+
+func _on_fast_travel_unlock_toggled(toggled_on: bool) -> void:
+	overseers_unlock_fast_travel = toggled_on
+	update_itempool.emit()
 
 
 class PlayerState:
