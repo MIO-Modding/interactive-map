@@ -30,6 +30,7 @@ func _ready() -> void:
 	
 	if state_exists("temp"):
 		var button := Button.new()
+		button.text = "Yes"
 		button.pressed.connect(load_state.bind("temp"), CONNECT_ONE_SHOT)
 		var button_array: Array[Button]
 		button_array.append(button)
@@ -156,7 +157,6 @@ func save_state(state: Main.PlayerState, file_name: String = "") -> void:
 
 func load_state(file_name: String) -> Main.PlayerState:
 	var state := Main.PlayerState.new()
-	state.main = Globals.main
 	var stringified: String = FileAccess.get_file_as_string(STATE_PATH % file_name)
 	var data = JSON.parse_string(stringified)
 	state.prog_items.assign(data["items"])
