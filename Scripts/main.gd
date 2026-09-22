@@ -1224,8 +1224,13 @@ func set_preference(entry: String, value: Variant) -> void:
 	if node is CheckBox or node is CheckButton:
 		node.button_pressed = value
 	elif node is OptionButton:
-		node.select(value)
-		node.item_selected.emit(value)
+		if entry == "CTRL_PANEL>STARTING_ROOM":
+			finished_requesting.connect(func():
+				node.select(value)
+				node.item_selected.emit(value), CONNECT_ONE_SHOT)
+		else:
+			node.select(value)
+			node.item_selected.emit(value)
 	elif node is LineEdit:
 		node.text = value
 		node.text_changed.emit(value)

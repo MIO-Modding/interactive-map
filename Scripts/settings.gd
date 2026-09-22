@@ -23,6 +23,7 @@ func _ready() -> void:
 	var temp: Array[String]
 	temp.assign(PRESETS[0])
 	choose_tab_set(temp)
+	await Globals.main.finished_requesting
 	get_parent().current_tab = 6
 
 
