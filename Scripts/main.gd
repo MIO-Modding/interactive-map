@@ -221,6 +221,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"ARCHIPELAGO>IS_MANUAL": null,
 	
 	"SETTINGS>VISIBLE_TABS": $TabContainer/Settings,
+	"SETTINGS>DATA_OVERRIDE_MODE": $TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer/DataOverrideMode,
 }
 
 
@@ -261,8 +262,6 @@ func _ready() -> void:
 	preferences_to_save["ARCHIPELAGO>SLOT_NAME"] = content_box.get_node("Slot_Box")
 	preferences_to_save["ARCHIPELAGO>IS_MANUAL"] = checkbox
 	
-	request_data()
-	
 	await get_tree().process_frame
 	get_node("TabContainer").get_child(0).get_child(0).focus_mode = Control.FOCUS_CLICK
 	
@@ -277,6 +276,8 @@ func _ready() -> void:
 		elif i is LineEdit:
 			i.text_changed.connect(save_all_preferences.unbind(1))
 	
+	request_data()
+	
 	finished_requesting.connect(run_other_requests, CONNECT_ONE_SHOT)
 
 
@@ -287,9 +288,17 @@ func request_data():
 	
 	var non_overrid_sheets: Array[String] = DATA_LINKS.keys()
 	var overrides: Dictionary[String, String] = get_node("TabContainer/Saves").grab_overrides()
-	#for i in overrides:
-		#non_overrid_sheets.erase(i)
-		#on_finished_request(0, 0, [], overrides[i].to_utf8_buffer(), i)
+	match $TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer/DataOverrideMode.selected:
+		0:
+			overrides.clear()
+		1:
+			var error = requester.request("https://google.com")
+			if error != OK:
+				overrides.clear()
+			else:
+				await requester.request_completed
+		2:
+			pass
 	
 	requester.request_completed.connect(iterate_requests.bind(non_overrid_sheets, overrides), CONNECT_ONE_SHOT)
 	$LoadingScreen/VBoxContainer/ProgressBar.value += 1

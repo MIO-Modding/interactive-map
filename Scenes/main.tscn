@@ -34,7 +34,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 10
+current_tab = 11
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -801,6 +801,7 @@ popup/item_2/text = "Set Index"
 popup/item_2/id = 2
 
 [node name="Rando" type="Control" parent="TabContainer" unique_id=1884829303]
+visible = false
 layout_mode = 2
 script = ExtResource("10_hptm8")
 metadata/_tab_index = 10
@@ -953,7 +954,6 @@ grow_horizontal = 2
 text = "Play Rando"
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
-visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
@@ -1007,6 +1007,24 @@ popup/item_3/text = "Archipelago"
 popup/item_3/id = 3
 popup/item_4/text = "Sheets"
 popup/item_4/id = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=867380456]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=942496507]
+layout_mode = 2
+text = "Data Override Mode:"
+
+[node name="DataOverrideMode" type="OptionButton" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1229536607]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Never"
+popup/item_0/id = 0
+popup/item_1/text = "When Offline"
+popup/item_1/id = 1
+popup/item_2/text = "Always"
+popup/item_2/id = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1
