@@ -92,5 +92,17 @@ func get_connected_markdown() -> String:
 	return "\n- ".join(connected_rooms.map(Globals.fix_underscores))
 
 
+func highlight_path() -> void:
+	if room_id.is_empty():
+		return
+	var path_string: String = Globals.main.reachable_web[LogicLevel.LogicLevels.INTENDED_LOGIC][room_id]
+	var path: Array[String]
+	var timer := get_tree().create_timer(5)
+	path.assign(Array(path_string.split("->")))
+	for i: TransitionPanel in Globals.main.get_node("TabContainer/TransitionRequirements/VBoxContainer").get_children():
+		if (i.from + "->" + i.to) in path_string or (i.to + "->" + i.from) in path_string:
+			i.transition_line.highlight(Color.HOT_PINK, timer)
+
+
 func _on_link_pressed() -> void:
 	Globals.main.get_node("TabContainer/Info").add_page(Globals.main.get_room_panel($HBoxContainer/ID.text))

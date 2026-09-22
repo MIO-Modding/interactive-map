@@ -76,6 +76,8 @@ var notes: String:
 		notes = v
 		$HBoxContainer/Notes.text = v
 
+var transition_line: TransitionLine
+
 
 func _init() -> void:
 	await tree_entered

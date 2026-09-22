@@ -14,6 +14,10 @@ layout_mode = 2
 layout_mode = 2
 text = "Open"
 
+[node name="Path" type="Button" parent="HBoxContainer" unique_id=449128928]
+layout_mode = 2
+text = "Show Route"
+
 [node name="Region" type="Label" parent="HBoxContainer" unique_id=638413075]
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
@@ -47,3 +51,4 @@ custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 
 [connection signal="pressed" from="HBoxContainer/Link" to="." method="_on_link_pressed"]
+[connection signal="pressed" from="HBoxContainer/Path" to="." method="highlight_path"]

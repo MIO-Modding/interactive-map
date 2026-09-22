@@ -151,6 +151,11 @@ var reachable_rooms: Array[String]
 var simple_reachable_rooms: Array[String]
 ## Advanced skips reachable rooms
 var advanced_reachable_rooms: Array[String]
+var reachable_web: Dictionary[LogicLevel.LogicLevels, Dictionary] = {
+	LogicLevel.LogicLevels.INTENDED_LOGIC: {},
+	LogicLevel.LogicLevels.SIMPLE_SKIPS: {},
+	LogicLevel.LogicLevels.ADVANCED_SKIPS: {},
+}
 
 ## The room that the player starts in, used for logic calculation
 var starting_room := "ST_security_fall_P1"
@@ -590,7 +595,8 @@ func fill_sheet(sheet_kind: String, body: PackedByteArray, cap: int = -1) -> voi
 	for i in body.get_string_from_utf8().split("\r\n"):
 		var current = row_to_list(i, cap)
 		if not is_empty_string_list(current):
-			get("%s_sheet" % sheet_kind.to_snake_case()).append(current)
+			if current[0] != "":
+				get("%s_sheet" % sheet_kind.to_snake_case()).append(current)
 
 
 ## Converts a stringified row to an array, limiting the amount of columns to [param cap]
@@ -648,13 +654,13 @@ func combine_logic_strings(string1: String, string2: String) -> String:
 ## Updates all reachable locations and items for each [enum LogicLevel.LogicLevels]
 func update_reachable() -> void:
 	logic_kind = LogicLevel.LogicLevels.INTENDED_LOGIC
-	reachable_rooms = get_reachable()
+	reachable_rooms = get_reachable(true)
 	reachable_locations = get_reachable_locations(reachable_rooms)
 	logic_kind = LogicLevel.LogicLevels.SIMPLE_SKIPS
-	simple_reachable_rooms = get_reachable()
+	simple_reachable_rooms = get_reachable(true)
 	simple_reachable_locations = get_reachable_locations(simple_reachable_rooms)
 	logic_kind = LogicLevel.LogicLevels.ADVANCED_SKIPS
-	advanced_reachable_rooms = get_reachable()
+	advanced_reachable_rooms = get_reachable(true)
 	advanced_reachable_locations = get_reachable_locations(advanced_reachable_rooms)
 	logic_kind = LogicLevel.LogicLevels.INTENDED_LOGIC
 	
@@ -698,16 +704,26 @@ func get_locations_for_room(room_id: String) -> Array[LocationPanel]:
 
 
 ## Returns all reachable rooms
-func get_reachable() -> Array[String]:
+func get_reachable(set_web := false) -> Array[String]:
 	var result: Array[String] = []
 	var current_room: String
 	var available: Array[String] = [starting_room]
+	
+	if set_web:
+		reachable_web[logic_kind].clear()
+		reachable_web[logic_kind][starting_room] = starting_room
+		#reachable_web[LogicLevel.LogicLevels.INTENDED_LOGIC]
 	
 	while not available.is_empty():
 		current_room = available[-1]
 		result.append(current_room)
 		available.remove_at(-1)
-		available.append_array(get_room_connections(current_room).filter(func(e): return not result.has(e)))
+		var new_available: Array[String]
+		new_available.assign(get_room_connections(current_room).filter(func(e): return not result.has(e)))
+		if set_web:
+			for i: String in new_available:
+				reachable_web[logic_kind][i] = reachable_web[logic_kind][current_room] + "->" + i
+		available.append_array(new_available)
 	
 	return result
 
@@ -881,6 +897,7 @@ func update_map() -> void:
 				line.z_index = 0
 			else:
 				line.z_index = 3 - transition.LOGIC_LEVEL_COLORS.values().find(transition.modulate)
+		line.base_color = line.default_color
 		line.transition_panel = transition
 		line.add_point($TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Points.get_node(transition.from).position)
 		var wrap_transitions = MAP_WRAP_TRANSITIONS[wheel_rotation]
@@ -894,6 +911,7 @@ func update_map() -> void:
 		if line.points.has(Vector2(0, 0)):
 			continue
 		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Lines.add_child(line)
+		transition.transition_line = line
 	
 	var hint_locs := get_hint_locs()
 	var taken_positions: Array[Vector2i]
@@ -1083,6 +1101,7 @@ func point_clicked(point: Node2D, double_click := false) -> void:
 		if panel.room_id == point.get_meta("id", ""):
 			var duplicate_panel = panel.duplicate()
 			duplicate_panel.show()
+			duplicate_panel.room_id = panel.room_id
 			$TabContainer/Map/ScrollContainer/PanelContainer/VBoxContainer.add_child(duplicate_panel)
 			break
 
