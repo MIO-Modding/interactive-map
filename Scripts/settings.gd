@@ -23,6 +23,7 @@ func _ready() -> void:
 	var temp: Array[String]
 	temp.assign(PRESETS[0])
 	choose_tab_set(temp)
+	get_parent().current_tab = 6
 
 
 func tab_toggle_toggled(toggled_on: bool, tab_idx: int) -> void:

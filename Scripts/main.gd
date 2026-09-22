@@ -222,7 +222,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 func _ready() -> void:
 	add_scrollbar_backgrounds()
 	$LoadingScreen.show()
-	$TabContainer.current_tab = 5
+	$TabContainer.current_tab = 6
 	player_state = PlayerState.new()
 	update_itempool.connect(func(): update_transitions.emit())
 	update_itempool.connect(update_reachable)
