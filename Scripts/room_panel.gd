@@ -95,7 +95,13 @@ func get_connected_markdown() -> String:
 func highlight_path() -> void:
 	if room_id.is_empty():
 		return
-	var path_string: String = Globals.main.reachable_web[LogicLevel.LogicLevels.INTENDED_LOGIC][room_id]
+	var path_string: String
+	for i in Globals.main.reachable_web:
+		if Globals.main.reachable_web[i].has(room_id):
+			path_string = Globals.main.reachable_web[i][room_id]
+			break
+	if path_string.is_empty():
+		return
 	var path: Array[String]
 	var timer := get_tree().create_timer(5)
 	path.assign(Array(path_string.split("->")))
