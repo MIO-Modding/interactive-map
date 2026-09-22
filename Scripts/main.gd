@@ -989,6 +989,8 @@ func update_map() -> void:
 		
 		if panel.type == "Network Gate":
 			icon.scale = Vector2.ONE * 0.075
+		elif panel.type == "Npc":
+			icon.scale = Vector2.ONE * 0.015
 		
 		var temp_point: Vector2i = get_rotated_position(panel.coords)
 		icon.position = Vector2(temp_point) / 5 * Vector2(1, -1)
