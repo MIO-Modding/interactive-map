@@ -8,6 +8,7 @@ const SAVES_FOLDER: String = "user://Data/Saves"
 const STATE_PATH: String = SAVES_FOLDER + "/States/%s.dat"
 const SAVE_FILES_PATH: String = SAVES_FOLDER + "/SaveFiles/%s.dat"
 const METADATA_PATH: String = SAVES_FOLDER + "/Metadata/%s.dat"
+const OVERRIDES_PATH: String = "user://Data/Overrides/%s.csv"
 
 var old_core_dialog: Array[String]
 
@@ -15,7 +16,7 @@ var mio_saves_path: String
 
 
 func _ready() -> void:
-	for i in [STATE_PATH, SAVE_FILES_PATH, METADATA_PATH]:
+	for i in [STATE_PATH, SAVE_FILES_PATH, METADATA_PATH, OVERRIDES_PATH]:
 		validate_folders(i.trim_suffix("%s.dat"))
 	
 	Globals.main.finished_requesting.connect(update_display)
@@ -139,6 +140,16 @@ func validate_folders(path: String) -> void:
 		current_path += "/" + as_list[i]
 		if not DirAccess.dir_exists_absolute(current_path):
 			DirAccess.make_dir_absolute(current_path)
+
+
+func grab_overrides() -> Dictionary[String, String]:
+	var result: Dictionary[String, String]
+	var file_names: Array[String]
+	file_names.assign(DirAccess.get_files_at(OVERRIDES_PATH.trim_suffix("%s.csv")))
+	for file in file_names:
+		result[file.get_basename()] = FileAccess.get_file_as_string(OVERRIDES_PATH % file.get_basename())
+	
+	return result
 
 
 func state_exists(file_name: String) -> bool:

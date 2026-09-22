@@ -285,11 +285,18 @@ func request_data():
 	var requester := HTTPRequest.new()
 	add_child(requester)
 	
-	requester.request_completed.connect(iterate_requests.bind(DATA_LINKS.keys()), CONNECT_ONE_SHOT)
+	var non_overrid_sheets: Array[String] = DATA_LINKS.keys()
+	var overrides: Dictionary[String, String] = get_node("TabContainer/Saves").grab_overrides()
+	for i in overrides:
+		non_overrid_sheets.erase(i)
+		on_finished_request(0, 0, [], overrides[i].to_utf8_buffer(), i)
+	
+	requester.request_completed.connect(iterate_requests.bind(non_overrid_sheets), CONNECT_ONE_SHOT)
 	$LoadingScreen/VBoxContainer/ProgressBar.value += 1
-	$LoadingScreen/VBoxContainer/Label.text = "Requesting room requirements"
-	requester.request(DATA_LINKS["room requirements"])
-	Globals.trigger_popup("Queued room requirements")
+	var kind: String = non_overrid_sheets[0]
+	$LoadingScreen/VBoxContainer/Label.text = "Requesting " + kind
+	requester.request(DATA_LINKS[kind])
+	Globals.trigger_popup("Queued " + kind)
 
 
 ## Receives a request and runs the next one from [param kinds]. Emits [signal finished_requesting] when finished.
