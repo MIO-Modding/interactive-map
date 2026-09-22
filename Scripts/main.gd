@@ -287,13 +287,15 @@ func request_data():
 	
 	var non_overrid_sheets: Array[String] = DATA_LINKS.keys()
 	var overrides: Dictionary[String, String] = get_node("TabContainer/Saves").grab_overrides()
-	for i in overrides:
-		non_overrid_sheets.erase(i)
-		on_finished_request(0, 0, [], overrides[i].to_utf8_buffer(), i)
+	#for i in overrides:
+		#non_overrid_sheets.erase(i)
+		#on_finished_request(0, 0, [], overrides[i].to_utf8_buffer(), i)
 	
-	requester.request_completed.connect(iterate_requests.bind(non_overrid_sheets), CONNECT_ONE_SHOT)
+	requester.request_completed.connect(iterate_requests.bind(non_overrid_sheets, overrides), CONNECT_ONE_SHOT)
 	$LoadingScreen/VBoxContainer/ProgressBar.value += 1
 	var kind: String = non_overrid_sheets[0]
+	if "room requirements" in overrides:
+		on_finished_request(0, 0, [], overrides["room requirements"].to_utf8_buffer(), "room requirements")
 	$LoadingScreen/VBoxContainer/Label.text = "Requesting " + kind
 	requester.request(DATA_LINKS[kind])
 	Globals.trigger_popup("Queued " + kind)
@@ -301,7 +303,7 @@ func request_data():
 
 ## Receives a request and runs the next one from [param kinds]. Emits [signal finished_requesting] when finished.
 ## Runs [method on_finished_request] for each.
-func iterate_requests(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, kinds: Array) -> void:
+func iterate_requests(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, kinds: Array, overrides: Dictionary[String, String] = {}) -> void:
 	await on_finished_request(result, response_code, headers, body, kinds[0])
 	kinds.remove_at(0)
 	if kinds.is_empty():
@@ -310,10 +312,13 @@ func iterate_requests(result: int, response_code: int, headers: PackedStringArra
 		$LoadingScreen.visible = false
 		finished_requesting.emit()
 		return
-	get_child(-1).request_completed.connect(iterate_requests.bind(kinds), CONNECT_ONE_SHOT)
+	if kinds[0] in overrides:
+		iterate_requests(result, response_code, headers, overrides[kinds[0]].to_utf8_buffer(), kinds, overrides)
+	else:
+		get_child(-1).request_completed.connect(iterate_requests.bind(kinds, overrides), CONNECT_ONE_SHOT)
+		get_child(-1).request(DATA_LINKS[kinds[0]])
 	$LoadingScreen/VBoxContainer/ProgressBar.value += 1
 	$LoadingScreen/VBoxContainer/Label.text = "Requesting " + kinds[0]
-	get_child(-1).request(DATA_LINKS[kinds[0]])
 	Globals.trigger_popup("Queued " + kinds[0])
 
 

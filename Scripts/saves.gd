@@ -17,7 +17,7 @@ var mio_saves_path: String
 
 func _ready() -> void:
 	for i in [STATE_PATH, SAVE_FILES_PATH, METADATA_PATH, OVERRIDES_PATH]:
-		validate_folders(i.trim_suffix("%s.dat"))
+		validate_folders(i)
 	
 	Globals.main.finished_requesting.connect(update_display)
 	mio_saves_path = find_mio_saves_path()
@@ -134,6 +134,7 @@ func update_display() -> void:
 
 
 func validate_folders(path: String) -> void:
+	path = path.get_base_dir().get_basename()
 	var current_path: String = "user://"
 	var as_list: Array = (path.trim_prefix(current_path)).split("/")
 	for i in range(as_list.size()):
