@@ -1444,6 +1444,8 @@ class PlayerState:
 				return false
 			elif item == "True":
 				return true
+			elif item in Globals.main.room_order:
+				return Globals.main.reachable_rooms.has(item) #TODO temp fix
 			return full_itemset().has(item))
 	
 	

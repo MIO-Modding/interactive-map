@@ -105,6 +105,7 @@ static func computerize_logic_string(logic_string: String) -> String:
 	logic_string = logic_string.replace("flowing_steps", "{ striders && flowing_steps }").replace("striders", "{ striders || flowing_steps }")
 	logic_string = logic_string.replace("{ striders || flowing_steps } && flowing_steps", "striders && flowing_steps")
 	logic_string = logic_string.replace("CHEST_KEY:0-5", "{ CHEST_KEY:0 && CHEST_KEY:1 && CHEST_KEY:2 && CHEST_KEY:3 && CHEST_KEY:4 && CHEST_KEY:5 }")
+	logic_string = logic_string.replace("CANDLE:0-11", "{ %s }" % " && ".join(range(12).map(func(e): return "Candle (#%d)" % (e + 1))))
 	logic_string = logic_string.replace("Find Mel && Mel Freed", "Mel Freed").replace("Mel Freed", "Find Mel && Mel Freed")
 	logic_string = logic_string.replace("1 Scrapling", "{ Find Sin || Find Cos || Find Tan }")
 	logic_string = logic_string.replace("2 Scraplings", "{ { Find Sin && Find Cos } || { Find Sin && Find Tan } || { Find Cos && Find Tan } }")
