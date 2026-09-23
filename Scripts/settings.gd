@@ -19,11 +19,13 @@ func _ready() -> void:
 			toggle.disabled = true
 		$ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer.add_child(toggle)
 	
-	#await Globals.main.finished_requesting
 	var temp: Array[String]
 	temp.assign(PRESETS[0])
 	choose_tab_set(temp)
 	await Globals.main.finished_requesting
+	for type in RevertBox.get_all_setting_sections():
+		var box := RevertBox.new(type)
+		$ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer.add_child(box)
 	get_parent().current_tab = 6
 
 
@@ -83,3 +85,8 @@ func _on_ui_scale_drag_ended(value_changed: bool) -> void:
 		value = clampf(value, 0.5, 4.0)
 		$ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale.value = value
 		get_tree().root.content_scale_factor = value
+
+
+func _on_revert_all_pressed() -> void:
+	for setting in Globals.main.default_preferences:
+		Globals.main.set_preference(setting, Globals.main.default_preferences[setting])

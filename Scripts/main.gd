@@ -183,6 +183,7 @@ var wheel_rotation := "0":
 
 var all_release_tags: Array[String]
 
+var default_preferences: Dictionary[String, Variant] = {}
 var non_node_preferences: Dictionary[String, Variant] = {
 	"MISC>SEEN_PATCH_NOTES": "0.0.0",
 }
@@ -269,6 +270,11 @@ func _ready() -> void:
 	get_node("TabContainer").get_child(0).get_child(0).focus_mode = Control.FOCUS_CLICK
 	
 	await get_tree().process_frame
+	
+	for i in preferences_to_save:
+		default_preferences[i] = get_preference(i)
+	for i in non_node_preferences:
+		default_preferences[i] = non_node_preferences[i]
 	
 	load_preferences()
 	for i in preferences_to_save.values():

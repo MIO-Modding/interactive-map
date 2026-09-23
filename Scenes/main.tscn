@@ -1012,9 +1012,11 @@ popup/item_4/id = 4
 
 [node name="GraphicsFoldable" type="FoldableContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=186739576]
 layout_mode = 2
+folded = true
 title = "Graphics"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable" unique_id=1340230476]
+visible = false
 layout_mode = 2
 
 [node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer" unique_id=1625412956]
@@ -1032,6 +1034,19 @@ tick_count = 5
 layout_mode = 2
 button_pressed = true
 text = "Scale Change Hotkeys"
+
+[node name="RevertFoldable" type="FoldableContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=934204330]
+layout_mode = 2
+folded = true
+title = "Revert Settings"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable" unique_id=1903576465]
+visible = false
+layout_mode = 2
+
+[node name="RevertAll" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer" unique_id=1900880485]
+layout_mode = 2
+text = "All"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=867380456]
 layout_mode = 2
@@ -1171,4 +1186,5 @@ text = "Skip (I know what I'm doing)"
 [connection signal="pressed" from="TabContainer/Settings/FileLoc" to="TabContainer/Settings" method="_on_file_loc_pressed"]
 [connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer/SetPreset" to="TabContainer/Settings" method="_on_set_preset_item_selected"]
 [connection signal="drag_ended" from="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale" to="TabContainer/Settings" method="_on_ui_scale_drag_ended"]
+[connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer/RevertAll" to="TabContainer/Settings" method="_on_revert_all_pressed"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]
