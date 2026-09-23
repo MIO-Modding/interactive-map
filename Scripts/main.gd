@@ -151,12 +151,8 @@ var reachable_rooms: Array[String]
 var simple_reachable_rooms: Array[String]
 ## Advanced skips reachable rooms
 var advanced_reachable_rooms: Array[String]
-var reachable_web: Dictionary[LogicLevel.LogicLevels, Dictionary] = {
-	LogicLevel.LogicLevels.INTENDED_LOGIC: {},
-	LogicLevel.LogicLevels.SIMPLE_SKIPS: {},
-	LogicLevel.LogicLevels.ADVANCED_SKIPS: {},
-}
 var astar_web := AStar2D.new()
+var room_order: Array[String]
 
 ## The room that the player starts in, used for logic calculation
 var starting_room := "ST_security_fall_P1"
@@ -407,6 +403,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					astar_web.add_point(panel_id, panel.coords)
 					
 					panel_id += 1
+					room_order.append(panel.room_id)
 				
 				skip_first = false
 		"items":
@@ -704,6 +701,10 @@ func combine_logic_strings(string1: String, string2: String) -> String:
 
 ## Updates all reachable locations and items for each [enum LogicLevel.LogicLevels]
 func update_reachable() -> void:
+	for i in range(room_order.size()):
+		for connection in astar_web.get_point_connections(i):
+			astar_web.disconnect_points(i, connection, false)
+	
 	logic_kind = LogicLevel.LogicLevels.INTENDED_LOGIC
 	reachable_rooms = get_reachable(true)
 	reachable_locations = get_reachable_locations(reachable_rooms)
@@ -714,6 +715,13 @@ func update_reachable() -> void:
 	advanced_reachable_rooms = get_reachable(true)
 	advanced_reachable_locations = get_reachable_locations(advanced_reachable_rooms)
 	logic_kind = LogicLevel.LogicLevels.INTENDED_LOGIC
+	for i in advanced_reachable_rooms:
+		if i in reachable_rooms:
+			pass
+		elif i in simple_reachable_rooms:
+			astar_web.set_point_weight_scale(room_order.find(i), 50)
+		else:
+			astar_web.set_point_weight_scale(room_order.find(i), 500)
 	
 	if not $TabContainer/LocationRequirements/VBoxContainer.get_children().is_empty():
 		await get_tree().process_frame
@@ -760,20 +768,16 @@ func get_reachable(set_web := false) -> Array[String]:
 	var current_room: String
 	var available: Array[String] = [starting_room]
 	
-	if set_web:
-		reachable_web[logic_kind].clear()
-		reachable_web[logic_kind][starting_room] = starting_room
-		#reachable_web[LogicLevel.LogicLevels.INTENDED_LOGIC]
-	
 	while not available.is_empty():
 		current_room = available[-1]
 		result.append(current_room)
 		available.remove_at(-1)
 		var new_available: Array[String]
-		new_available.assign(get_room_connections(current_room).filter(func(e): return not result.has(e)))
+		new_available.assign(get_room_connections(current_room))
 		if set_web:
 			for i: String in new_available:
-				reachable_web[logic_kind][i] = reachable_web[logic_kind][current_room] + "->" + i
+				astar_web.connect_points(room_order.find(current_room), room_order.find(i), false)
+		new_available = new_available.filter(func(e): return not result.has(e))
 		available.append_array(new_available)
 	
 	return result

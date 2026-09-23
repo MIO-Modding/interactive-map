@@ -98,15 +98,10 @@ func highlight_path() -> void:
 	if room_id.is_empty():
 		return
 	var path_string: String
-	for i in Globals.main.reachable_web:
-		if Globals.main.reachable_web[i].has(room_id):
-			path_string = Globals.main.reachable_web[i][room_id]
-			break
-	if path_string.is_empty():
-		return
 	var path: Array[String]
 	var timer := get_tree().create_timer(5)
-	path.assign(Array(path_string.split("->")))
+	path.assign(Array(Globals.main.astar_web.get_id_path(Globals.main.room_order.find(Globals.main.starting_room), Globals.main.room_order.find(room_id))).map(func(e): return Globals.main.room_order[e]))
+	path_string = "->".join(path)
 	for i: TransitionPanel in Globals.main.get_node("TabContainer/TransitionRequirements/VBoxContainer").get_children():
 		if (i.from + "->" + i.to) in path_string or (i.to + "->" + i.from) in path_string:
 			i.transition_line.highlight(Color.HOT_PINK, timer)
