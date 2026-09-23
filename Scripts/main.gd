@@ -116,8 +116,9 @@ const MEL_LEVELS: Array[String] = [
 ]
 
 
-var overseer_connections = {}
+var all_cores: Array[String] = []
 
+var overseer_connections = {}
 
 ## The state of this player, including items given through this client and items received through archipelago.
 static var player_state: PlayerState
@@ -428,8 +429,10 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					item.notes = row[columns["Remarks"]]
 					update_itempool.connect(item.update)
 					
-					if item.item_name.contains("Old Core") and item.save_entry.contains("DIALOG:"):
-						$TabContainer/Saves.old_core_dialog.append(item.save_entry)
+					if item.item_name.contains("Old Core"):
+						if item.save_entry.contains("DIALOG:"):
+							$TabContainer/Saves.old_core_dialog.append(item.save_entry)
+						all_cores.append(item.save_entry)
 					
 					%ItemPool.add_child(item)
 					item.update()
