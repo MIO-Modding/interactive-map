@@ -231,6 +231,7 @@ func _ready() -> void:
 	add_scrollbar_backgrounds()
 	if OS.has_feature("web_ios") or OS.has_feature("web_android"):
 		get_tree().root.content_scale_factor = 2
+		$TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale.value = 2
 	$LoadingScreen.show()
 	$TabContainer.current_tab = 6
 	player_state = PlayerState.new()
