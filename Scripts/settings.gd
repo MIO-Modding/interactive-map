@@ -75,3 +75,11 @@ func _on_set_preset_item_selected(index: int) -> void:
 			list.assign(PRESETS[index - 2])
 			choose_tab_set(list)
 	Globals.main.save_all_preferences()
+
+
+func _on_ui_scale_drag_ended(value_changed: bool) -> void:
+	if value_changed:
+		var value: float = $ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale.value
+		value = clampf(value, 0.5, 4.0)
+		$ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale.value = value
+		get_tree().root.content_scale_factor = value

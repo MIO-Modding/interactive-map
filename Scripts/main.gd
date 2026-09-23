@@ -222,13 +222,15 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	
 	"SETTINGS>VISIBLE_TABS": $TabContainer/Settings,
 	"SETTINGS>DATA_OVERRIDE_MODE": $TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer/DataOverrideMode,
+	
+	"GRAPHICS>UI_SCALE": $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale,
 }
 
 
 func _ready() -> void:
 	add_scrollbar_backgrounds()
-	if OS.has_feature("mobile"):
-		ProjectSettings.set_setting("display/window/stretch/scale", 2)
+	if OS.has_feature("web_ios") or OS.has_feature("web_android"):
+		get_tree().root.content_scale_factor = 2
 	$LoadingScreen.show()
 	$TabContainer.current_tab = 6
 	player_state = PlayerState.new()
@@ -277,6 +279,8 @@ func _ready() -> void:
 			i.item_selected.connect(save_all_preferences.unbind(1))
 		elif i is LineEdit:
 			i.text_changed.connect(save_all_preferences.unbind(1))
+		elif i is Slider:
+			i.drag_ended.connect(func(b: bool): if b: save_all_preferences())
 	
 	request_data()
 	
@@ -1228,6 +1232,8 @@ func get_preference(key: String) -> Variant:
 		return node.selected
 	elif node is LineEdit:
 		return node.text
+	elif node is Slider:
+		return node.value
 	elif node == $TabContainer/Settings:
 		var settings_key := key.get_slice(">", 1)
 		match settings_key:
@@ -1276,6 +1282,9 @@ func set_preference(entry: String, value: Variant) -> void:
 	elif node is LineEdit:
 		node.text = value
 		node.text_changed.emit(value)
+	elif node is Slider:
+		node.value = value
+		node.drag_ended.emit(true)
 	elif node == $TabContainer/Settings:
 		var typed: Array[String]
 		typed.assign(value)
