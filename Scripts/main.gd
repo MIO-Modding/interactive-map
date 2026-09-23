@@ -227,6 +227,8 @@ var non_node_preferences: Dictionary[String, Variant] = {
 
 func _ready() -> void:
 	add_scrollbar_backgrounds()
+	if OS.has_feature("mobile"):
+		ProjectSettings.set_setting("display/window/stretch/scale", 2)
 	$LoadingScreen.show()
 	$TabContainer.current_tab = 6
 	player_state = PlayerState.new()
