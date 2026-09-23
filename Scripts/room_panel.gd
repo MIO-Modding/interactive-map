@@ -37,6 +37,8 @@ var coords: Vector2i:
 
 var point_node: Polygon2D
 
+var astar_id: int
+
 
 const BASE_WIKITEXT: String = """
 # Room: %s (%s)

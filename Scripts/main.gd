@@ -156,6 +156,7 @@ var reachable_web: Dictionary[LogicLevel.LogicLevels, Dictionary] = {
 	LogicLevel.LogicLevels.SIMPLE_SKIPS: {},
 	LogicLevel.LogicLevels.ADVANCED_SKIPS: {},
 }
+var astar_web := AStar2D.new()
 
 ## The room that the player starts in, used for logic calculation
 var starting_room := "ST_security_fall_P1"
@@ -355,9 +356,9 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 	
 	match kind:
 		"room requirements":
-			room_requirements_sheet = room_requirements_sheet.filter(func(e): return not e[0].is_empty())
 			var skip_first := true
 			var columns := parse_header_row(room_requirements_sheet[0])
+			var panel_id: int = 0
 			for row in room_requirements_sheet:
 				for cell in row:
 					var label = Label.new()
@@ -383,9 +384,13 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					
 					if row[columns["Room ID"]] != "ST_security_fall_P1":
 						$TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.add_item(row[columns["Room ID"]])
+					
+					panel.astar_id = panel_id
+					astar_web.add_point(panel_id, panel.coords)
+					
+					panel_id += 1
 				
 				skip_first = false
-				
 		"items":
 			items_sheet = items_sheet.filter(func(e): return not e[0].is_empty())
 			var skip_first := true
