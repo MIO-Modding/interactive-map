@@ -1028,6 +1028,11 @@ step = 0.1
 value = 1.0
 tick_count = 5
 
+[node name="UiScaleHotkeys" type="CheckButton" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer" unique_id=1089645873]
+layout_mode = 2
+button_pressed = true
+text = "Scale Change Hotkeys"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=867380456]
 layout_mode = 2
 

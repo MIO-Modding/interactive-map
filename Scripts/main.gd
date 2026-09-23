@@ -225,6 +225,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"SETTINGS>DATA_OVERRIDE_MODE": $TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer/DataOverrideMode,
 	
 	"GRAPHICS>UI_SCALE": $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale,
+	"GRAPHICS>UI_SCALE_HOTKEYS": $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScaleHotkeys,
 }
 
 
@@ -290,10 +291,11 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("content_scale_up"):
-		change_content_scale(0.1)
-	elif event.is_action_pressed("content_scale_down"):
-		change_content_scale(-0.1)
+	if $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScaleHotkeys.button_pressed:
+		if event.is_action_pressed("content_scale_up"):
+			change_content_scale(0.1)
+		elif event.is_action_pressed("content_scale_down"):
+			change_content_scale(-0.1)
 
 
 func change_content_scale(diff: float) -> void:
