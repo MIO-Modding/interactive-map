@@ -289,6 +289,22 @@ func _ready() -> void:
 	finished_requesting.connect(run_other_requests, CONNECT_ONE_SHOT)
 
 
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("content_scale_up"):
+		change_content_scale(0.1)
+	elif event.is_action_pressed("content_scale_down"):
+		change_content_scale(-0.1)
+
+
+func change_content_scale(diff: float) -> void:
+	var val: float
+	val = $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale.value
+	val += diff
+	val = clampf(val, 0.5, 4.0)
+	get_tree().root.content_scale_factor = val
+	$TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale.value = val
+
+
 ## Requests all the sheet data and loads it when it arrives
 func request_data():
 	var requester := HTTPRequest.new()
