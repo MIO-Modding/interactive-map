@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://8180katr04wv" path="res://Scripts/camera_2d.gd" id="1_v1qfn"]
 [ext_resource type="Texture2D" uid="uid://duu5kvjb0mgra" path="res://Sprites/map/dwellings.png" id="2_6whob"]
 [ext_resource type="Texture2D" uid="uid://c6iw0bpq6dx8v" path="res://Sprites/map/hub.png" id="2_hh5uf"]
+[ext_resource type="FontFile" uid="uid://uuqfviuc7ns4" path="res://Speeches/Gilroy-Light.otf" id="2_uybdb"]
 [ext_resource type="Texture2D" uid="uid://djw3co0cckeuv" path="res://Sprites/map/foundations.png" id="4_6whob"]
 [ext_resource type="Texture2D" uid="uid://fe6dkemuycns" path="res://Sprites/map/city.png" id="4_u7krg"]
 [ext_resource type="Texture2D" uid="uid://5fu6us5op4s" path="res://Sprites/map/embedding.png" id="6_tx0tn"]
@@ -28,6 +29,9 @@
 [ext_resource type="Texture2D" uid="uid://dk1ao2qgjtgil" path="res://Sprites/map_mesh/library.png" id="26_ud1os"]
 [ext_resource type="Texture2D" uid="uid://dyfupou1ldgn6" path="res://Sprites/map_mesh/canopy.png" id="27_fpmp2"]
 [ext_resource type="Texture2D" uid="uid://cvpj1r0bew8ih" path="res://Sprites/map_mesh/feral_undergrowth.png" id="28_xiv05"]
+
+[sub_resource type="Theme" id="Theme_1dvcg"]
+default_font = ExtResource("2_uybdb")
 
 [node name="Node2D" type="Node2D" unique_id=82726750]
 
@@ -64,9 +68,13 @@ z_index = 9
 [node name="Icons" type="Node2D" parent="." unique_id=1921509772]
 visible = false
 
-[node name="LocGroupLabels" type="Node2D" parent="." unique_id=600536210]
+[node name="LocGroupLabels" type="Control" parent="." unique_id=622545830]
+layout_mode = 3
+anchors_preset = 0
+theme = SubResource("Theme_1dvcg")
 
 [node name="Mel" type="Label" parent="LocGroupLabels" unique_id=1602276604]
+layout_mode = 0
 offset_left = -275.0
 offset_top = -278.0
 offset_right = -192.0
@@ -75,6 +83,7 @@ scale = Vector2(0.2, 0.2)
 text = "Mel's Shop"
 
 [node name="Capucine" type="Label" parent="LocGroupLabels" unique_id=285257693]
+layout_mode = 0
 offset_left = -275.00003
 offset_top = -253.00002
 offset_right = -192.00003
@@ -82,9 +91,11 @@ offset_bottom = -230.00002
 scale = Vector2(0.2, 0.2)
 text = "Capucine"
 
-[node name="MelLabels" type="Node2D" parent="LocGroupLabels" unique_id=1075541803]
+[node name="MelLabels" type="Control" parent="LocGroupLabels" unique_id=1910574251]
+anchors_preset = 0
 
 [node name="Init" type="Label" parent="LocGroupLabels/MelLabels" unique_id=81749612]
+layout_mode = 0
 offset_left = -332.0
 offset_top = -290.0
 offset_right = -249.0
@@ -94,6 +105,7 @@ text = "Init"
 horizontal_alignment = 2
 
 [node name="Scrap1" type="Label" parent="LocGroupLabels/MelLabels" unique_id=1625081616]
+layout_mode = 0
 offset_left = -332.0
 offset_top = -284.0
 offset_right = -249.0
@@ -103,6 +115,7 @@ text = "1 Scrap"
 horizontal_alignment = 2
 
 [node name="Scrap2" type="Label" parent="LocGroupLabels/MelLabels" unique_id=646195259]
+layout_mode = 0
 offset_left = -332.00003
 offset_top = -278.00003
 offset_right = -249.00003
@@ -112,6 +125,7 @@ text = "2 Scrap"
 horizontal_alignment = 2
 
 [node name="Scrap3" type="Label" parent="LocGroupLabels/MelLabels" unique_id=1483098976]
+layout_mode = 0
 offset_left = -332.0
 offset_top = -272.0
 offset_right = -249.0
@@ -121,6 +135,7 @@ text = "3 Scrap"
 horizontal_alignment = 2
 
 [node name="Gratitude" type="Label" parent="LocGroupLabels/MelLabels" unique_id=1886238904]
+layout_mode = 0
 offset_left = -332.0
 offset_top = -266.0
 offset_right = -249.0

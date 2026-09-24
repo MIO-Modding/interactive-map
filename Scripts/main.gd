@@ -634,6 +634,7 @@ func on_releases_recieved(_result: int, _response_code: int, _headers: PackedStr
 	all_release_tags.assign(list)
 
 
+## Returns true if the [param target_version] is an earlier version than [param compared_to]
 func is_version_less(target_version: String, compared_to: String) -> bool:
 	var target_values: Array[int]
 	var compared_values: Array[int]
@@ -740,7 +741,7 @@ func update_reachable() -> void:
 
 ## Updates the location group labels for mel and capucine
 func update_loc_group_labels() -> void:
-	var group_labels: Node2D = get_node("TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocGroupLabels")
+	var group_labels: Control = get_node("TabContainer/Map/SubViewportContainer/SubViewport/Node2D/LocGroupLabels")
 	group_labels.get_node("Mel").self_modulate = get_location_panel("HUB_hub_shop: Buy from Mel's Shop (Maintenance Hack)").modulate
 	group_labels.get_node("MelLabels/Init").self_modulate = group_labels.get_node("Mel").self_modulate
 	group_labels.get_node("MelLabels/Gratitude").self_modulate = group_labels.get_node("Mel").self_modulate
