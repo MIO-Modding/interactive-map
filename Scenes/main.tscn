@@ -145,6 +145,21 @@ layout_mode = 2
 focus_mode = 1
 text = "Send"
 
+[node name="ItemsFromChecking" type="FoldableContainer" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=578708598]
+layout_mode = 2
+title = "Location Checking Gives Items"
+
+[node name="HBoxContainer" type="VBoxContainer" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking" unique_id=1032690604]
+layout_mode = 2
+
+[node name="Events" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer" unique_id=515307222]
+layout_mode = 2
+text = "Event Locations"
+
+[node name="Regular" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer" unique_id=350812552]
+layout_mode = 2
+text = "Regular Locations"
+
 [node name="ClearButton" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=85385007]
 layout_mode = 2
 focus_mode = 1

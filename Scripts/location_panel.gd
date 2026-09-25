@@ -189,6 +189,15 @@ func _on_checked_toggled(toggled_on: bool) -> void:
 		var item: String = Main.player_state.rando_assignments[serialize()]
 		Main.player_state.rando_prog_items.append(item)
 		Globals.trigger_popup("Received item: %s" % item, Color.GREEN, false, true)
+	elif Globals.main.get_preference("CTRL_PANEL>CHECKED_EVENT_LOCATIONS_GIVE_ITEMS") or Globals.main.get_preference("CTRL_PANEL>CHECKED_REGULAR_LOCATIONS_GIVE_ITEMS"):
+		var setting: String = "CTRL_PANEL>CHECKED_%s_LOCATIONS_GIVE_ITEMS" % ("EVENT" if Globals.main.is_location_event(panel) else "REGULAR")
+		print(setting)
+		if Globals.main.get_preference(setting):
+			if toggled_on:
+				Main.player_state.ap_prog_items.append(panel.vanilla_item)
+			else:
+				Main.player_state.ap_prog_items.erase(panel.vanilla_item)
+			Globals.main.update_itempool.emit()
 	if point_node == null:
 		modulate = Color(0.232, 0.566, 0.61) if toggled_on else original_color
 	Main.player_state.check_location_serialized(serialize(), not toggled_on)

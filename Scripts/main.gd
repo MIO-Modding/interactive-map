@@ -210,6 +210,8 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	
 	"CTRL_PANEL>HIGHLIGHT": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle,
 	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,
+	"CTRL_PANEL>CHECKED_EVENT_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer/Events,
+	"CTRL_PANEL>CHECKED_REGULAR_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer/Regular,
 	"CTRL_PANEL>STARTING_ROOM": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation,
 	"CTRL_PANEL>FAST_TRAVEL_UNLOCK": $TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock,
 	"CTRL_PANEL>PROGRESSIVE_STRIDERS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveStriders,
