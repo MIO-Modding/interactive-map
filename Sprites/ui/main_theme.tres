@@ -8,7 +8,10 @@
 [ext_resource type="Texture2D" uid="uid://6mrwmwpyscne" path="res://Sprites/ui/incrament_h.png" id="2_52chh"]
 [ext_resource type="Texture2D" uid="uid://bakh1xlnhl6u4" path="res://Sprites/ui/incrament.png" id="2_m0k6t"]
 [ext_resource type="Texture2D" uid="uid://bxov6vyhdoolp" path="res://Sprites/ui/down_arrow.svg" id="5_aq34m"]
+[ext_resource type="Texture2D" uid="uid://clg1tg1xaww4u" path="res://Sprites/ui/diamond.svg" id="5_n1l7y"]
 [ext_resource type="Texture2D" uid="uid://3ex7nfooxtq7" path="res://Sprites/ui/up_arrow.svg" id="6_cyjwx"]
+[ext_resource type="Texture2D" uid="uid://thfuthaffmmj" path="res://Sprites/ui/left_arrow.svg" id="7_7wqcc"]
+[ext_resource type="Texture2D" uid="uid://dqxbne6myll8a" path="res://Sprites/ui/right_arrow.svg" id="8_n1l7y"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ph50u"]
 bg_color = Color(0, 0, 0, 0.4)
@@ -43,6 +46,46 @@ border_color = Color(0.8, 0.8, 0.8, 0)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5mvfg"]
 content_margin_top = 1.0
 content_margin_bottom = 1.0
+
+[sub_resource type="DPITexture" id="DPITexture_qq8wm"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"4\" height=\"8\"><path fill=\"#fff\" fill-opacity=\".25\" d=\"M1 0h2v16H1z\"/></svg>
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exa1f"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.9411765, 0.83137256, 0.5019608, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nvg7m"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.9411765, 0.83137256, 0.5019608, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kdgoj"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.4)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiful"]
 content_margin_left = 4.0
@@ -111,24 +154,8 @@ border_color = Color(0.98039216, 0.7764706, 0.42352942, 1)
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#fff\" fill-opacity=\".75\" d=\"m1 3 2-2 5 5 5-5 2 2-5 5 5 5-2 2-5-5-5 5-2-2 5-5z\"/></svg>
 "
 
-[sub_resource type="DPITexture" id="DPITexture_fw15l"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"#fefffe\" fill-opacity=\".75\"/><path fill=\"none\" stroke=\"#1a1a1a\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-opacity=\".65\" stroke-width=\"2\" d=\"m9 5-3 3 3 3\"/></svg>
-"
-
-[sub_resource type="DPITexture" id="DPITexture_xm5xx"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"#fefffe\"/><path fill=\"none\" stroke=\"#1a1a1a\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m9 5-3 3 3 3\"/></svg>
-"
-
 [sub_resource type="DPITexture" id="DPITexture_qkv32"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"32\"><path fill=\"#d3d3d3\" d=\"m5 1h6v30h-6z\"/></svg>
-"
-
-[sub_resource type="DPITexture" id="DPITexture_pek65"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"#fefffe\" fill-opacity=\".75\"/><path fill=\"none\" stroke=\"#1a1a1a\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-opacity=\".65\" stroke-width=\"2\" d=\"m7 5 3 3-3 3\"/></svg>
-"
-
-[sub_resource type="DPITexture" id="DPITexture_xiful"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"#fefffe\"/><path fill=\"none\" stroke=\"#1a1a1a\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m7 5 3 3-3 3\"/></svg>
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qkv32"]
@@ -318,6 +345,16 @@ HScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_m0k6t")
 HScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_m0k6t")
 HScrollBar/styles/scroll = SubResource("StyleBoxEmpty_5mvfg")
 HScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_5mvfg")
+HSlider/constants/center_grabber = 0
+HSlider/constants/grabber_offset = 0
+HSlider/constants/tick_offset = 0
+HSlider/icons/grabber = ExtResource("5_n1l7y")
+HSlider/icons/grabber_disabled = ExtResource("5_n1l7y")
+HSlider/icons/grabber_highlight = ExtResource("5_n1l7y")
+HSlider/icons/tick = SubResource("DPITexture_qq8wm")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_exa1f")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_nvg7m")
+HSlider/styles/slider = SubResource("StyleBoxFlat_kdgoj")
 Label/colors/font_color = Color(0.9411765, 0.83137256, 0.5019608, 1)
 Label/colors/font_outline_color = Color(0, 0, 0, 1)
 Label/colors/font_shadow_color = Color(0, 0, 0, 0)
@@ -377,11 +414,11 @@ TabBar/constants/outline_size = 0
 TabBar/constants/tab_separation = 0
 TabBar/font_sizes/font_size = 16
 TabBar/icons/close = SubResource("DPITexture_ph50u")
-TabBar/icons/decrement = SubResource("DPITexture_fw15l")
-TabBar/icons/decrement_highlight = SubResource("DPITexture_xm5xx")
+TabBar/icons/decrement = ExtResource("7_7wqcc")
+TabBar/icons/decrement_highlight = ExtResource("7_7wqcc")
 TabBar/icons/drop_mark = SubResource("DPITexture_qkv32")
-TabBar/icons/increment = SubResource("DPITexture_pek65")
-TabBar/icons/increment_highlight = SubResource("DPITexture_xiful")
+TabBar/icons/increment = ExtResource("8_n1l7y")
+TabBar/icons/increment_highlight = ExtResource("8_n1l7y")
 TabBar/styles/button_highlight = SubResource("StyleBoxFlat_qkv32")
 TabBar/styles/button_pressed = SubResource("StyleBoxFlat_qm78i")
 TabBar/styles/tab_disabled = SubResource("StyleBoxFlat_bgxca")
@@ -403,11 +440,11 @@ TabContainer/constants/icon_separation = 4
 TabContainer/constants/outline_size = 0
 TabContainer/constants/side_margin = 8
 TabContainer/font_sizes/font_size = 16
-TabContainer/icons/decrement = SubResource("DPITexture_fw15l")
-TabContainer/icons/decrement_highlight = SubResource("DPITexture_xm5xx")
+TabContainer/icons/decrement = ExtResource("7_7wqcc")
+TabContainer/icons/decrement_highlight = ExtResource("7_7wqcc")
 TabContainer/icons/drop_mark = SubResource("DPITexture_qkv32")
-TabContainer/icons/increment = SubResource("DPITexture_pek65")
-TabContainer/icons/increment_highlight = SubResource("DPITexture_xiful")
+TabContainer/icons/increment = ExtResource("8_n1l7y")
+TabContainer/icons/increment_highlight = ExtResource("8_n1l7y")
 TabContainer/icons/menu = SubResource("DPITexture_fydix")
 TabContainer/icons/menu_highlight = SubResource("DPITexture_tt4b0")
 TabContainer/styles/panel = SubResource("StyleBoxFlat_m6ylw")
@@ -451,3 +488,6 @@ VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_mw5vy")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_mw5vy")
 VScrollBar/styles/scroll = SubResource("StyleBoxEmpty_v2jg6")
 VScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_v2jg6")
+VSlider/icons/grabber = ExtResource("5_n1l7y")
+VSlider/icons/grabber_disabled = ExtResource("5_n1l7y")
+VSlider/icons/grabber_highlight = ExtResource("5_n1l7y")
