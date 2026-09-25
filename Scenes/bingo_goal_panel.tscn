@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dihgnlujsv86d"]
+
+[node name="BingoGoalPanel" type="PanelContainer" unique_id=901196132]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=44191831]
+layout_mode = 2
+
+[node name="CheckBox" type="CheckBox" parent="HBoxContainer" unique_id=688523729]
+layout_mode = 2
+text = "Checked"
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=743665680]
+layout_mode = 2
+text = "Name"

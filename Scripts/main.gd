@@ -596,6 +596,10 @@ func run_other_requests() -> void:
 		request_release_notes()
 		non_node_preferences["MISC>SEEN_PATCH_NOTES"] = all_release_tags[0]
 		save_all_preferences()
+		
+		await get_child(-1).request_completed
+	
+	request_bingo()
 
 
 ## Requests release notes from github
@@ -646,6 +650,17 @@ func is_version_less(target_version: String, compared_to: String) -> bool:
 		elif target_values[i] > compared_values[i]:
 			return false
 	return false
+
+
+func request_bingo() -> void:
+	get_child(-1).request_completed.connect(on_bingo_recieved, CONNECT_ONE_SHOT)
+	get_child(-1).request("https://raw.githubusercontent.com/Zhetadelta/Silksong.BingoGenerator/main/assets/mio.json")
+
+
+func on_bingo_recieved(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	var string: String = body.get_string_from_utf8()
+	var data: Dictionary = JSON.parse_string(string)
+	get_node("TabContainer/Bingo").load_bingo(data)
 
 
 ## Fills a sheet with data from [param body], limiting the amount of columns to [param cap]

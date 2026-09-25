@@ -210,3 +210,11 @@ func capitalize_first(input: String) -> String:
 	for i in range(split.size()):
 		split[i] = split[i].capitalize()
 	return " ".join(split)
+
+
+func free_all_children(node: Node, queue := true) -> void:
+	for i in node.get_children():
+		if queue:
+			i.queue_free()
+		else:
+			i.free()

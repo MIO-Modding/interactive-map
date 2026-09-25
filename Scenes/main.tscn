@@ -13,6 +13,8 @@
 [ext_resource type="Script" uid="uid://t08vd4w5yt3s" path="res://Scripts/exclude_locations_checkbox.gd" id="11_6iyac"]
 [ext_resource type="Script" uid="uid://b6dcedlxkrppa" path="res://Scripts/settings.gd" id="11_d1ilt"]
 [ext_resource type="Script" uid="uid://cda2554826lcj" path="res://Scripts/start_inventory_checkbox.gd" id="12_fdnlq"]
+[ext_resource type="Script" uid="uid://ccfams21gd6ni" path="res://Scripts/bingo.gd" id="14_jkdf5"]
+[ext_resource type="PackedScene" uid="uid://yfaci5qkopjk" path="res://Scenes/bingo_board_panel.tscn" id="15_wsu2k"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
 font_color = Color(1, 0, 0, 1)
@@ -34,7 +36,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 11
+current_tab = 12
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -954,6 +956,7 @@ grow_horizontal = 2
 text = "Play Rando"
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
+visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
@@ -1065,6 +1068,116 @@ popup/item_1/text = "When Offline"
 popup/item_1/id = 1
 popup/item_2/text = "Always"
 popup/item_2/id = 2
+
+[node name="Bingo" type="Control" parent="TabContainer" unique_id=756016963]
+layout_mode = 2
+script = ExtResource("14_jkdf5")
+metadata/_tab_index = 12
+
+[node name="Split" type="VSplitContainer" parent="TabContainer/Bingo" unique_id=474237669]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Bingo/Split" unique_id=960214696]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Bingo/Split/ScrollContainer" unique_id=1999273854]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="TabContainer/Bingo/Split" unique_id=1527071474]
+custom_minimum_size = Vector2(0, 350)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="TabContainer/Bingo/Split/Panel" unique_id=1105068529]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="TabContainer/Bingo/Split/Panel/CenterContainer" unique_id=1705645730]
+layout_mode = 2
+columns = 5
+
+[node name="BingoBoardPanel" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=402465178 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel2" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1519519226 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel3" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=570463921 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel4" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1987767992 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel5" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1115144317 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel6" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=833029008 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel7" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=2035852590 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel8" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1549417333 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel9" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=559564167 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel10" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1090448294 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel11" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1654354881 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel12" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1690187345 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel13" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1900889325 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel14" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1015751449 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel15" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1112465878 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel16" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1254647394 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel17" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1418146402 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel18" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1041841962 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel19" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=82520616 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel20" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1916296574 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel21" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=1060243048 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel22" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=593231824 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel23" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=962026980 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel24" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=2139553913 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
+
+[node name="BingoBoardPanel25" parent="TabContainer/Bingo/Split/Panel/CenterContainer/GridContainer" unique_id=455428159 instance=ExtResource("15_wsu2k")]
+layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1

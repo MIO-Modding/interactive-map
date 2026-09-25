@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://yfaci5qkopjk"]
+
+[ext_resource type="Script" uid="uid://biiyyn17rdo1v" path="res://Scripts/bingo_board_panel.gd" id="1_ld8ye"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_wsu2k"]
+font_size = 8
+
+[node name="BingoBoardPanel" type="PanelContainer" unique_id=402465178]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_ld8ye")
+
+[node name="Label" type="Label" parent="." unique_id=1770863544]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+text = "2 of Glitch Trail, Afterimage, and HV Discharge"
+label_settings = SubResource("LabelSettings_wsu2k")
+horizontal_alignment = 1
+autowrap_mode = 3
