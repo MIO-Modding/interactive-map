@@ -69,11 +69,11 @@ func update_shape_visualization() -> void:
 		"Shape...":
 			pass
 		"Circle":
-			var center = map_node.get_node("MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition").values
+			var center = map_node.get_node("MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition").values
 			center = Vector2(center) / 5
 			@warning_ignore("integer_division")
 			draw_node.draw_circle(center * Vector2(1, -1), 
-			map_node.get_node("MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius").value / 5, Color(0.0, 0.795, 1.0, 0.543))
+			map_node.get_node("MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius").value / 5, Color(0.0, 0.795, 1.0, 0.543))
 
 
 func run_click(double := false) -> void:

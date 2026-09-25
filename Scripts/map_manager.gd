@@ -24,7 +24,7 @@ const MAP_IMAGE_X_POSITIONS: Dictionary[String, Dictionary] = {
 
 var old_size: Vector2
 
-@onready var shape_option: OptionButton = $MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption
+@onready var shape_option: OptionButton = $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption
 
 @onready var map_node: Node2D = $SubViewportContainer/SubViewport/Node2D
 
@@ -53,9 +53,9 @@ func update_filter() -> void:
 	for i in room_points + transition_lines + location_points + location_lines:
 		i.show()
 	
-	var region_index: int = $MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.selected
+	var region_index: int = $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/AreaFilter.selected
 	if region_index != 0:
-		var region_text: String = $MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.get_item_text(region_index)
+		var region_text: String = $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/AreaFilter.get_item_text(region_index)
 		for i: RoomPanel in room_panels:
 			if region_text != i.region_name:
 				i.point_node.hide()
@@ -72,10 +72,10 @@ func update_filter() -> void:
 		"Shape...":
 			pass
 		"Circle":
-			var radius: int = $MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius.value
+			var radius: int = $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius.value
 			if radius > 0:
 				filter_logic = func(c: Vector2i): return Geometry2D.is_point_in_circle(c, 
-				$MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition.values,
+				$MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition.values,
 				radius
 				)
 	if selected_text != "Shape...":
@@ -88,7 +88,7 @@ func update_filter() -> void:
 		for i in location_points.filter(func(e): return not filter_logic.call(e.get_meta("panel").coords)):
 			hide_location_point(i)
 	
-	match $MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter.selected:
+	match $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/LogicFilter.selected:
 		0:
 			pass
 		1: # int
@@ -141,7 +141,7 @@ func update_filter() -> void:
 				else:
 					hide_location_point(i)
 	
-	match $MapSettings/VBoxContainer/Filters/VBoxContainer/CheckedFilter.selected:
+	match $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/CheckedFilter.selected:
 		0:
 			pass
 		1:
@@ -153,13 +153,13 @@ func update_filter() -> void:
 				if i.get_meta("panel").checked:
 					hide_location_point(i)
 	
-	var loc_type_selected: String = $MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.get_item_text($MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.selected)
+	var loc_type_selected: String = $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter.get_item_text($MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter.selected)
 	if loc_type_selected != "Location Type...":
 		for i in location_points:
 			if i.get_meta("panel").type != loc_type_selected:
 				hide_location_point(i)
 	
-	match $MapSettings/VBoxContainer/Filters/VBoxContainer/ScoutableFilter.selected:
+	match $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/ScoutableFilter.selected:
 		0:
 			pass
 		1:
@@ -173,7 +173,7 @@ func update_filter() -> void:
 	
 	if Archipelago.is_ap_connected():
 		var hint_locs := Globals.main.get_hint_locs()
-		match $MapSettings/VBoxContainer/Filters/VBoxContainer/HintedFilter.selected:
+		match $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/HintedFilter.selected:
 			1:
 				for i in location_points:
 					if not hint_locs.has(i.get_meta("panel").serialize()):
@@ -202,7 +202,7 @@ func _on_reset_pressed() -> void:
 
 
 func _on_room_points_toggled(toggled_on: bool) -> void:
-	map_node.get_node("LocLines").visible = toggled_on and $MapSettings/VBoxContainer/Locations.button_pressed
+	map_node.get_node("LocLines").visible = toggled_on and $MapSettings/Foldable/VBoxContainer/Locations.button_pressed
 	map_node.get_node("Points").visible = toggled_on
 
 
@@ -211,7 +211,7 @@ func _on_transitions_toggled(toggled_on: bool) -> void:
 
 
 func _on_locations_toggled(toggled_on: bool) -> void:
-	map_node.get_node("LocLines").visible = toggled_on and $MapSettings/VBoxContainer/RoomPoints.button_pressed
+	map_node.get_node("LocLines").visible = toggled_on and $MapSettings/Foldable/VBoxContainer/RoomPoints.button_pressed
 	map_node.get_node("LocPoints").visible = toggled_on
 	map_node.get_node("LocGroupLabels").visible = toggled_on
 
@@ -285,7 +285,7 @@ func _on_map_image_type_item_selected(index: int) -> void:
 
 
 func _on_icon_style_item_selected(index: int) -> void:
-	var icon_style = $MapSettings/VBoxContainer/IconStyle.get_item_text(index)
+	var icon_style = $MapSettings/Foldable/VBoxContainer/IconStyle.get_item_text(index)
 	for loc_icon: LocationIcon in map_node.get_node("LocPoints").get_children():
 		loc_icon.icon_style = icon_style
 

@@ -192,21 +192,21 @@ var non_node_preferences: Dictionary[String, Variant] = {
 
 ## The save keys to preference nodes
 @onready var preferences_to_save: Dictionary[String, Control] = {
-	"MAP_SETTINGS>DOUBLE_CLICK_CHECK": $TabContainer/Map/MapSettings/VBoxContainer/DoubleChecker,
-	"MAP_SETTINGS>ROOM_POINTS": $TabContainer/Map/MapSettings/VBoxContainer/RoomPoints,
-	"MAP_SETTINGS>TRANSITIONS": $TabContainer/Map/MapSettings/VBoxContainer/Transitions,
-	"MAP_SETTINGS>LOCATIONS": $TabContainer/Map/MapSettings/VBoxContainer/Locations,
-	"MAP_SETTINGS>MAP_IMAGE_TYPE": $TabContainer/Map/MapSettings/VBoxContainer/MapImageType,
-	"MAP_SETTINGS>MAP_ROTATION": $TabContainer/Map/MapSettings/VBoxContainer/Rotation,
-	"MAP_SETTINGS>ICON_STYLE": $TabContainer/Map/MapSettings/VBoxContainer/IconStyle,
-	"MAP_SETTINGS>MAP_ICONS": $TabContainer/Map/MapSettings/VBoxContainer/MapIcons,
+	"MAP_SETTINGS>DOUBLE_CLICK_CHECK": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/DoubleChecker,
+	"MAP_SETTINGS>ROOM_POINTS": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/RoomPoints,
+	"MAP_SETTINGS>TRANSITIONS": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Transitions,
+	"MAP_SETTINGS>LOCATIONS": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Locations,
+	"MAP_SETTINGS>MAP_IMAGE_TYPE": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/MapImageType,
+	"MAP_SETTINGS>MAP_ROTATION": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Rotation,
+	"MAP_SETTINGS>ICON_STYLE": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/IconStyle,
+	"MAP_SETTINGS>MAP_ICONS": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/MapIcons,
 	
-	"FILTERS>AREA_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter,
-	"FILTERS>TYPE_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter,
-	"FILTERS>LOGIC_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter,
-	"FILTERS>CHECKED_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/CheckedFilter,
-	"FILTERS>SCOUTABLE_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/ScoutableFilter,
-	"FILTERS>HINTED_FILTER": $TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/HintedFilter,
+	"FILTERS>AREA_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/AreaFilter,
+	"FILTERS>TYPE_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter,
+	"FILTERS>LOGIC_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/LogicFilter,
+	"FILTERS>CHECKED_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/CheckedFilter,
+	"FILTERS>SCOUTABLE_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/ScoutableFilter,
+	"FILTERS>HINTED_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/HintedFilter,
 	
 	"CTRL_PANEL>HIGHLIGHT": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle,
 	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,
@@ -941,20 +941,20 @@ func update_map() -> void:
 	#await get_tree().process_frame
 	
 	var all_regions: Array[String]
-	for i in range($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.item_count):
+	for i in range($TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/AreaFilter.item_count):
 		if i == 0:
 			continue
-		all_regions.append($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.get_item_text(i))
+		all_regions.append($TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/AreaFilter.get_item_text(i))
 	var all_location_types: Array[String]
-	for i in range($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.item_count):
+	for i in range($TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter.item_count):
 		if i == 0:
 			continue
-		all_location_types.append($TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.get_item_text(i))
+		all_location_types.append($TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter.get_item_text(i))
 	
 	for room: RoomPanel in $TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels.get_children():
 		if not room.region_name in all_regions:
 			all_regions.append(room.region_name)
-			$TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter.add_item(room.region_name)
+			$TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/AreaFilter.add_item(room.region_name)
 		
 		var point := Polygon2D.new()
 		point.polygon = [Vector2(1,0), Vector2(0,1), Vector2(-1,0), Vector2(0,-1)]
@@ -1006,7 +1006,7 @@ func update_map() -> void:
 		
 		if not all_location_types.has(loc_panel.type):
 			all_location_types.append(loc_panel.type)
-			$TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter.add_item(loc_panel.type)
+			$TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter.add_item(loc_panel.type)
 		
 		var point: LocationIcon = preload("res://Scenes/location_icon.tscn").instantiate()
 		point.set_meta("panel", loc_panel)
@@ -1195,7 +1195,7 @@ func point_clicked(point: Node2D, double_click := false) -> void:
 ## Checks if the player is in go mode and updates the label for it
 func update_go_mode() -> void:
 	var event: String
-	event = $TabContainer/Map/MapSettings/VBoxContainer/GoalOption.get_item_text($TabContainer/Map/MapSettings/VBoxContainer/GoalOption.selected)
+	event = $TabContainer/Map/MapSettings/Foldable/VBoxContainer/GoalOption.get_item_text($TabContainer/Map/MapSettings/Foldable/VBoxContainer/GoalOption.selected)
 	var panel: LocationPanel = get_event_location(get_item_node(event))
 	if player_state.ap_prog_items.has(event):
 		Archipelago.set_client_status(AP.ClientStatus.CLIENT_GOAL)
@@ -1212,12 +1212,12 @@ func update_go_mode() -> void:
 	
 	if level == LogicLevel.LogicLevels.NONE:
 		go_mode = false
-		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.text = "NO GO MODE"
-		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.label_settings.font_color = Color.RED
+		$TabContainer/Map/MapSettings/Foldable/VBoxContainer/GoModeLabel.text = "NO GO MODE"
+		$TabContainer/Map/MapSettings/Foldable/VBoxContainer/GoModeLabel.label_settings.font_color = Color.RED
 	else:
 		go_mode = true
-		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.text = "GO MODE"
-		$TabContainer/Map/MapSettings/VBoxContainer/GoModeLabel.label_settings.font_color = LogicLevel.LEVEL_COLORS[level]
+		$TabContainer/Map/MapSettings/Foldable/VBoxContainer/GoModeLabel.text = "GO MODE"
+		$TabContainer/Map/MapSettings/Foldable/VBoxContainer/GoModeLabel.label_settings.font_color = LogicLevel.LEVEL_COLORS[level]
 
 
 ## Gets the [TransitionPanel] for the room [param from] going into [param to]

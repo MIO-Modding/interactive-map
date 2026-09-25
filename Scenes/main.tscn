@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://b6dcedlxkrppa" path="res://Scripts/settings.gd" id="11_d1ilt"]
 [ext_resource type="Script" uid="uid://cda2554826lcj" path="res://Scripts/start_inventory_checkbox.gd" id="12_fdnlq"]
 [ext_resource type="Script" uid="uid://ccfams21gd6ni" path="res://Scripts/bingo.gd" id="14_jkdf5"]
+[ext_resource type="Texture2D" uid="uid://cpaf75dggyui2" path="res://Sprites/ui/file_icon.svg" id="14_k12tt"]
 [ext_resource type="PackedScene" uid="uid://yfaci5qkopjk" path="res://Scenes/bingo_board_panel.tscn" id="15_wsu2k"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
@@ -36,7 +37,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 5
+current_tab = 11
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -83,6 +84,7 @@ metadata/_tab_index = 4
 layout_mode = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -355,48 +357,52 @@ mouse_filter = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/ScrollContainer/PanelContainer" unique_id=2038293500]
 layout_mode = 2
 
-[node name="MapSettings" type="FoldableContainer" parent="TabContainer/Map" unique_id=1632666162]
+[node name="MapSettings" type="ScrollContainer" parent="TabContainer/Map" unique_id=332947454]
 layout_mode = 0
-offset_right = 187.0
-offset_bottom = 307.0
+offset_right = 229.0
+offset_bottom = 516.0
+horizontal_scroll_mode = 0
+
+[node name="Foldable" type="FoldableContainer" parent="TabContainer/Map/MapSettings" unique_id=1632666162]
+layout_mode = 2
 title = "Settings"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings" unique_id=612524763]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings/Foldable" unique_id=612524763]
 layout_mode = 2
 
-[node name="DoubleChecker" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=866439109]
+[node name="DoubleChecker" type="CheckButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=866439109]
 layout_mode = 2
 focus_mode = 1
 text = "Double Click
 Checks Locations"
 
-[node name="RoomPoints" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1981569208]
+[node name="RoomPoints" type="CheckButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1981569208]
 layout_mode = 2
 focus_mode = 1
 button_pressed = true
 text = "Room Points"
 
-[node name="Transitions" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1123281438]
+[node name="Transitions" type="CheckButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1123281438]
 layout_mode = 2
 focus_mode = 1
 button_pressed = true
 text = "Transitions"
 
-[node name="Locations" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1020033018]
+[node name="Locations" type="CheckButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1020033018]
 layout_mode = 2
 focus_mode = 1
 button_pressed = true
 text = "Locations"
 
-[node name="MapIcons" type="CheckButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=941201915]
+[node name="MapIcons" type="CheckButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=941201915]
 layout_mode = 2
 text = "Map Icons"
 
-[node name="Label" type="Label" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1245158274]
+[node name="Label" type="Label" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1245158274]
 layout_mode = 2
 text = "Map Type:"
 
-[node name="MapImageType" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1335651842]
+[node name="MapImageType" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1335651842]
 layout_mode = 2
 focus_mode = 1
 selected = 2
@@ -408,7 +414,7 @@ popup/item_1/id = 1
 popup/item_2/text = "In-Game"
 popup/item_2/id = 2
 
-[node name="Rotation" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1365527500]
+[node name="Rotation" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1365527500]
 layout_mode = 2
 focus_mode = 1
 selected = 0
@@ -420,11 +426,11 @@ popup/item_1/id = 1
 popup/item_2/text = "Rotation: 240"
 popup/item_2/id = 2
 
-[node name="Label2" type="Label" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1285139126]
+[node name="Label2" type="Label" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1285139126]
 layout_mode = 2
 text = "Icon Style:"
 
-[node name="IconStyle" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1872916685]
+[node name="IconStyle" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1872916685]
 layout_mode = 2
 selected = 0
 item_count = 2
@@ -433,16 +439,16 @@ popup/item_0/id = 0
 popup/item_1/text = "Full Color"
 popup/item_1/id = 1
 
-[node name="Filters" type="FoldableContainer" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1891767696]
+[node name="Filters" type="FoldableContainer" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1891767696]
 layout_mode = 2
 folded = true
 title = "Filter by"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters" unique_id=953395244]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters" unique_id=953395244]
 visible = false
 layout_mode = 2
 
-[node name="AreaFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=447845020]
+[node name="AreaFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer" unique_id=447845020]
 layout_mode = 2
 focus_mode = 1
 selected = 0
@@ -451,16 +457,16 @@ item_count = 1
 popup/item_0/text = "Area..."
 popup/item_0/id = 0
 
-[node name="PositionContainer" type="FoldableContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=2015373869]
+[node name="PositionContainer" type="FoldableContainer" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer" unique_id=2015373869]
 layout_mode = 2
 folded = true
 title = "Position"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer" unique_id=1413058284]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer" unique_id=1413058284]
 visible = false
 layout_mode = 2
 
-[node name="ShapeOption" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer" unique_id=1405346067]
+[node name="ShapeOption" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer" unique_id=1405346067]
 layout_mode = 2
 focus_mode = 1
 selected = 0
@@ -470,22 +476,22 @@ popup/item_0/id = 0
 popup/item_1/text = "Circle"
 popup/item_1/id = 1
 
-[node name="Circle" type="VBoxContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer" unique_id=35035665]
+[node name="Circle" type="VBoxContainer" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer" unique_id=35035665]
 visible = false
 layout_mode = 2
 
-[node name="CircleRadius" type="SpinBox" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle" unique_id=1632852592]
+[node name="CircleRadius" type="SpinBox" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle" unique_id=1632852592]
 layout_mode = 2
 max_value = 1000.0
 prefix = "Radius:"
 
-[node name="CirclePosition" type="HBoxContainer" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle" unique_id=1501840246]
+[node name="CirclePosition" type="HBoxContainer" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle" unique_id=1501840246]
 layout_mode = 2
 script = ExtResource("5_kry3j")
 text = "Center:"
 metadata/_custom_type_script = "uid://blhmfcrwuh8kj"
 
-[node name="TypeFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=1187889595]
+[node name="TypeFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer" unique_id=1187889595]
 layout_mode = 2
 focus_mode = 1
 selected = 0
@@ -493,7 +499,7 @@ item_count = 1
 popup/item_0/text = "Location Type..."
 popup/item_0/id = 0
 
-[node name="LogicFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=47395043]
+[node name="LogicFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer" unique_id=47395043]
 layout_mode = 2
 focus_mode = 1
 selected = 0
@@ -507,7 +513,7 @@ popup/item_2/id = 2
 popup/item_3/text = "Advanced Skips"
 popup/item_3/id = 3
 
-[node name="CheckedFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=769730396]
+[node name="CheckedFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer" unique_id=769730396]
 layout_mode = 2
 focus_mode = 1
 selected = 0
@@ -519,7 +525,7 @@ popup/item_1/id = 1
 popup/item_2/text = "Not Found Locs"
 popup/item_2/id = 2
 
-[node name="ScoutableFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=887430335]
+[node name="ScoutableFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer" unique_id=887430335]
 layout_mode = 2
 selected = 0
 item_count = 3
@@ -530,7 +536,7 @@ popup/item_1/id = 1
 popup/item_2/text = "Cannot Scout"
 popup/item_2/id = 2
 
-[node name="HintedFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer" unique_id=542068504]
+[node name="HintedFilter" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer" unique_id=542068504]
 layout_mode = 2
 selected = 0
 item_count = 3
@@ -541,7 +547,7 @@ popup/item_1/id = 1
 popup/item_2/text = "No"
 popup/item_2/id = 2
 
-[node name="GoalOption" type="OptionButton" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1195380631]
+[node name="GoalOption" type="OptionButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1195380631]
 layout_mode = 2
 focus_mode = 1
 selected = 0
@@ -551,7 +557,7 @@ popup/item_0/id = 0
 popup/item_1/text = "Shii Defeated"
 popup/item_1/id = 1
 
-[node name="GoModeLabel" type="Label" parent="TabContainer/Map/MapSettings/VBoxContainer" unique_id=1230226265]
+[node name="GoModeLabel" type="Label" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1230226265]
 layout_mode = 2
 text = "NO GO MODE"
 label_settings = SubResource("LabelSettings_1dvcg")
@@ -975,7 +981,6 @@ grow_horizontal = 2
 text = "Play Rando"
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
-visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
@@ -988,7 +993,7 @@ anchor_right = 1.0
 offset_left = -8.0
 offset_bottom = 8.0
 grow_horizontal = 0
-text = "Open File Location"
+icon = ExtResource("14_k12tt")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings" unique_id=1865609048]
 layout_mode = 1
@@ -1288,24 +1293,24 @@ text = "Skip (I know what I'm doing)"
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/ClassOption" to="TabContainer/PlayerState/ItemsPanel" method="_on_class_option_item_selected"]
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/HasButton" to="TabContainer/PlayerState/ItemsPanel" method="_on_option_button_item_selected"]
 [connection signal="item_selected" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/APHasButton" to="TabContainer/PlayerState/ItemsPanel" method="_on_ap_has_button_item_selected"]
-[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/DoubleChecker" to="." method="_on_double_checker_toggled"]
-[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/RoomPoints" to="TabContainer/Map" method="_on_room_points_toggled"]
-[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]
-[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/Locations" to="TabContainer/Map" method="_on_locations_toggled"]
-[connection signal="toggled" from="TabContainer/Map/MapSettings/VBoxContainer/MapIcons" to="TabContainer/Map" method="_on_map_icons_toggled"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/MapImageType" to="TabContainer/Map" method="_on_map_image_type_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Rotation" to="TabContainer/Map" method="_on_rotation_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/IconStyle" to="TabContainer/Map" method="_on_icon_style_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption" to="TabContainer/Map" method="_on_shape_option_item_selected"]
-[connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius" to="TabContainer/Map" method="_on_circle_radius_value_changed"]
-[connection signal="value_changed" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition" to="TabContainer/Map" method="_on_circle_position_value_changed"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/LogicFilter" to="TabContainer/Map" method="_on_logic_filter_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/CheckedFilter" to="TabContainer/Map" method="_on_checked_filter_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/ScoutableFilter" to="TabContainer/Map" method="_on_scoutable_filter_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/Filters/VBoxContainer/HintedFilter" to="TabContainer/Map" method="_on_hinted_filter_item_selected"]
-[connection signal="item_selected" from="TabContainer/Map/MapSettings/VBoxContainer/GoalOption" to="." method="_on_goal_option_item_selected"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/DoubleChecker" to="." method="_on_double_checker_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/RoomPoints" to="TabContainer/Map" method="_on_room_points_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Locations" to="TabContainer/Map" method="_on_locations_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/MapIcons" to="TabContainer/Map" method="_on_map_icons_toggled"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/MapImageType" to="TabContainer/Map" method="_on_map_image_type_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Rotation" to="TabContainer/Map" method="_on_rotation_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/IconStyle" to="TabContainer/Map" method="_on_icon_style_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/AreaFilter" to="TabContainer/Map" method="_on_area_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption" to="TabContainer/Map" method="_on_shape_option_item_selected"]
+[connection signal="value_changed" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CircleRadius" to="TabContainer/Map" method="_on_circle_radius_value_changed"]
+[connection signal="value_changed" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/Circle/CirclePosition" to="TabContainer/Map" method="_on_circle_position_value_changed"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter" to="TabContainer/Map" method="_on_type_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/LogicFilter" to="TabContainer/Map" method="_on_logic_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/CheckedFilter" to="TabContainer/Map" method="_on_checked_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/ScoutableFilter" to="TabContainer/Map" method="_on_scoutable_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/HintedFilter" to="TabContainer/Map" method="_on_hinted_filter_item_selected"]
+[connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/GoalOption" to="." method="_on_goal_option_item_selected"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/+" to="TabContainer/Map" method="_on_plus_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/R" to="TabContainer/Map" method="_on_reset_pressed"]
 [connection signal="pressed" from="TabContainer/Map/ZoomBox/-" to="TabContainer/Map" method="_on_minus_pressed"]
