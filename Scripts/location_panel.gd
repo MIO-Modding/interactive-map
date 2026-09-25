@@ -191,7 +191,6 @@ func _on_checked_toggled(toggled_on: bool) -> void:
 		Globals.trigger_popup("Received item: %s" % item, Color.GREEN, false, true)
 	elif Globals.main.get_preference("CTRL_PANEL>CHECKED_EVENT_LOCATIONS_GIVE_ITEMS") or Globals.main.get_preference("CTRL_PANEL>CHECKED_REGULAR_LOCATIONS_GIVE_ITEMS"):
 		var setting: String = "CTRL_PANEL>CHECKED_%s_LOCATIONS_GIVE_ITEMS" % ("EVENT" if Globals.main.is_location_event(panel) else "REGULAR")
-		print(setting)
 		if Globals.main.get_preference(setting):
 			if toggled_on:
 				Main.player_state.ap_prog_items.append(panel.vanilla_item)
