@@ -6,6 +6,7 @@ signal update_itempool
 ## Emitted whenever transitions should update (is connected to each individual 
 ##[TransitionPanel], [RoomPanel], and [LocationPanel]) (all [FeaturePanel]s [i]except[/i] for [Item.ItemPanel]s)
 signal update_transitions
+signal reset_logic
 ## Emitted when the [HttpRequest] for the sheet finishes requesting and loading all data
 signal finished_requesting
 ## Emitted when [member wheel_rotation] is set
@@ -211,6 +212,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,
 	"CTRL_PANEL>STARTING_ROOM": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation,
 	"CTRL_PANEL>FAST_TRAVEL_UNLOCK": $TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock,
+	"CTRL_PANEL>PROGRESSIVE_STRIDERS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveStriders,
 	
 	"ARCHIPELAGO>PERSISTANT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
 	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
@@ -461,6 +463,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				panel.advanced_string = row[columns["Advanced Skips"]]
 				panel.door = row[columns["Door?"]]
 				panel.notes = row[columns["Remarks"]]
+				reset_logic.connect(panel.reset_logic)
 				update_transitions.connect(panel.update)
 				$TabContainer/TransitionRequirements/VBoxContainer.add_child(panel)
 			
@@ -492,6 +495,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				panel.advanced_string = row[columns["Advanced Skips"]]
 				panel.notes = row[columns["Remarks"]]
 				panel.type = row[columns["Location Category"]]
+				reset_logic.connect(panel.reset_logic)
 				update_transitions.connect(panel.update)
 				$TabContainer/LocationRequirements/VBoxContainer.add_child(panel)
 		"combat requirements":
@@ -1418,6 +1422,13 @@ func _on_deathlink_send_pressed() -> void:
 
 func _on_fast_travel_unlock_toggled(toggled_on: bool) -> void:
 	overseers_unlock_fast_travel = toggled_on
+	update_itempool.emit()
+
+
+func _on_progressive_striders_toggled(_toggled_on: bool) -> void:
+	reset_logic.emit()
+	for i in range(3):
+		await get_tree().process_frame
 	update_itempool.emit()
 
 

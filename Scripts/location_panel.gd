@@ -134,6 +134,12 @@ func update() -> void:
 		loc_description.contains("Buy from Mel's Shop") or SCOUTABLE_LOCS.has(serialize()))
 
 
+func reset_logic() -> void:
+	intended_string = intended_string
+	simple_string = simple_string
+	advanced_string = advanced_string
+
+
 func serialize() -> String:
 	return Main.PlayerState.serialize_location(self)
 

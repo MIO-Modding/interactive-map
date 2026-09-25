@@ -110,6 +110,12 @@ func update() -> void:
 				modulate = Color.WHITE
 
 
+func reset_logic():
+	intended_string = intended_string
+	simple_string = simple_string
+	advanced_string = advanced_string
+
+
 func get_logic_result(logic: Callable) -> bool:
 	if logic == null or logic.is_null():
 		return false
