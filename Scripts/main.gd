@@ -523,16 +523,16 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				
 				if loc_panel.advanced_string == "-":
 					if loc_panel.simple_string == "-":
-						loc_panel.advanced_string = combine_logic_strings(loc_panel.intended_string, row[columns["Requirements (Hard)"]])
+						loc_panel.advanced_string = combine_logic_strings(loc_panel.intended_string, row[columns["Advanced Skips"]])
 					else:
-						loc_panel.advanced_string = combine_logic_strings(loc_panel.simple_string, row[columns["Requirements (Hard)"]])
+						loc_panel.advanced_string = combine_logic_strings(loc_panel.simple_string, row[columns["Advanced Skips"]])
 				else:
-					loc_panel.advanced_string = combine_logic_strings(loc_panel.advanced_string, row[columns["Requirements (Hard)"]])
+					loc_panel.advanced_string = combine_logic_strings(loc_panel.advanced_string, row[columns["Advanced Skips"]])
 				if loc_panel.simple_string == "-":
-					loc_panel.simple_string = combine_logic_strings(loc_panel.intended_string, row[columns["Requirements (Medium)"]])
+					loc_panel.simple_string = combine_logic_strings(loc_panel.intended_string, row[columns["Simple Skips"]])
 				else:
-					loc_panel.simple_string = combine_logic_strings(loc_panel.simple_string, row[columns["Requirements (Medium)"]])
-				loc_panel.intended_string = combine_logic_strings(loc_panel.intended_string, row[columns["Requirements (Easy/Intended)"]])
+					loc_panel.simple_string = combine_logic_strings(loc_panel.simple_string, row[columns["Simple Skips"]])
+				loc_panel.intended_string = combine_logic_strings(loc_panel.intended_string, row[columns["Intended Logic"]])
 			
 			await get_tree().process_frame
 			update_reachable()
