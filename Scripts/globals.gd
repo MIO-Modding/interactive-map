@@ -174,7 +174,7 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 	label.label_settings.font_size = 30
 	label.size_flags_horizontal = Control.SIZE_EXPAND
 	if is_item:
-		text = text.replace("Crystallised", "Crystallized")
+		text = text.replace("Crystallized", "Crystallised")
 		var node: Item = main.get_item_node(text.get_slice(": ", 1))
 		if node != null:
 			if main.show_item_flags:
