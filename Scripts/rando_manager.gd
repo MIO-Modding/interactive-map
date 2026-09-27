@@ -25,12 +25,17 @@ game: %s
 	"death_link": $SplitContainer/Options/Control/GridContainer/DeathLink,
 	"exclude_locations_nacre": $SplitContainer/Options/Control/GridContainer/CrystalNacre,
 	"start_inventory_overseers": $SplitContainer/Options/Control/GridContainer/Overseers,
+	"starting_room": $SplitContainer/Options/Control/GridContainer/Start,
 }
 
 
 func _ready() -> void:
 	get_parent().get_node("Saves").validate_folders(YAML_FILE_PATH.trim_suffix("%s.yaml"))
 	get_viewport().size_changed.connect(update_alignment)
+	
+	for i in Globals.STARTING_LOC_LIST:
+		$SplitContainer/Options/Control/GridContainer/Start.add_item(i)
+	$SplitContainer/Options/Control/GridContainer/Start.select(0)
 
 
 func update_alignment() -> void:

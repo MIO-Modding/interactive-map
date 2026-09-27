@@ -1,6 +1,7 @@
 extends Node
 
 
+const STARTING_LOC_LIST: Array[String] = ["ST_security_fall_P1", "LQ_city_hall_C2", "GA_vin_terrace_P3", "LQ_vin_intro", "GA_root_conex_P2"]
 
 var main: Main
 
@@ -49,11 +50,10 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 	
 	var start_index: int = get_yaml_option("starting_room", -1)
 	if start_index > -1:
-		const LOC_LIST: Array[String] = ["ST_security_fall_P1", "LQ_city_hall_C2", "GA_vin_terrace_P3", "LQ_vin_intro", "GA_root_conex_P2"]
 		var node: OptionButton = main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation")
 		for i in range(node.get_item_count()):
-			if node.get_item_text(i) in LOC_LIST:
-				if LOC_LIST.find(node.get_item_text(i)) == start_index:
+			if node.get_item_text(i) in STARTING_LOC_LIST:
+				if STARTING_LOC_LIST.find(node.get_item_text(i)) == start_index:
 					node.select(i)
 					node.item_selected.emit(i)
 					break

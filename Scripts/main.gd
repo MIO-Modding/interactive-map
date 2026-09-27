@@ -118,6 +118,8 @@ const MEL_LEVELS: Array[String] = [
 
 
 var all_cores: Array[String] = []
+var all_event_items: Array[String] = []
+var include_unchecked_events := false
 
 var overseer_connections = {}
 
@@ -428,6 +430,8 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					item.max_amount = row[columns["Amount"]].to_int()
 					item.room = row[columns["Room ID"]]
 					item.type = Item.ItemTypes[row[columns["Type"]].to_upper()]
+					if item.type == Item.ItemTypes.EVENT:
+						all_event_items.append(item.item_name)
 					item.classification = Item.ItemClassifications[row[columns["AP Classification"]].to_upper()]
 					item.save_entry = row[columns["Save Entry Key"]]
 					item.notes = row[columns["Remarks"]]
@@ -1473,7 +1477,7 @@ class PlayerState:
 	
 	
 	## Returns a callable for if the player has the [param item]
-	func has_call(item: String) -> Callable:
+	func has_call(item: String, logic_level: LogicLevel.LogicLevels) -> Callable:
 		return (func() -> bool:
 			if item == "False":
 				return false
@@ -1481,6 +1485,9 @@ class PlayerState:
 				return true
 			elif item in Globals.main.room_order:
 				return Globals.main.reachable_rooms.has(item) #TODO temp fix
+			elif Globals.main.include_unchecked_events:
+				if Globals.main.all_event_items.has(item):
+					return Globals.main.reachable_locations.has(Globals.main.get_event_location(Globals.main.get_item_node(item)))
 			return full_itemset().has(item))
 	
 	

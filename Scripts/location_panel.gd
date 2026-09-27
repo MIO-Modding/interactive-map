@@ -145,6 +145,7 @@ func serialize() -> String:
 
 
 func get_wikitext() -> String:
+	@warning_ignore("static_called_on_instance")
 	return BASE_WIKITEXT % [
 		Globals.fix_underscores(room_id), loc_description, region_name,
 		Globals.fix_underscores(room_id), region_name, decapitalize(loc_description),

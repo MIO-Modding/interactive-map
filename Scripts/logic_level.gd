@@ -31,6 +31,19 @@ var logic := Callable():
 			return await string_to_logic(string, "", Node.new())
 
 
+func get_logic_from_level(target_level: LogicLevels, node) -> Callable:
+	match target_level:
+		LogicLevels.NONE:
+			return func(): return false
+		LogicLevels.INTENDED_LOGIC:
+			return node.intended_logic
+		LogicLevels.SIMPLE_SKIPS:
+			return node.simple_logic
+		LogicLevels.ADVANCED_SKIPS:
+			return node.advanced_logic
+	return func(): return true
+
+
 static func combine_logic(l1: LogicLevel, l2: LogicLevel) -> LogicLevel:
 	var result := LogicLevel.new()
 	result.level = get_higher_logic(l1.level, l2.level)
@@ -148,7 +161,7 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 				if i.contains("@"):
 					hases.append(logic_list[i.substr(i.find("@")).to_int()])
 					continue
-				hases.append(state.has_call(i))
+				hases.append(state.has_call(i, LogicLevels.INTENDED_LOGIC))
 			current_logic = state.and_call(hases)
 		elif converted.contains("||"):
 			var hases: Array[Callable] = []
@@ -156,7 +169,7 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 				if i.contains("@"):
 					hases.append(logic_list[i.substr(i.find("@")).to_int()])
 					continue
-				hases.append(state.has_call(i))
+				hases.append(state.has_call(i, LogicLevels.INTENDED_LOGIC))
 			current_logic = state.or_call(hases)
 		else:
 			break
@@ -179,7 +192,7 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 			if i.contains("@"):
 				hases.append(logic_list[i.substr(i.find("@")).to_int()])
 				continue
-			hases.append(state.has_call(i))
+			hases.append(state.has_call(i, LogicLevels.INTENDED_LOGIC))
 		last_logic = state.and_call(hases)
 	elif last_converted.contains("||"):
 		var hases: Array[Callable] = []
@@ -187,10 +200,10 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 			if i.contains("@"):
 				hases.append(logic_list[i.substr(i.find("@")).to_int()])
 				continue
-			hases.append(state.has_call(i))
+			hases.append(state.has_call(i, LogicLevels.INTENDED_LOGIC))
 		last_logic = state.or_call(hases)
 	else:
-		last_logic = state.has_call(last_converted)
+		last_logic = state.has_call(last_converted, LogicLevels.INTENDED_LOGIC)
 	
 	return last_logic
 
