@@ -182,7 +182,7 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 				
 				var copy_button := Button.new()
 				copy_button.text = "Copy Flag"
-				copy_button.pressed.connect(func(): DisplayServer.clipboard_set(node.save_entry))
+				copy_button.pressed.connect(DisplayServer.clipboard_set.bind(node.save_entry))
 				container.add_child(copy_button)
 			
 			label.label_settings.font_color = Item.COLORS[node.classification]
