@@ -119,6 +119,7 @@ func read_yaml_data(data: Dictionary[String, String]) -> Dictionary[String, Vari
 	for i in option_nodes:
 		match option_nodes[i].get_class():
 			"OptionButton":
+				@warning_ignore("static_called_on_instance")
 				result[i] = Globals.capitalize_first(data[i])
 			"CheckBox":
 				result[i] = data[i] == "true"

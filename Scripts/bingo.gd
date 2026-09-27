@@ -8,6 +8,7 @@ var all_goals: Array[BingoGoal]
 
 
 func load_bingo(data: Dictionary) -> void:
+	@warning_ignore("static_called_on_instance")
 	Globals.free_all_children($Split/ScrollContainer/VBoxContainer)
 	prog_options.assign(data["prog_options"])
 	type_options.assign(data["type_options"])

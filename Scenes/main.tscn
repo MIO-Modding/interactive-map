@@ -161,6 +161,10 @@ text = "Event Locations"
 layout_mode = 2
 text = "Regular Locations"
 
+[node name="IncludeUncheckedEvents" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=885760490]
+layout_mode = 2
+text = "Treat In-Logic Events As Complete"
+
 [node name="ClearButton" type="Button" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=85385007]
 layout_mode = 2
 focus_mode = 1
@@ -1314,6 +1318,7 @@ text = "Skip (I know what I'm doing)"
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems" to="." method="_on_persistant_items_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags" to="." method="_on_item_flags_toggled"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink/Send" to="." method="_on_deathlink_send_pressed"]
+[connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/IncludeUncheckedEvents" to="." method="_on_include_unchecked_events_toggled"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ClearButton" to="." method="_on_clear_button_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/AllButton" to="." method="_on_all_button_pressed"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/GiveStartingButton" to="." method="_on_give_starting_button_pressed"]

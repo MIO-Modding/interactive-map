@@ -214,6 +214,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,
 	"CTRL_PANEL>CHECKED_EVENT_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer/Events,
 	"CTRL_PANEL>CHECKED_REGULAR_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer/Regular,
+	"CTRL_PANEL>INCLUDE_UNCHECKED_EVENTS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/IncludeUncheckedEvents,
 	"CTRL_PANEL>STARTING_ROOM": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation,
 	"CTRL_PANEL>FAST_TRAVEL_UNLOCK": $TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock,
 	"CTRL_PANEL>PROGRESSIVE_STRIDERS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveStriders,
@@ -907,7 +908,7 @@ func is_empty_string_list(string_list: Array[String]) -> bool:
 
 ## The logic level that a location in room [param room_id] with intended logic [param logic_string] would have
 func theoretical_logic(room_id: String, logic_string: String) -> LogicLevel.LogicLevels:
-	var parsed: Callable = await LogicLevel.string_to_logic(logic_string, "intended", self)
+	var parsed: Callable = await LogicLevel.string_to_logic(logic_string, LogicLevel.LogicLevels.INTENDED_LOGIC, self)
 	if not parsed.call():
 		return LogicLevel.LogicLevels.NONE
 	else:
@@ -1228,6 +1229,33 @@ func update_go_mode() -> void:
 		$TabContainer/Map/MapSettings/Foldable/VBoxContainer/GoModeLabel.label_settings.font_color = LogicLevel.LEVEL_COLORS[level]
 
 
+func get_reachable_rooms_level(level: LogicLevel.LogicLevels) -> Array[String]:
+	match level:
+		LogicLevel.LogicLevels.NONE:
+			return []
+		LogicLevel.LogicLevels.INTENDED_LOGIC:
+			return reachable_rooms
+		LogicLevel.LogicLevels.SIMPLE_SKIPS:
+			return simple_reachable_rooms
+		LogicLevel.LogicLevels.ADVANCED_SKIPS:
+			return advanced_reachable_rooms
+	return []
+
+
+func get_reachable_locations_level(level: LogicLevel.LogicLevels) -> Array[LocationPanel]:
+	match level:
+		LogicLevel.LogicLevels.NONE:
+			return []
+		LogicLevel.LogicLevels.INTENDED_LOGIC:
+			return reachable_locations
+		LogicLevel.LogicLevels.SIMPLE_SKIPS:
+			return simple_reachable_locations
+		LogicLevel.LogicLevels.ADVANCED_SKIPS:
+			return advanced_reachable_locations
+	return []
+
+
+
 ## Gets the [TransitionPanel] for the room [param from] going into [param to]
 func get_transition_panel(to: String, from: String) -> TransitionPanel:
 	for i: TransitionPanel in $TabContainer/TransitionRequirements/VBoxContainer.get_children():
@@ -1449,6 +1477,11 @@ func _on_progressive_harvester_toggled(_toggled_on: bool) -> void:
 	update_itempool.emit()
 
 
+func _on_include_unchecked_events_toggled(toggled_on: bool) -> void:
+	include_unchecked_events = toggled_on
+	update_itempool.emit()
+
+
 class PlayerState:
 	## Class for holding items given by the client, received from archipelago, and checked locations
 	
@@ -1492,10 +1525,12 @@ class PlayerState:
 			elif item == "True":
 				return true
 			elif item in Globals.main.room_order:
-				return Globals.main.reachable_rooms.has(item) #TODO temp fix
+				return Globals.main.get_reachable_rooms_level(logic_level).has(item)
 			elif Globals.main.include_unchecked_events:
 				if Globals.main.all_event_items.has(item):
-					return Globals.main.reachable_locations.has(Globals.main.get_event_location(Globals.main.get_item_node(item)))
+					#TODO broken when some event is available on a harder logic and then is not included in an easier logic calculation (doesn't contaminate)
+					#ex. Acat event with just slash
+					return Globals.main.get_reachable_locations_level(logic_level).has(Globals.main.get_event_location(Globals.main.get_item_node(item)))
 			return full_itemset().has(item))
 	
 	

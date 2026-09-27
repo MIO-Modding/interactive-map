@@ -28,10 +28,10 @@ var logic := Callable():
 		if logic != Callable():
 			return logic
 		else:
-			return await string_to_logic(string, "", Node.new())
+			return await string_to_logic(string, LogicLevels.INTENDED_LOGIC, Node.new())
 
 
-func get_logic_from_level(target_level: LogicLevels, node) -> Callable:
+static func get_logic_from_level(target_level: LogicLevels, node) -> Callable:
 	match target_level:
 		LogicLevels.NONE:
 			return func(): return false
@@ -42,6 +42,19 @@ func get_logic_from_level(target_level: LogicLevels, node) -> Callable:
 		LogicLevels.ADVANCED_SKIPS:
 			return node.advanced_logic
 	return func(): return true
+
+
+static func get_logic_string_from_level(target_level: LogicLevels, node) -> String:
+	match target_level:
+		LogicLevels.NONE:
+			return "False"
+		LogicLevels.INTENDED_LOGIC:
+			return node.intended_string
+		LogicLevels.SIMPLE_SKIPS:
+			return node.simple_string
+		LogicLevels.ADVANCED_SKIPS:
+			return node.advanced_string
+	return "True"
 
 
 static func combine_logic(l1: LogicLevel, l2: LogicLevel) -> LogicLevel:
@@ -68,38 +81,32 @@ static func combine_logic_strings(string1: String, string2: String) -> String:
 
 
 ## Returns the harder logic between the two
-static func get_higher_logic(logic1: LogicLevel.LogicLevels, logic2: LogicLevel.LogicLevels) -> LogicLevel.LogicLevels:
-	return maxi(logic1, logic2) as LogicLevel.LogicLevels
+static func get_higher_logic(logic1: LogicLevels, logic2: LogicLevels) -> LogicLevels:
+	return maxi(logic1, logic2) as LogicLevels
 
 
-static func string_to_logic(logic_string: String, from_type: String, node: Node) -> Callable:
-	var heirarchy = ["intended", "simple", "advanced"]
-	
+static func string_to_logic(logic_string: String, from_level: LogicLevels, node: Node) -> Callable:
 	if logic_string == "-":
-		if from_type == "intended":
+		if from_level == LogicLevels.INTENDED_LOGIC:
 			return func(): return true
 		else:
 			await Globals.get_tree().process_frame
-			var getting: String = "%s_logic" % heirarchy[heirarchy.find(from_type) - 1]
-			if getting in node:
-				return node.get(getting)
+			return get_logic_from_level((from_level - 1) as LogicLevels, node)
 	elif logic_string == "True":
 		return func(): return true
 	elif logic_string == "False":
 		return func(): return false
 	else:
-		return await parse_logic(computerize_logic_string(logic_string), node)
-	
-	return func(): return false
+		return await parse_logic(computerize_logic_string(logic_string), node, from_level)
 
 
 static func computerize_logic_string(logic_string: String) -> String:
 	logic_string = logic_string.replace("(", "{ ").replace(")", " }").replace(" and ", " && ").replace(" or ", " || ").replace("glide", "sail")
+	logic_string = logic_string.replace("Meet Mel", "Find Mel")
 	for i in ["airstall", "crystal_stall", "ground_pogo", "enemy_pogo", "pogo_jump", "enemy_pogos"]:
 		logic_string = logic_string.replace(i, "slash")
-	logic_string = logic_string.replace("Meet Mel", "Find Mel")
-	for way in ["hairpin_launch", "hairstall", "hairpin_stall"]:
-		logic_string = logic_string.replace(way, "hairpin")
+	for i in ["hairpin_launch", "hairstall", "hairpin_stall"]:
+		logic_string = logic_string.replace(i, "hairpin")
 	logic_string = logic_string.replace("slope_boost", "True")
 	logic_string = logic_string.replace("e_dodge", "{ dodge && TRINKET:BETTER_DODGE }")
 	logic_string = logic_string.replace("latency", "TRINKET:FAST_RECOVERY")
@@ -138,7 +145,7 @@ static func computerize_logic_string(logic_string: String) -> String:
 	return logic_string
 
 
-static func parse_logic(logic_string: String, node: Node) -> Callable:
+static func parse_logic(logic_string: String, node: Node, from_level: LogicLevels) -> Callable:
 	var logic_list: Array[Callable]
 	var edited_string: String = logic_string
 	if not edited_string.is_empty():
@@ -167,7 +174,7 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 				if i.contains("@"):
 					hases.append(logic_list[i.substr(i.find("@")).to_int()])
 					continue
-				hases.append(state.has_call(i, LogicLevels.INTENDED_LOGIC))
+				hases.append(state.has_call(i, from_level))
 			current_logic = state.and_call(hases)
 		elif converted.contains("||"):
 			var hases: Array[Callable] = []
@@ -175,7 +182,7 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 				if i.contains("@"):
 					hases.append(logic_list[i.substr(i.find("@")).to_int()])
 					continue
-				hases.append(state.has_call(i, LogicLevels.INTENDED_LOGIC))
+				hases.append(state.has_call(i, from_level))
 			current_logic = state.or_call(hases)
 		else:
 			break
@@ -198,7 +205,7 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 			if i.contains("@"):
 				hases.append(logic_list[i.substr(i.find("@")).to_int()])
 				continue
-			hases.append(state.has_call(i, LogicLevels.INTENDED_LOGIC))
+			hases.append(state.has_call(i, from_level))
 		last_logic = state.and_call(hases)
 	elif last_converted.contains("||"):
 		var hases: Array[Callable] = []
@@ -206,10 +213,10 @@ static func parse_logic(logic_string: String, node: Node) -> Callable:
 			if i.contains("@"):
 				hases.append(logic_list[i.substr(i.find("@")).to_int()])
 				continue
-			hases.append(state.has_call(i, LogicLevels.INTENDED_LOGIC))
+			hases.append(state.has_call(i, from_level))
 		last_logic = state.or_call(hases)
 	else:
-		last_logic = state.has_call(last_converted, LogicLevels.INTENDED_LOGIC)
+		last_logic = state.has_call(last_converted, from_level)
 	
 	return last_logic
 

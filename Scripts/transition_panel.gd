@@ -45,17 +45,17 @@ var first_pass: bool:
 var intended_string: String:
 	set(v):
 		intended_string = v
-		intended_logic = await LogicLevel.string_to_logic(v, "intended", self)
+		intended_logic = await LogicLevel.string_to_logic(v, LogicLevel.LogicLevels.INTENDED_LOGIC, self)
 		$HBoxContainer/Intended.text = v
 var simple_string: String:
 	set(v):
 		simple_string = v
-		simple_logic = await LogicLevel.string_to_logic(v, "simple", self)
+		simple_logic = await LogicLevel.string_to_logic(v, LogicLevel.LogicLevels.SIMPLE_SKIPS, self)
 		$HBoxContainer/Simple.text = v
 var advanced_string: String:
 	set(v):
 		advanced_string = v
-		advanced_logic = await LogicLevel.string_to_logic(v, "advanced", self)
+		advanced_logic = await LogicLevel.string_to_logic(v, LogicLevel.LogicLevels.ADVANCED_SKIPS, self)
 		$HBoxContainer/Advanced.text = v
 
 var intended_logic: Callable
@@ -124,6 +124,7 @@ func get_logic_result(logic: Callable) -> bool:
 
 
 static func comp_info_string(string: String):
+	@warning_ignore("static_called_on_instance")
 	return Globals.fix_underscores(LogicLevel.computerize_logic_string(string).replace("||", "or").replace("&&", "and"))
 
 
@@ -132,6 +133,7 @@ func get_pagename() -> String:
 
 
 func get_wikitext() -> String:
+	@warning_ignore("static_called_on_instance")
 	return BASE_WIKITEXT % [
 		Globals.fix_underscores(from), Globals.fix_underscores(to),
 		Globals.fix_underscores(from), Globals.main.get_room_panel(from).region_name, 
