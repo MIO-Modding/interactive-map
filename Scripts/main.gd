@@ -217,6 +217,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"CTRL_PANEL>STARTING_ROOM": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation,
 	"CTRL_PANEL>FAST_TRAVEL_UNLOCK": $TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock,
 	"CTRL_PANEL>PROGRESSIVE_STRIDERS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveStriders,
+	"CTRL_PANEL>PROGRESSIVE_HARVESTER": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveHarvester,
 	
 	"ARCHIPELAGO>PERSISTANT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
 	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
@@ -1435,6 +1436,13 @@ func _on_fast_travel_unlock_toggled(toggled_on: bool) -> void:
 
 
 func _on_progressive_striders_toggled(_toggled_on: bool) -> void:
+	reset_logic.emit()
+	for i in range(3):
+		await get_tree().process_frame
+	update_itempool.emit()
+
+
+func _on_progressive_harvester_toggled(_toggled_on: bool) -> void:
 	reset_logic.emit()
 	for i in range(3):
 		await get_tree().process_frame

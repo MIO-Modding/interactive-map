@@ -37,7 +37,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 10
+current_tab = 5
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -84,7 +84,6 @@ metadata/_tab_index = 4
 layout_mode = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -204,6 +203,11 @@ text = "Overseers unlock fast travel"
 layout_mode = 2
 button_pressed = true
 text = "Progressive Striders"
+
+[node name="ProgressiveHarvester" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=1930891777]
+layout_mode = 2
+button_pressed = true
+text = "Progressive Harvester"
 
 [node name="ItemsPanel" type="PanelContainer" parent="TabContainer/PlayerState" unique_id=603864817]
 layout_mode = 1
@@ -849,6 +853,7 @@ popup/item_2/text = "Set Index"
 popup/item_2/id = 2
 
 [node name="Rando" type="Control" parent="TabContainer" unique_id=1884829303]
+visible = false
 layout_mode = 2
 script = ExtResource("10_hptm8")
 metadata/_tab_index = 10
@@ -1315,6 +1320,7 @@ text = "Skip (I know what I'm doing)"
 [connection signal="item_selected" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation" to="." method="_on_starting_location_item_selected"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock" to="." method="_on_fast_travel_unlock_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveStriders" to="." method="_on_progressive_striders_toggled"]
+[connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveHarvester" to="." method="_on_progressive_harvester_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/DoubleChecker" to="." method="_on_double_checker_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/RoomPoints" to="TabContainer/Map" method="_on_room_points_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]

@@ -114,7 +114,11 @@ static func computerize_logic_string(logic_string: String) -> String:
 	logic_string = logic_string.replace("laser_skip", "slash")
 	logic_string = logic_string.replace("flower_warp", "slash")
 	logic_string = logic_string.replace("enemy_lure", "True")
-	logic_string = logic_string.replace("harvester", "{ harvester && slash }").replace("slingshot", "{ slingshot && slash }")
+	logic_string = logic_string.replace("slingshot", "{ slingshot && slash }")
+	logic_string = logic_string.replace("harvester", "{ harvester && slash }")
+	if Globals.main.get_preference("CTRL_PANEL>PROGRESSIVE_HARVESTER"):
+		logic_string = logic_string.replace("slash", "{ slash || harvester }")
+		logic_string = logic_string.replace("{ slash || harvester} && harvester", "{ harvester && slash }")
 	if Globals.main.get_preference("CTRL_PANEL>PROGRESSIVE_STRIDERS"):
 		logic_string = logic_string.replace("flowing_steps", "{ striders && flowing_steps }").replace("striders", "{ striders || flowing_steps }")
 		logic_string = logic_string.replace("{ striders || flowing_steps } && flowing_steps", "striders && flowing_steps")
