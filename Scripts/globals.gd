@@ -7,6 +7,8 @@ var main: Main
 var LOCATION_NAME_TO_ID: Dictionary[String, int]
 var ITEM_NAME_TO_ID: Dictionary[String, int]
 
+var ap_items_recieved_this_session: Array[String]
+
 var queued_refresh := false
 
 var is_manual := false
@@ -50,10 +52,12 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 	await get_tree().process_frame
 	for i in main.get_node("VBoxContainer").get_children():
 		i.queue_free()
+	Archipelago.conn.obtained_item.connect(func(e: NetworkItem): ap_items_recieved_this_session.append(Main.PlayerState.convert_if_manual(e.get_name())))
 
 
 func disconnect_script() -> void:
 	main.player_state.ap_prog_items = []
+	ap_items_recieved_this_session = []
 	for i: LocationPanel in main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
 		i.checked = false
 		if i.has_node("Checked"):

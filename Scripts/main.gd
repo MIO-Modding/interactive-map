@@ -1577,6 +1577,10 @@ class PlayerState:
 		return ""
 	
 	
+	static func convert_if_manual(item: String) -> String:
+		return convert_from_manual_item(item) if Globals.is_manual else item
+	
+	
 	## Checks the location from the [param serial] (unchecks if [param uncheck] is true)
 	func check_location_serialized(serial: String, uncheck := false) -> void:
 		if not checked_locations_serialized().has(serial):

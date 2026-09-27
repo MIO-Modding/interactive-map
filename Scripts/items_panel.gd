@@ -56,6 +56,14 @@ func update_search() -> void:
 				if not Globals.main.player_state.ap_prog_items.has(i.item_name):
 					i.hide()
 			2:
+				if Globals.ap_items_recieved_this_session.has(i.item_name):
+					i.hide()
+				if not Globals.main.player_state.ap_prog_items.has(i.item_name):
+					i.hide()
+			3:
+				if not Globals.ap_items_recieved_this_session.has(i.item_name):
+					i.hide()
+			4:
 				if Globals.main.player_state.ap_prog_items.has(i.item_name):
 					i.hide()
 		
