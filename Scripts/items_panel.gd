@@ -1,6 +1,17 @@
 extends PanelContainer
 
 
+@onready var filter_nodes: Array[Control] = [$VBoxContainer/Search, $VBoxContainer/EntryOption]
+
+
+func _ready() -> void:
+	filter_nodes.append_array($VBoxContainer/Filters.get_children())
+	for i in filter_nodes:
+		if i is OptionButton:
+			i.item_selected.connect(update_search.unbind(1))
+		elif i is LineEdit:
+			i.text_changed.connect(update_search.unbind(1))
+
 
 func update_search() -> void:
 	for i: Item in %ItemPool.get_children():
@@ -45,27 +56,7 @@ func update_search() -> void:
 			2:
 				if Globals.main.player_state.ap_prog_items.has(i.item_name):
 					i.hide()
-
-
-func _on_search_text_changed(_new_text: String) -> void:
-	update_search()
-
-
-func _on_entry_option_item_selected(_index: int) -> void:
-	update_search()
-
-
-func _on_type_option_item_selected(_index: int) -> void:
-	update_search()
-
-
-func _on_class_option_item_selected(_index: int) -> void:
-	update_search()
-
-
-func _on_option_button_item_selected(_index: int) -> void:
-	update_search()
-
-
-func _on_ap_has_button_item_selected(_index: int) -> void:
-	update_search()
+		
+		if $VBoxContainer/Filters/CategoryOption.selected > 0:
+			if i.category != $VBoxContainer/Filters/CategoryOption.get_item_text($VBoxContainer/Filters/CategoryOption.selected):
+				i.hide()

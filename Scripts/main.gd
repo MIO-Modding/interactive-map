@@ -25,7 +25,7 @@ const DATA_LINKS: Dictionary[String, String] = {
 ## The columns used for each data set
 const KIND_MAXES: Dictionary[String, int] = {
 	"room requirements": 12,
-	"items": 8,
+	"items": 10,
 	"transition requirements": 8,
 	"location requirements": 13,
 	"combat requirements": 5,
@@ -431,6 +431,8 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					item.classification = Item.ItemClassifications[row[columns["AP Classification"]].to_upper()]
 					item.save_entry = row[columns["Save Entry Key"]]
 					item.notes = row[columns["Remarks"]]
+					item.in_game_description = row[columns["In-Game Description"]]
+					item.category = row[columns["Item Category"]]
 					update_itempool.connect(item.update)
 					
 					if item.item_name.contains("Old Core"):
@@ -1007,6 +1009,7 @@ func update_map() -> void:
 		if not all_location_types.has(loc_panel.type):
 			all_location_types.append(loc_panel.type)
 			$TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter.add_item(loc_panel.type)
+			$TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/CategoryOption.add_item(loc_panel.type)
 		
 		var point: LocationIcon = preload("res://Scenes/location_icon.tscn").instantiate()
 		point.set_meta("panel", loc_panel)

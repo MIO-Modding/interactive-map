@@ -56,6 +56,8 @@ var classification: ItemClassifications:
 			$Name.self_modulate = COLORS[value]
 var save_entry: String
 var notes: String
+var in_game_description: String
+var category: String
 
 var panel := ItemPanel.new()
 
