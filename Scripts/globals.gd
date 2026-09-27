@@ -179,14 +179,14 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 		if node != null:
 			if main.show_item_flags:
 				label.text += " (%s)" % node.save_entry
+				
+				var copy_button := Button.new()
+				copy_button.text = "Copy Flag"
+				copy_button.pressed.connect(func(): DisplayServer.clipboard_set(node.save_entry))
+				container.add_child(copy_button)
+			
 			label.label_settings.font_color = Item.COLORS[node.classification]
 	container.add_child(label)
-	if is_item and main.get_item_node(text.get_slice(": ", 1)) != null and main.show_item_flags:
-		var node: Item = main.get_item_node(text.get_slice(": ", 1))
-		var copy_button := Button.new()
-		copy_button.text = "Copy Flag"
-		copy_button.pressed.connect(func(): DisplayServer.clipboard_set(node.save_entry))
-		container.add_child(copy_button)
 	if (is_item and main.persistant_items) or persistant:
 		var button := Button.new()
 		button.text = "Dismiss" if persistant else "Added?"
