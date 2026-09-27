@@ -47,6 +47,17 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 	LOCATION_NAME_TO_ID.assign(Archipelago.conn.get_gamedata_for_player(Archipelago.conn.player_id).location_name_to_id)
 	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings").show()
 	
+	var start_index: int = get_yaml_option("starting_room", -1)
+	if start_index > -1:
+		const LOC_LIST: Array[String] = ["ST_security_fall_P1", "LQ_city_hall_C2", "GA_vin_terrace_P3", "LQ_vin_intro", "GA_root_conex_P2"]
+		var node: OptionButton = main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation")
+		for i in range(node.get_item_count()):
+			if node.get_item_text(i) in LOC_LIST:
+				if LOC_LIST.find(node.get_item_text(i)) == start_index:
+					node.select(i)
+					node.item_selected.emit(i)
+					break
+	
 	main.update_itempool.emit()
 	
 	await get_tree().process_frame
@@ -166,6 +177,14 @@ func send_deathlink(cause: String) -> void:
 			Archipelago.conn.send_deathlink(cause)
 
 
+func get_yaml_option(key: String, default: Variant) -> Variant:
+	if Archipelago.is_ap_connected():
+		if key in Archipelago.conn.slot_data:
+			return Archipelago.conn.slot_data[key]
+	
+	return default
+
+
 func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_item := false, other_buttons: Array[Button] = []) -> void:
 	var popup := PanelContainer.new()
 	var delete_popup: Callable = func(): popup.queue_free()
@@ -211,11 +230,11 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 		popup.queue_free()
 
 
-func fix_underscores(input: String) -> String:
+static func fix_underscores(input: String) -> String:
 	return input.replace("_", "\\_")
 
 
-func capitalize_first(input: String) -> String:
+static func capitalize_first(input: String) -> String:
 	var split: Array[String]
 	split.assign(Array(input.split(" ")))
 	for i in range(split.size()):
@@ -223,7 +242,7 @@ func capitalize_first(input: String) -> String:
 	return " ".join(split)
 
 
-func free_all_children(node: Node, queue := true) -> void:
+static func free_all_children(node: Node, queue := true) -> void:
 	for i in node.get_children():
 		if queue:
 			i.queue_free()
