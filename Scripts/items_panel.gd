@@ -11,6 +11,8 @@ func _ready() -> void:
 			i.item_selected.connect(update_search.unbind(1))
 		elif i is LineEdit:
 			i.text_changed.connect(update_search.unbind(1))
+	$VBoxContainer/Sort.item_selected.connect(update_sort.unbind(1))
+	Archipelago.connected.connect(func(c: ConnectionInfo, _j: Dictionary): await get_tree().process_frame; c.obtained_item.connect(update_sort.unbind(1)))
 
 
 func update_search() -> void:
@@ -60,3 +62,47 @@ func update_search() -> void:
 		if $VBoxContainer/Filters/CategoryOption.selected > 0:
 			if i.category != $VBoxContainer/Filters/CategoryOption.get_item_text($VBoxContainer/Filters/CategoryOption.selected):
 				i.hide()
+
+
+func update_sort() -> void:
+	var all_items: Array[Item]
+	for i: Item in %ItemPool.get_children():
+		all_items.append(i)
+	
+	var logic: Callable = func(): return true
+	
+	match $VBoxContainer/Sort.selected:
+		0:
+			var order: Array[String]
+			var skip_first := true
+			for i in Globals.main.items_sheet:
+				if skip_first:
+					skip_first = false
+					continue
+				order.append(i[0])
+			logic = func(x: Item, y: Item): 
+				return order.find(x.item_name) < order.find(y.item_name)
+		1:
+			if Archipelago.is_ap_connected():
+				var order: Array[String]
+				for i: NetworkItem in Archipelago.conn.received_items:
+					if Globals.is_manual:
+						order.append(Main.PlayerState.convert_from_manual_item(i.get_name()))
+					else:
+						order.append(i.get_name())
+				logic = func(x: Item, y: Item): 
+					var x_val: int = order.find(x.item_name)
+					var y_val: int = order.find(y.item_name)
+					if x_val == -1:
+						x_val = order.size()
+					if y_val == -1:
+						y_val = order.size()
+					return x_val < y_val
+	
+	if logic != func(): return true:
+		all_items.sort_custom(logic)
+	
+	#print(all_items.map(func(e): return e.item_name))
+	for i: Item in all_items:
+		%ItemPool.remove_child(i)
+		%ItemPool.add_child(i)

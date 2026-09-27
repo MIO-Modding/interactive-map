@@ -173,6 +173,7 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 	label.label_settings.font_color = color
 	label.label_settings.font_size = 30
 	label.size_flags_horizontal = Control.SIZE_EXPAND
+	container.add_child(label)
 	if is_item:
 		text = text.replace("Crystallized", "Crystallised")
 		var node: Item = main.get_item_node(text.get_slice(": ", 1))
@@ -186,7 +187,7 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 				container.add_child(copy_button)
 			
 			label.label_settings.font_color = Item.COLORS[node.classification]
-	container.add_child(label)
+	
 	if (is_item and main.persistant_items) or persistant:
 		var button := Button.new()
 		button.text = "Dismiss" if persistant else "Added?"
