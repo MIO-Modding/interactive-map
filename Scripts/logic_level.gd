@@ -98,7 +98,9 @@ static func computerize_logic_string(logic_string: String) -> String:
 	for i in ["airstall", "crystal_stall", "ground_pogo", "enemy_pogo", "pogo_jump", "enemy_pogos"]:
 		logic_string = logic_string.replace(i, "slash")
 	logic_string = logic_string.replace("Meet Mel", "Find Mel")
-	logic_string = logic_string.replace("hairpin_launch", "hairpin").replace("slope_boost", "True")
+	for way in ["hairpin_launch", "hairstall", "hairpin_stall"]:
+		logic_string = logic_string.replace(way, "hairpin")
+	logic_string = logic_string.replace("slope_boost", "True")
 	logic_string = logic_string.replace("e_dodge", "{ dodge && TRINKET:BETTER_DODGE }")
 	logic_string = logic_string.replace("latency", "TRINKET:FAST_RECOVERY")
 	logic_string = logic_string.replace("defrag_pogo", "{ slash && TRINKET:ORB_RECOVERY && TRINKET:FAST_RECOVERY }").replace("defrag", "TRINKET:ORB_RECOVERY")
