@@ -1645,16 +1645,15 @@ class PlayerState:
 			if i.room_id == room:
 				if loc_name.contains("Crystalli") and i.vanilla_item.contains("Crystalli"):
 					if loc_name.contains("Nacre_"):
-						if i.loc_description.contains("Left"):
+						if i.loc_description.contains("Left") and loc_name.contains("_left"):
 							return i
-						elif i.loc_description.contains("Right"):
+						elif i.loc_description.contains("Right") and loc_name.contains("_right"):
 							return i
 						elif i.loc_description == "Above a Door":
 							return i
 						elif i.loc_description == "In the Middle of the Room":
 							return i
-					
-					if i.vanilla_item.contains("Crystallised Nacre") or i.vanilla_item.contains("Crystallized Nacre"):
+					elif i.vanilla_item.contains("Crystallised Nacre") or i.vanilla_item.contains("Crystallized Nacre"):
 						return i
 				elif i.vanilla_item.containsn(item):
 					return i
