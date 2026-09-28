@@ -187,10 +187,12 @@ var wheel_rotation := "0":
 		rotation_changed.emit()
 
 var all_release_tags: Array[String]
+var manual_release_tags: Array[String]
 
 var default_preferences: Dictionary[String, Variant] = {}
 var non_node_preferences: Dictionary[String, Variant] = {
 	"MISC>SEEN_PATCH_NOTES": "0.0.0",
+	"MISC>MANUAL_PATCH_NOTES": "0.0.0",
 }
 
 ## The save keys to preference nodes
@@ -603,13 +605,17 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 
 ## Requests the other info needed
 func run_other_requests() -> void:
-	request_all_releases()
-	
-	await get_child(-1).request_completed
+	await request_all_releases()
 	
 	if non_node_preferences["MISC>SEEN_PATCH_NOTES"] != all_release_tags[0]:
 		request_release_notes()
 		non_node_preferences["MISC>SEEN_PATCH_NOTES"] = all_release_tags[0]
+		save_all_preferences()
+		
+		await get_child(-1).request_completed
+	if non_node_preferences["MISC>MANUAL_PATCH_NOTES"] != manual_release_tags[0]:
+		request_release_notes("latest", true)
+		non_node_preferences["MISC>MANUAL_PATCH_NOTES"] = manual_release_tags[0]
 		save_all_preferences()
 		
 		await get_child(-1).request_completed
@@ -618,11 +624,22 @@ func run_other_requests() -> void:
 
 
 ## Requests release notes from github
-func request_release_notes(target_release := "latest") -> void:
+func request_release_notes(target_release := "latest", manual := false) -> void:
 	if target_release != "latest" and not target_release.contains("tag/"):
 		target_release = "tag/" + target_release
-	get_child(-1).request_completed.connect(on_release_notes_recieved, CONNECT_ONE_SHOT)
-	get_child(-1).request("https://api.github.com/repos/MIO-Modding/interactive-map/releases/" + target_release)
+	get_child(-1).request_completed.connect(on_manual_release_notes_recieved if manual else on_release_notes_recieved, CONNECT_ONE_SHOT)
+	get_child(-1).request(("https://api.github.com/repos/MIO-Modding/%s/releases/" % ("manual-randomizer" if manual else "interactive-map")) + target_release)
+
+
+func on_manual_release_notes_recieved(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	var text := body.get_string_from_utf8()
+	var json: Dictionary = JSON.parse_string(text)
+	
+	var page := InfoPage.new()
+	page.text = json["body"]
+	page.name = "Manual Randomizer " + json["name"]
+	$TabContainer/Info.add_page_node(page)
+	$TabContainer/Info.select_last_page()
 
 
 ## Opens an info page for a release
@@ -641,16 +658,23 @@ func on_release_notes_recieved(_result: int, _response_code: int, _headers: Pack
 
 ## Requests a list of all releases from github
 func request_all_releases() -> void:
-	get_child(-1).request_completed.connect(on_releases_recieved, CONNECT_ONE_SHOT)
-	get_child(-1).request("https://api.github.com/repos/MIO-Modding/interactive-map/releases?per_page=100")
+	var repos: Dictionary[String, Array] = {"interactive-map": all_release_tags, "manual-randomizer": manual_release_tags}
+	for i in repos:
+		var list: Array[String]
+		list = repos[i]
+		
+		get_child(-1).request_completed.connect(on_releases_recieved.bind(list), CONNECT_ONE_SHOT)
+		get_child(-1).request("https://api.github.com/repos/MIO-Modding/%s/releases?per_page=100" % i)
+		await get_child(-1).request_completed
+		list.assign(list.map(func(e): return e.trim_prefix("v")))
 
 
 ## Sets [member all_release_tags] with the info from github
-func on_releases_recieved(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+func on_releases_recieved(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray, target_list: Array[String]) -> void:
 	var text := body.get_string_from_utf8()
 	var list: Array = JSON.parse_string(text)
 	list = list.map(func(e): return e["html_url"].get_slice("/tag/", 1))
-	all_release_tags.assign(list)
+	target_list.assign(list)
 
 
 ## Returns true if the [param target_version] is an earlier version than [param compared_to]
