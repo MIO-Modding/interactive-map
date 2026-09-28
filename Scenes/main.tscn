@@ -37,7 +37,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 5
+current_tab = 6
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -84,6 +84,7 @@ metadata/_tab_index = 4
 layout_mode = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -347,7 +348,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
-visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 6
@@ -364,7 +364,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -1017,6 +1017,16 @@ offset_bottom = 32.0
 grow_horizontal = 2
 text = "Play Rando"
 
+[node name="OpenFolder" type="Button" parent="TabContainer/Rando" unique_id=1410141461]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -38.0
+offset_right = 48.0
+grow_vertical = 0
+icon = ExtResource("14_k12tt")
+
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
 visible = false
 layout_mode = 2
@@ -1356,6 +1366,7 @@ text = "Skip (I know what I'm doing)"
 [connection signal="item_selected" from="TabContainer/Saves/Lists/File/V/ModeOption" to="TabContainer/Saves" method="_on_mode_option_item_selected"]
 [connection signal="pressed" from="TabContainer/Rando/SplitContainer/Options/Control/DownloadButton" to="TabContainer/Rando" method="_on_download_button_pressed"]
 [connection signal="pressed" from="TabContainer/Rando/SplitContainer/Play/Control/Start" to="TabContainer/Rando" method="_on_start_pressed"]
+[connection signal="pressed" from="TabContainer/Rando/OpenFolder" to="TabContainer/Rando" method="_on_open_folder_pressed"]
 [connection signal="pressed" from="TabContainer/Settings/FileLoc" to="TabContainer/Settings" method="_on_file_loc_pressed"]
 [connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer/SetPreset" to="TabContainer/Settings" method="_on_set_preset_item_selected"]
 [connection signal="drag_ended" from="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale" to="TabContainer/Settings" method="_on_ui_scale_drag_ended"]

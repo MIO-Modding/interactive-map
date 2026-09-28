@@ -319,3 +319,8 @@ func _on_download_button_pressed() -> void:
 
 func _on_start_pressed() -> void:
 	start_rando()
+
+
+func _on_open_folder_pressed() -> void:
+	if not OS.has_feature("web"):
+		OS.shell_open(ProjectSettings.globalize_path("user://Data/Players/"))
