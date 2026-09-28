@@ -199,7 +199,7 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 	container.add_child(label)
 	if is_item:
 		text = text.replace("Crystallized", "Crystallised")
-		var node: Item = main.get_item_node(text.get_slice(": ", 1))
+		var node: Item = main.get_item_node(text.trim_prefix("Received item: "))
 		if node != null:
 			if main.show_item_flags:
 				label.text += " (%s)" % node.save_entry
