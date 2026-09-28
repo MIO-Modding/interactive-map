@@ -37,7 +37,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 6
+current_tab = 10
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -348,6 +348,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
+visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 6
@@ -364,7 +365,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -858,7 +859,6 @@ popup/item_2/text = "Set Index"
 popup/item_2/id = 2
 
 [node name="Rando" type="Control" parent="TabContainer" unique_id=1884829303]
-visible = false
 layout_mode = 2
 script = ExtResource("10_hptm8")
 metadata/_tab_index = 10
@@ -996,6 +996,21 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Download"
 
+[node name="DownloadToArchipelagoButton" type="Button" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=322035847]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -99.0
+offset_top = -59.0
+offset_right = 99.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Download to Archipelago"
+
 [node name="Play" type="ScrollContainer" parent="TabContainer/Rando/SplitContainer" unique_id=1687706043]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1017,6 +1032,59 @@ offset_bottom = 32.0
 grow_horizontal = 2
 text = "Play Rando"
 
+[node name="APButtons" type="VBoxContainer" parent="TabContainer/Rando/SplitContainer/Play/Control" unique_id=1842629433]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -51.5
+offset_top = 60.0
+offset_right = 51.5
+offset_bottom = 100.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="TabContainer/Rando/SplitContainer/Play/Control/APButtons" unique_id=182198147]
+layout_mode = 2
+text = "Archipelago"
+horizontal_alignment = 1
+
+[node name="OpenAP" type="Button" parent="TabContainer/Rando/SplitContainer/Play/Control/APButtons" unique_id=699890220]
+layout_mode = 2
+text = "Launcher"
+
+[node name="GenerateAP" type="Button" parent="TabContainer/Rando/SplitContainer/Play/Control/APButtons" unique_id=1302831525]
+layout_mode = 2
+text = "Generate"
+
+[node name="HostAP" type="Button" parent="TabContainer/Rando/SplitContainer/Play/Control/APButtons" unique_id=778836917]
+layout_mode = 2
+text = "Host"
+
+[node name="LinkButton" type="LinkButton" parent="TabContainer/Rando/SplitContainer/Play/Control/APButtons" unique_id=1648763721]
+layout_mode = 2
+text = "Open in Web"
+uri = "https://archipelago.gg"
+
+[node name="ClearOutput" type="Button" parent="TabContainer/Rando/SplitContainer/Play/Control/APButtons" unique_id=570600294]
+layout_mode = 2
+text = "Clear Output Folder"
+
+[node name="DownloadAP" type="Button" parent="TabContainer/Rando/SplitContainer/Play/Control" unique_id=1448279674]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Download Archipelago"
+
+[node name="DownloadRequester" type="HTTPRequest" parent="TabContainer/Rando/SplitContainer/Play/Control" unique_id=2135528765]
+
 [node name="OpenFolder" type="Button" parent="TabContainer/Rando" unique_id=1410141461]
 layout_mode = 1
 anchors_preset = 2
@@ -1025,6 +1093,19 @@ anchor_bottom = 1.0
 offset_top = -38.0
 offset_right = 48.0
 grow_vertical = 0
+text = "Players Folder"
+icon = ExtResource("14_k12tt")
+
+[node name="APOpenFolder" type="Button" parent="TabContainer/Rando" unique_id=768273043]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -78.0
+offset_right = 155.0
+offset_bottom = -40.0
+grow_vertical = 0
+text = "AP Players Folder"
 icon = ExtResource("14_k12tt")
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
@@ -1365,8 +1446,16 @@ text = "Skip (I know what I'm doing)"
 [connection signal="toggled" from="TabContainer/Saves/Lists/State/V/DeleteButton" to="TabContainer/Saves" method="_on_delete_state_button_toggled"]
 [connection signal="item_selected" from="TabContainer/Saves/Lists/File/V/ModeOption" to="TabContainer/Saves" method="_on_mode_option_item_selected"]
 [connection signal="pressed" from="TabContainer/Rando/SplitContainer/Options/Control/DownloadButton" to="TabContainer/Rando" method="_on_download_button_pressed"]
+[connection signal="pressed" from="TabContainer/Rando/SplitContainer/Options/Control/DownloadToArchipelagoButton" to="TabContainer/Rando" method="_on_download_to_archipelago_button_pressed"]
 [connection signal="pressed" from="TabContainer/Rando/SplitContainer/Play/Control/Start" to="TabContainer/Rando" method="_on_start_pressed"]
+[connection signal="pressed" from="TabContainer/Rando/SplitContainer/Play/Control/APButtons/OpenAP" to="TabContainer/Rando" method="_on_open_ap_pressed"]
+[connection signal="pressed" from="TabContainer/Rando/SplitContainer/Play/Control/APButtons/GenerateAP" to="TabContainer/Rando" method="_on_generate_ap_pressed"]
+[connection signal="pressed" from="TabContainer/Rando/SplitContainer/Play/Control/APButtons/HostAP" to="TabContainer/Rando" method="_on_host_ap_pressed"]
+[connection signal="pressed" from="TabContainer/Rando/SplitContainer/Play/Control/APButtons/ClearOutput" to="TabContainer/Rando" method="_on_clear_output_pressed"]
+[connection signal="pressed" from="TabContainer/Rando/SplitContainer/Play/Control/DownloadAP" to="TabContainer/Rando" method="_on_download_ap_pressed"]
+[connection signal="request_completed" from="TabContainer/Rando/SplitContainer/Play/Control/DownloadRequester" to="TabContainer/Rando" method="_on_download_requester_request_completed"]
 [connection signal="pressed" from="TabContainer/Rando/OpenFolder" to="TabContainer/Rando" method="_on_open_folder_pressed"]
+[connection signal="pressed" from="TabContainer/Rando/APOpenFolder" to="TabContainer/Rando" method="_on_ap_open_folder_pressed"]
 [connection signal="pressed" from="TabContainer/Settings/FileLoc" to="TabContainer/Settings" method="_on_file_loc_pressed"]
 [connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer/SetPreset" to="TabContainer/Settings" method="_on_set_preset_item_selected"]
 [connection signal="drag_ended" from="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale" to="TabContainer/Settings" method="_on_ui_scale_drag_ended"]

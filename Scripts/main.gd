@@ -9,6 +9,7 @@ signal update_transitions
 signal reset_logic
 ## Emitted when the [HttpRequest] for the sheet finishes requesting and loading all data
 signal finished_requesting
+signal finished_other_requests
 ## Emitted when [member wheel_rotation] is set
 signal rotation_changed
 
@@ -621,6 +622,9 @@ func run_other_requests() -> void:
 		await get_child(-1).request_completed
 	
 	request_bingo()
+	await get_child(-1).request_completed
+	
+	finished_other_requests.emit()
 
 
 ## Requests release notes from github

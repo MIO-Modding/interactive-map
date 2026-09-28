@@ -18,6 +18,13 @@ game: %s
   start_inventory_from_pool: {}%s
 """
 
+var archipelago_folder: String:
+	set(v):
+		archipelago_folder = v
+		for i in ap_nodes:
+			i.visible = not v.is_empty()
+		$SplitContainer/Play/Control/DownloadAP.visible = v.is_empty() and not (OS.has_feature("web") or OS.has_feature("linux"))
+
 @onready var option_nodes: Dictionary[String, Control] = {
 	"logic_level": $SplitContainer/Options/Control/GridContainer/Logic,
 	"randomize_slash": $SplitContainer/Options/Control/GridContainer/Slash,
@@ -27,6 +34,11 @@ game: %s
 	"start_inventory_overseers": $SplitContainer/Options/Control/GridContainer/Overseers,
 	"starting_room": $SplitContainer/Options/Control/GridContainer/Start,
 }
+@onready var ap_nodes: Array[Control] = [
+	$SplitContainer/Play/Control/APButtons, 
+	$SplitContainer/Options/Control/DownloadToArchipelagoButton, 
+	$APOpenFolder,
+]
 
 
 func _ready() -> void:
@@ -36,6 +48,8 @@ func _ready() -> void:
 	for i in Globals.STARTING_LOC_LIST:
 		$SplitContainer/Options/Control/GridContainer/Start.add_item(i)
 	$SplitContainer/Options/Control/GridContainer/Start.select(0)
+	
+	archipelago_folder = find_archipelago_dir()
 
 
 func update_alignment() -> void:
@@ -88,8 +102,8 @@ func get_current_options() -> Dictionary[String, String]:
 	return result
 
 
-func save_yaml(contents_string: String, file_name: String) -> void:
-	var file := FileAccess.open(YAML_FILE_PATH % file_name, FileAccess.WRITE)
+func save_yaml(contents_string: String, file_name: String, path := YAML_FILE_PATH) -> void:
+	var file := FileAccess.open(path % file_name, FileAccess.WRITE)
 	file.store_string(contents_string)
 	file.close()
 
@@ -107,7 +121,7 @@ func load_yaml(file_name: String) -> Dictionary[String, String]:
 	split.assign(Array(text.split("\n  ")))
 	for i: String in split: #TODO fix with exclude locs and start inv
 		if i.begins_with("- "):
-			pass
+			continue
 		var key_val_split: Array[String]
 		key_val_split.assign(Array(i.split(": ")))
 		result[key_val_split[0]] = key_val_split[1]
@@ -308,6 +322,23 @@ func start_rando(from_yaml := "") -> void:
 	Globals.is_solo_rando = true
 
 
+func find_archipelago_dir() -> String:
+	var result: String
+	if not OS.has_feature("web"):
+		if OS.has_feature("windows"):
+			result = OS.get_environment("ALLUSERSPROFILE")
+			if DirAccess.dir_exists_absolute(result + "\\Archipelago"):
+				result += "\\Archipelago"
+		elif OS.has_feature("linux"):
+			pass #print("Suck to be you")
+	return result
+
+
+func run_archipelago_exe(process_name: String, open_console := false) -> void:
+	if not archipelago_folder.is_empty():
+		OS.create_process(archipelago_folder + "\\Archipelago%s.exe" % process_name, [], open_console)
+
+
 func _on_download_button_pressed() -> void:
 	var text: String = $SplitContainer/Options/Control/GridContainer/Name.text
 	save_yaml(construct_yaml(), text)
@@ -324,3 +355,43 @@ func _on_start_pressed() -> void:
 func _on_open_folder_pressed() -> void:
 	if not OS.has_feature("web"):
 		OS.shell_open(ProjectSettings.globalize_path("user://Data/Players/"))
+
+
+func _on_ap_open_folder_pressed() -> void:
+	if not archipelago_folder.is_empty():
+		OS.shell_open(archipelago_folder + "\\Players")
+
+
+func _on_download_to_archipelago_button_pressed() -> void:
+	if not archipelago_folder.is_empty():
+		var text: String = $SplitContainer/Options/Control/GridContainer/Name.text
+		save_yaml(construct_yaml(), text, archipelago_folder + "\\Players\\%s.yaml")
+
+
+func _on_download_ap_pressed() -> void:
+	$SplitContainer/Play/Control/DownloadRequester.request("https://github.com/ArchipelagoMW/Archipelago/releases/latest/download/Setup.Archipelago.0.6.7.exe")
+
+
+func _on_download_requester_request_completed(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	var setup_file := FileAccess.open("user://Data/ap-setup.exe", FileAccess.WRITE)
+	setup_file.store_buffer(body)
+	setup_file.close()
+	OS.execute(ProjectSettings.globalize_path("user://Data/ap-setup.exe"), [])
+
+
+func _on_open_ap_pressed() -> void:
+	run_archipelago_exe("Launcher")
+
+
+func _on_generate_ap_pressed() -> void:
+	run_archipelago_exe("Generate", true)
+
+
+func _on_host_ap_pressed() -> void:
+	run_archipelago_exe("Host", true)
+
+
+func _on_clear_output_pressed() -> void:
+	if not archipelago_folder.is_empty():
+		for i in DirAccess.get_files_at(archipelago_folder + "\\output\\"):
+			DirAccess.remove_absolute(archipelago_folder + "\\output\\" + i)
