@@ -91,7 +91,13 @@ static func string_to_logic(logic_string: String, from_level: LogicLevels, node:
 			return func(): return true
 		else:
 			await Globals.get_tree().process_frame
-			return get_logic_from_level((from_level - 1) as LogicLevels, node)
+			if Globals.main.include_unchecked_events:
+				#if node is TransitionPanel:
+					#if node.to == "LQ_ruins_transi_F2":
+						#print(computerize_logic_string(get_logic_string_from_level((from_level - 1) as LogicLevels, node)))
+				return await parse_logic(computerize_logic_string(get_logic_string_from_level((from_level - 1) as LogicLevels, node)), node, from_level)
+			else:
+				return get_logic_from_level((from_level - 1) as LogicLevels, node)
 	elif logic_string == "True":
 		return func(): return true
 	elif logic_string == "False":
@@ -216,6 +222,10 @@ static func parse_logic(logic_string: String, node: Node, from_level: LogicLevel
 			hases.append(state.has_call(i, from_level))
 		last_logic = state.or_call(hases)
 	else:
+		#if last_converted == "Acat Defeated":
+			#print(last_converted)
+			#print(from_level)
+			#print(state.has_call(last_converted, from_level).call())
 		last_logic = state.has_call(last_converted, from_level)
 	
 	return last_logic

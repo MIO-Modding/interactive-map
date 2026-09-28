@@ -110,7 +110,6 @@ func update_sort() -> void:
 	if logic != func(): return true:
 		all_items.sort_custom(logic)
 	
-	#print(all_items.map(func(e): return e.item_name))
 	for i: Item in all_items:
 		%ItemPool.remove_child(i)
 		%ItemPool.add_child(i)

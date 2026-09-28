@@ -157,6 +157,7 @@ var simple_reachable_rooms: Array[String]
 var advanced_reachable_rooms: Array[String]
 var astar_web := AStar2D.new()
 var room_order: Array[String]
+var _event_locs_added: int
 
 ## The room that the player starts in, used for logic calculation
 var starting_room := "ST_security_fall_P1"
@@ -745,12 +746,27 @@ func update_reachable() -> void:
 			astar_web.disconnect_points(i, connection, false)
 	
 	logic_kind = LogicLevel.LogicLevels.INTENDED_LOGIC
+	reachable_rooms.clear()
+	reachable_locations.clear()
 	reachable_rooms = get_reachable(true)
 	reachable_locations = get_reachable_locations(reachable_rooms)
+	if include_unchecked_events:
+		while _event_locs_added > 0:
+			print(_event_locs_added)
+			_event_locs_added = 0
+			for i in get_reachable(true):
+				if not i in reachable_rooms:
+					reachable_rooms.append(i)
+			#reachable_rooms = get_reachable(true)
+			reachable_locations = get_reachable_locations(reachable_rooms)
 	logic_kind = LogicLevel.LogicLevels.SIMPLE_SKIPS
+	simple_reachable_rooms.clear()
+	simple_reachable_locations.clear()
 	simple_reachable_rooms = get_reachable(true)
 	simple_reachable_locations = get_reachable_locations(simple_reachable_rooms)
 	logic_kind = LogicLevel.LogicLevels.ADVANCED_SKIPS
+	advanced_reachable_rooms.clear()
+	advanced_reachable_locations.clear()
 	advanced_reachable_rooms = get_reachable(true)
 	advanced_reachable_locations = get_reachable_locations(advanced_reachable_rooms)
 	logic_kind = LogicLevel.LogicLevels.INTENDED_LOGIC
@@ -783,11 +799,39 @@ func update_loc_group_labels() -> void:
 ## Returns all reachable locations
 func get_reachable_locations(availible_rooms: Array[String]) -> Array[LocationPanel]:
 	var result: Array[LocationPanel] = []
+	var leftover_locs: Array[LocationPanel]
+	var discarded_leftover: Array[LocationPanel]
+	var leftover_size: int
 	
 	for room in availible_rooms:
 		for loc: LocationPanel in get_locations_for_room(room):
 			if loc_in_logic(loc):
 				result.append(loc)
+				if include_unchecked_events:
+					get_reachable_locations_level(logic_kind).append(loc)
+					if not loc in get_reachable_locations_level(logic_kind):
+						if is_location_event(loc):
+							_event_locs_added += 1
+			elif include_unchecked_events:
+				discarded_leftover.append(loc)
+	
+	if include_unchecked_events:
+		leftover_size = discarded_leftover.size() + 1
+		while discarded_leftover.size() < leftover_size:
+			print(discarded_leftover)
+			leftover_size = leftover_locs.size()
+			discarded_leftover.clear()
+			for i in leftover_locs:
+				if loc_in_logic(i):
+					result.append(i)
+					if not i in get_reachable_locations_level(logic_kind):
+						get_reachable_locations_level(logic_kind).append(i)
+						if is_location_event(i):
+							_event_locs_added += 1
+				else:
+					discarded_leftover.append(i)
+			leftover_locs.clear()
+	
 	
 	return result
 
@@ -867,15 +911,17 @@ func in_logic(panel: TransitionPanel, override_logic_kind := LogicLevel.LogicLev
 	if override_logic_kind == LogicLevel.LogicLevels.NONE:
 		override_logic_kind = logic_kind
 	
-	if panel.simple_string != "-":
-		if override_logic_kind != LogicLevel.LogicLevels.INTENDED_LOGIC:
-			if panel.simple_logic.call():
-				return true
+	if panel.simple_string != "-" or include_unchecked_events:
+		if not panel.simple_logic.is_null():
+			if override_logic_kind != LogicLevel.LogicLevels.INTENDED_LOGIC:
+				if panel.simple_logic.call():
+					return true
 	
-	if panel.advanced_string != "-":
-		if override_logic_kind == LogicLevel.LogicLevels.ADVANCED_SKIPS:
-			if panel.advanced_logic.call():
-				return true
+	if panel.advanced_string != "-" or include_unchecked_events:
+		if not panel.advanced_logic.is_null():
+			if override_logic_kind == LogicLevel.LogicLevels.ADVANCED_SKIPS:
+				if panel.advanced_logic.call():
+					return true
 	
 	return false
 
@@ -1479,6 +1525,9 @@ func _on_progressive_harvester_toggled(_toggled_on: bool) -> void:
 
 func _on_include_unchecked_events_toggled(toggled_on: bool) -> void:
 	include_unchecked_events = toggled_on
+	reset_logic.emit()
+	for i in range(3):
+		await get_tree().process_frame
 	update_itempool.emit()
 
 
@@ -1528,8 +1577,6 @@ class PlayerState:
 				return Globals.main.get_reachable_rooms_level(logic_level).has(item)
 			elif Globals.main.include_unchecked_events:
 				if Globals.main.all_event_items.has(item):
-					#TODO broken when some event is available on a harder logic and then is not included in an easier logic calculation (doesn't contaminate)
-					#ex. Acat event with just slash
 					return Globals.main.get_reachable_locations_level(logic_level).has(Globals.main.get_event_location(Globals.main.get_item_node(item)))
 			return full_itemset().has(item))
 	

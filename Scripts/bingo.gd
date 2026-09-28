@@ -22,7 +22,6 @@ func load_bingo(data: Dictionary) -> void:
 		var node: PanelContainer = preload("res://Scenes/bingo_goal_panel.tscn").instantiate()
 		node.get_node("HBoxContainer/Label").text = goal["name"]
 		$Split/ScrollContainer/VBoxContainer.add_child(node)
-		#print(goal["name"])
 
 
 class BingoGoal:

@@ -122,7 +122,6 @@ func update_filter() -> void:
 					if TransitionPanel.LOGIC_LEVEL_COLORS.find_key(i.get_meta("panel").modulate) in ["intended", "simple"]:
 						hide_location_point(i)
 				else:
-					print(i.get_meta("panel").modulate)
 					hide_location_point(i)
 		3: # adv
 			for i in room_panels:

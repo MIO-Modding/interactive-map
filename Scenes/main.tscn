@@ -162,6 +162,7 @@ layout_mode = 2
 text = "Regular Locations"
 
 [node name="IncludeUncheckedEvents" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=885760490]
+visible = false
 layout_mode = 2
 text = "Treat In-Logic Events As Complete"
 

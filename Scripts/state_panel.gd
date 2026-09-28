@@ -11,8 +11,8 @@ class_name StatePanel extends PanelContainer
 
 var file_name: String:
 	set(v):
-		if v.is_empty():
-			print(text)
+		#if v.is_empty():
+			#print(text)
 		
 		#get_saves_tab().remove_meta_file(self)
 		file_name = v

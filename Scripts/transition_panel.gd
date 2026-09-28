@@ -59,7 +59,11 @@ var advanced_string: String:
 		$HBoxContainer/Advanced.text = v
 
 var intended_logic: Callable
-var simple_logic: Callable
+var simple_logic: Callable:
+	set(v):
+		simple_logic = v
+		if to == "LQ_ruins_transi_F2":
+			print(v.call())
 var advanced_logic: Callable
 
 var door: String:
