@@ -201,6 +201,7 @@ func _on_checked_toggled(toggled_on: bool) -> void:
 	if point_node == null:
 		modulate = Color(0.232, 0.566, 0.61) if toggled_on else original_color
 	Main.player_state.check_location_serialized(serialize(), not toggled_on)
+	Globals.main.get_node("TabContainer/Map").update_filter()
 
 
 func _on_link_pressed() -> void:

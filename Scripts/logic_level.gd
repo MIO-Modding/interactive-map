@@ -134,6 +134,8 @@ static func computerize_logic_string(logic_string: String) -> String:
 	if Globals.main.get_preference("CTRL_PANEL>PROGRESSIVE_HARVESTER"):
 		logic_string = logic_string.replace("slash", "{ slash || harvester }")
 		logic_string = logic_string.replace("{ slash || harvester} && harvester", "{ harvester && slash }")
+		logic_string = logic_string.replace("harvester && { slash || harvester }", "{ harvester && slash }")
+		logic_string = logic_string.replace("{ { harvester && slash } }", "{ harvester && slash }")
 	if Globals.main.get_preference("CTRL_PANEL>PROGRESSIVE_STRIDERS"):
 		logic_string = logic_string.replace("flowing_steps", "{ striders && flowing_steps }").replace("striders", "{ striders || flowing_steps }")
 		logic_string = logic_string.replace("{ striders || flowing_steps } && flowing_steps", "striders && flowing_steps")
