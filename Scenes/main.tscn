@@ -254,15 +254,17 @@ popup/item_1/id = 1
 popup/item_2/text = "Search by room id"
 popup/item_2/id = 2
 
-[node name="ByLabel" type="Label" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=786695246]
+[node name="Filters" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=1624339651]
 layout_mode = 2
-text = "Filter by:"
-horizontal_alignment = 1
+title = "Filter by:"
 
-[node name="Filters" type="HBoxContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=1404304632]
+[node name="Box" type="VBoxContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=1738911082]
 layout_mode = 2
 
-[node name="TypeOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=230667800]
+[node name="Simple" type="HBoxContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box" unique_id=1404304632]
+layout_mode = 2
+
+[node name="TypeOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=230667800]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -275,7 +277,7 @@ popup/item_1/id = 1
 popup/item_2/text = "Event"
 popup/item_2/id = 2
 
-[node name="ClassOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=935053527]
+[node name="ClassOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=935053527]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -292,7 +294,7 @@ popup/item_3/id = 3
 popup/item_4/text = "Trap"
 popup/item_4/id = 4
 
-[node name="HasButton" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=286759415]
+[node name="HasButton" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=286759415]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -305,7 +307,7 @@ popup/item_1/id = 1
 popup/item_2/text = "No"
 popup/item_2/id = 2
 
-[node name="APHasButton" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=1228733175]
+[node name="APHasButton" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=1228733175]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
@@ -321,7 +323,7 @@ popup/item_3/id = 3
 popup/item_4/text = "No"
 popup/item_4/id = 4
 
-[node name="CategoryOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=531897754]
+[node name="CategoryOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=531897754]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -330,12 +332,12 @@ item_count = 1
 popup/item_0/text = "Category..."
 popup/item_0/id = 0
 
-[node name="CategoryFilter" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=489037020]
+[node name="CategoryFilter" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box" unique_id=489037020]
 layout_mode = 2
 folded = true
-title = "Filter by Category"
+title = "Category"
 
-[node name="ToggleGrid" type="GridContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/CategoryFilter" unique_id=817127955]
+[node name="ToggleGrid" type="GridContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/CategoryFilter" unique_id=817127955]
 visible = false
 layout_mode = 2
 columns = 2

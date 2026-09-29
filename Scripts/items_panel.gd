@@ -5,13 +5,13 @@ extends PanelContainer
 
 
 func _ready() -> void:
-	filter_nodes.append_array($VBoxContainer/Filters.get_children())
+	filter_nodes.append_array($VBoxContainer/Filters/Box/Simple.get_children())
 	for i in filter_nodes:
 		if i is OptionButton:
 			i.item_selected.connect(update_search.unbind(1))
 		elif i is LineEdit:
 			i.text_changed.connect(update_search.unbind(1))
-	$VBoxContainer/CategoryFilter/ToggleGrid.toggle_toggled.connect(update_search.unbind(2))
+	$VBoxContainer/Filters/Box/CategoryFilter/ToggleGrid.toggle_toggled.connect(update_search.unbind(2))
 	$VBoxContainer/Sort.item_selected.connect(update_sort.unbind(1))
 	$VBoxContainer/MapTo.item_selected.connect(update_mappings.unbind(1))
 	Archipelago.connected.connect(func(c: ConnectionInfo, _j: Dictionary): await get_tree().process_frame; c.obtained_item.connect(update_sort.unbind(1)))
@@ -33,7 +33,7 @@ func update_search() -> void:
 					if not i.room.containsn($VBoxContainer/Search.text):
 						i.hide()
 		
-		match $VBoxContainer/Filters/TypeOption.selected:
+		match $VBoxContainer/Filters/Box/Simple/TypeOption.selected:
 			1:
 				if i.type != Item.ItemTypes.ITEM:
 					i.hide()
@@ -41,11 +41,11 @@ func update_search() -> void:
 				if i.type != Item.ItemTypes.EVENT:
 					i.hide()
 		
-		if $VBoxContainer/Filters/ClassOption.selected > 0:
-			if i.classification != $VBoxContainer/Filters/ClassOption.selected - 1:
+		if $VBoxContainer/Filters/Box/Simple/ClassOption.selected > 0:
+			if i.classification != $VBoxContainer/Filters/Box/Simple/ClassOption.selected - 1:
 				i.hide()
 		
-		match $VBoxContainer/Filters/HasButton.selected:
+		match $VBoxContainer/Filters/Box/Simple/HasButton.selected:
 			1:
 				if not Globals.main.player_state.prog_items.has(i.item_name):
 					i.hide()
@@ -53,7 +53,7 @@ func update_search() -> void:
 				if Globals.main.player_state.prog_items.has(i.item_name):
 					i.hide()
 		
-		match $VBoxContainer/Filters/APHasButton.selected:
+		match $VBoxContainer/Filters/Box/Simple/APHasButton.selected:
 			1:
 				if not Globals.main.player_state.ap_prog_items.has(i.item_name):
 					i.hide()
@@ -69,11 +69,11 @@ func update_search() -> void:
 				if Globals.main.player_state.ap_prog_items.has(i.item_name):
 					i.hide()
 		
-		if $VBoxContainer/Filters/CategoryOption.selected > 0:
-			if i.category != $VBoxContainer/Filters/CategoryOption.get_item_text($VBoxContainer/Filters/CategoryOption.selected):
+		if $VBoxContainer/Filters/Box/Simple/CategoryOption.selected > 0:
+			if i.category != $VBoxContainer/Filters/Box/Simple/CategoryOption.get_item_text($VBoxContainer/Filters/Box/Simple/CategoryOption.selected):
 				i.hide()
 		
-		if not i.category in $VBoxContainer/CategoryFilter/ToggleGrid.get_toggled_toggles():
+		if not i.category in $VBoxContainer/Filters/Box/CategoryFilter/ToggleGrid.get_toggled_toggles():
 			i.hide()
 
 
@@ -82,7 +82,7 @@ func update_sort() -> void:
 	for i: Item in %ItemPool.get_children():
 		all_items.append(i)
 	
-	var logic: Callable = func(): return true
+	var logic := Callable()
 	
 	match $VBoxContainer/Sort.selected:
 		0:
@@ -112,8 +112,10 @@ func update_sort() -> void:
 						y_val = order.size()
 					return x_val < y_val
 	
-	if logic != func(): return true:
+	if logic != Callable():
 		all_items.sort_custom(logic)
+	else:
+		return
 	
 	for i: Item in all_items:
 		%ItemPool.remove_child(i)
