@@ -12,6 +12,7 @@ func _ready() -> void:
 		elif i is LineEdit:
 			i.text_changed.connect(update_search.unbind(1))
 	$VBoxContainer/Sort.item_selected.connect(update_sort.unbind(1))
+	$VBoxContainer/MapTo.item_selected.connect(update_mappings.unbind(1))
 	Archipelago.connected.connect(func(c: ConnectionInfo, _j: Dictionary): await get_tree().process_frame; c.obtained_item.connect(update_sort.unbind(1)))
 
 
@@ -113,3 +114,14 @@ func update_sort() -> void:
 	for i: Item in all_items:
 		%ItemPool.remove_child(i)
 		%ItemPool.add_child(i)
+
+
+func update_mappings() -> void:
+	var logic: Callable
+	match $VBoxContainer/MapTo.selected:
+		0:
+			logic = func(e: Item): return e.item_name
+		1:
+			logic = func(e: Item): return e.save_entry
+	for i: Item in %ItemPool.get_children():
+		i.get_node("Name").text = logic.call(i)
