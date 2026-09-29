@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://cgrgrbd0cgj4" path="res://Scripts/items_panel.gd" id="2_8gbba"]
 [ext_resource type="PackedScene" uid="uid://d053j7xxppayl" path="res://Scenes/node_2d.tscn" id="3_8gbba"]
 [ext_resource type="Script" uid="uid://cf0bcw5xtc03o" path="res://Scripts/map_manager.gd" id="3_jjvhh"]
+[ext_resource type="Script" uid="uid://cyy3doxsx538s" path="res://Scripts/toggle_grid.gd" id="4_h1bgf"]
 [ext_resource type="Script" uid="uid://blhmfcrwuh8kj" path="res://Scripts/vector_2i_box.gd" id="5_kry3j"]
 [ext_resource type="Script" uid="uid://cccbr4ew5h430" path="res://Scripts/info_manager.gd" id="6_6bp64"]
 [ext_resource type="Script" uid="uid://dwe8brs2p3rup" path="res://Scripts/info_page.gd" id="6_21xkr"]
@@ -220,7 +221,7 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -564.0
+offset_left = -477.0
 offset_top = 4.0
 offset_right = -4.0
 offset_bottom = -4.0
@@ -321,12 +322,29 @@ popup/item_4/text = "No"
 popup/item_4/id = 4
 
 [node name="CategoryOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=531897754]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
 item_count = 1
 popup/item_0/text = "Category..."
 popup/item_0/id = 0
+
+[node name="CategoryFilter" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=489037020]
+layout_mode = 2
+folded = true
+title = "Filter by Category"
+
+[node name="ToggleGrid" type="GridContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/CategoryFilter" unique_id=817127955]
+visible = false
+layout_mode = 2
+columns = 2
+script = ExtResource("4_h1bgf")
+all_toggles = Dictionary[String, bool]({
+"All": false
+})
+toggle_for_all_default_value = true
+toggle_for_all = true
 
 [node name="Sort" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=756726446]
 layout_mode = 2

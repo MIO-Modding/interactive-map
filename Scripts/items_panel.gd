@@ -11,6 +11,7 @@ func _ready() -> void:
 			i.item_selected.connect(update_search.unbind(1))
 		elif i is LineEdit:
 			i.text_changed.connect(update_search.unbind(1))
+	$VBoxContainer/CategoryFilter/ToggleGrid.toggle_toggled.connect(update_search.unbind(2))
 	$VBoxContainer/Sort.item_selected.connect(update_sort.unbind(1))
 	$VBoxContainer/MapTo.item_selected.connect(update_mappings.unbind(1))
 	Archipelago.connected.connect(func(c: ConnectionInfo, _j: Dictionary): await get_tree().process_frame; c.obtained_item.connect(update_sort.unbind(1)))
@@ -71,6 +72,9 @@ func update_search() -> void:
 		if $VBoxContainer/Filters/CategoryOption.selected > 0:
 			if i.category != $VBoxContainer/Filters/CategoryOption.get_item_text($VBoxContainer/Filters/CategoryOption.selected):
 				i.hide()
+		
+		if not i.category in $VBoxContainer/CategoryFilter/ToggleGrid.get_toggled_toggles():
+			i.hide()
 
 
 func update_sort() -> void:
