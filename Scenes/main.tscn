@@ -238,11 +238,22 @@ theme_override_font_sizes/font_size = 20
 text = "Items"
 horizontal_alignment = 1
 
-[node name="Search" type="LineEdit" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=1080010399]
+[node name="Operations" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=154488815]
+layout_mode = 2
+title = "Search / Filter / Sort / Map"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations" unique_id=673978]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer" unique_id=20963759]
+layout_mode = 2
+
+[node name="Search" type="LineEdit" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer" unique_id=1080010399]
 layout_mode = 2
 placeholder_text = "Search..."
 
-[node name="EntryOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=950999774]
+[node name="EntryOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer" unique_id=950999774]
 layout_mode = 2
 focus_mode = 1
 selected = 0
@@ -254,17 +265,17 @@ popup/item_1/id = 1
 popup/item_2/text = "Search by room id"
 popup/item_2/id = 2
 
-[node name="Filters" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=1624339651]
+[node name="Filters" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer" unique_id=1624339651]
 layout_mode = 2
 title = "Filter by:"
 
-[node name="Box" type="VBoxContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters" unique_id=1738911082]
+[node name="Box" type="VBoxContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters" unique_id=1738911082]
 layout_mode = 2
 
-[node name="Simple" type="HBoxContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box" unique_id=1404304632]
+[node name="Simple" type="HBoxContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box" unique_id=1404304632]
 layout_mode = 2
 
-[node name="TypeOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=230667800]
+[node name="TypeOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple" unique_id=230667800]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -277,7 +288,7 @@ popup/item_1/id = 1
 popup/item_2/text = "Event"
 popup/item_2/id = 2
 
-[node name="ClassOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=935053527]
+[node name="ClassOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple" unique_id=935053527]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -294,7 +305,7 @@ popup/item_3/id = 3
 popup/item_4/text = "Trap"
 popup/item_4/id = 4
 
-[node name="HasButton" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=286759415]
+[node name="HasButton" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple" unique_id=286759415]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -307,7 +318,7 @@ popup/item_1/id = 1
 popup/item_2/text = "No"
 popup/item_2/id = 2
 
-[node name="APHasButton" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=1228733175]
+[node name="APHasButton" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple" unique_id=1228733175]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
@@ -323,7 +334,7 @@ popup/item_3/id = 3
 popup/item_4/text = "No"
 popup/item_4/id = 4
 
-[node name="CategoryOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/Simple" unique_id=531897754]
+[node name="CategoryOption" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple" unique_id=531897754]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -332,12 +343,12 @@ item_count = 1
 popup/item_0/text = "Category..."
 popup/item_0/id = 0
 
-[node name="CategoryFilter" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box" unique_id=489037020]
+[node name="CategoryFilter" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box" unique_id=489037020]
 layout_mode = 2
 folded = true
 title = "Category"
 
-[node name="ToggleGrid" type="GridContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/CategoryFilter" unique_id=817127955]
+[node name="ToggleGrid" type="GridContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/CategoryFilter" unique_id=817127955]
 visible = false
 layout_mode = 2
 columns = 2
@@ -348,16 +359,22 @@ all_toggles = Dictionary[String, bool]({
 toggle_for_all_default_value = true
 toggle_for_all = true
 
-[node name="Sort" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=756726446]
+[node name="Sort" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer" unique_id=756726446]
 layout_mode = 2
 selected = 0
-item_count = 2
+item_count = 3
 popup/item_0/text = "Sort By Sheet Index"
 popup/item_0/id = 0
 popup/item_1/text = "Sort By AP Recieved Order"
 popup/item_1/id = 1
+popup/item_2/text = "Sort Alphabetically"
+popup/item_2/id = 2
 
-[node name="MapTo" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=623313706]
+[node name="ReverseSort" type="CheckButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer" unique_id=414837537]
+layout_mode = 2
+text = "Reverse Sort"
+
+[node name="MapTo" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer" unique_id=623313706]
 layout_mode = 2
 selected = 0
 item_count = 2

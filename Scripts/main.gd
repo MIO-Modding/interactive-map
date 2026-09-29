@@ -1089,7 +1089,7 @@ func update_map() -> void:
 		if not all_location_types.has(loc_panel.type):
 			all_location_types.append(loc_panel.type)
 			$TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter.add_item(loc_panel.type)
-			$TabContainer/PlayerState/ItemsPanel/VBoxContainer/Filters/Box/CategoryFilter/ToggleGrid.add_toggle(loc_panel.type, true)
+			$TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/CategoryFilter/ToggleGrid.add_toggle(loc_panel.type, true)
 		
 		var point: LocationIcon = preload("res://Scenes/location_icon.tscn").instantiate()
 		point.set_meta("panel", loc_panel)
