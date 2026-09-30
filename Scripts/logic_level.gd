@@ -115,6 +115,7 @@ static func computerize_logic_string(logic_string: String) -> String:
 		logic_string = logic_string.replace(i, "hairpin")
 	logic_string = logic_string.replace("slope_boost", "True")
 	logic_string = logic_string.replace("e_dodge", "{ dodge && TRINKET:BETTER_DODGE }")
+	logic_string = logic_string.replace("dodge && { dodge && TRINKET:BETTER_DODGE }", "{ dodge && TRINKET:BETTER_DODGE }")
 	logic_string = logic_string.replace("latency", "TRINKET:FAST_RECOVERY")
 	logic_string = logic_string.replace("defrag_pogo", "{ slash && TRINKET:ORB_RECOVERY && TRINKET:FAST_RECOVERY }").replace("defrag", "TRINKET:ORB_RECOVERY")
 	logic_string = logic_string.replace("sail_stall", "{ slash && sail }").replace("strider_triple", "striders")
@@ -150,7 +151,38 @@ static func computerize_logic_string(logic_string: String) -> String:
 	for i in range(1, 6):
 		logic_string = logic_string.replace(("%d Core" % i) + ("s" if i != 1 else ""), "{ %s }" % " && ".join(Globals.main.all_cores))
 	
+	#var op = optimize_logic_string(logic_string)
+	#if op != logic_string:
+		#print(logic_string)
+		#print(get_logic_string_components(logic_string))
+		#print(optimize_logic_string(logic_string))
 	return logic_string
+
+
+static func optimize_logic_string(logic_string: String) -> String:
+	for component: String in get_logic_string_components(logic_string):
+		var string_changed := true
+		while string_changed:
+			string_changed = false
+			for type in ["&&", "||"]:
+				var temp_string: String
+				temp_string = logic_string.replace(" ".join([component, type, component]), component)
+				if temp_string != logic_string:
+					logic_string = temp_string
+					string_changed = true
+			
+			var second_temp: String = logic_string.replace("{ %s }" % component, component)
+			if second_temp != logic_string:
+				logic_string = second_temp
+				string_changed = true
+	
+	return logic_string
+
+
+static func get_logic_string_components(from_logic_string: String) -> Array[String]:
+	for i in ["{", "}", "&&", "||"]:
+		from_logic_string = from_logic_string.replace(i, "$$")
+	return (from_logic_string.split("$$") as Array[String]).map(func(e): return e.trim_prefix(" ").trim_suffix(" ")).filter(func(e): return not e.is_empty())
 
 
 static func parse_logic(logic_string: String, node: Node, from_level: LogicLevels) -> Callable:
