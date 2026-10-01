@@ -65,6 +65,14 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 	for i in main.get_node("VBoxContainer").get_children():
 		i.queue_free()
 	Archipelago.conn.obtained_item.connect(func(e: NetworkItem): ap_items_recieved_this_session.append(Main.PlayerState.convert_if_manual(e.get_name())))
+	#set_datastorage("EVENTS", [], [])
+	get_datastorage("events", func(e):
+			if e == null: 
+				set_datastorage("events", [], [])
+			else:
+				for i in e:
+					main.player_state.ap_prog_items.append(i)
+				main.update_itempool.emit())
 
 
 func disconnect_script() -> void:
@@ -112,8 +120,10 @@ func check_location(location: LocationPanel, send := true) -> void:
 		return
 	if item.type == Item.ItemTypes.EVENT:
 		if send:
+			set_datastorage("events", [item.item_name], [], "add")
 			main.player_state.ap_prog_items.append(item.item_name)
 		else:
+			set_datastorage("events", [item.item_name], [], "remove")
 			main.player_state.ap_prog_items.erase(item.item_name)
 		main.update_itempool.emit()
 		main.update_go_mode()
@@ -187,6 +197,30 @@ func get_yaml_option(key: String, default: Variant) -> Variant:
 			return Archipelago.conn.slot_data[key]
 	
 	return default
+
+
+func datastorage_prefix() -> String:
+	if Archipelago.is_ap_connected():
+		return "MioIM_%d_%d_" % [Archipelago.conn.player_id, Archipelago.conn.team_id]
+	else:
+		return ""
+
+
+func get_datastorage(key: String, on_get: Callable) -> void:
+	if Archipelago.is_ap_connected():
+		Archipelago.conn.retrieve(datastorage_prefix() + key, on_get)
+
+
+func set_datastorage(key: String, value: Variant, default: Variant, operation := "replace") -> void:
+	if Archipelago.is_ap_connected():
+		var args = {
+			"key": datastorage_prefix() + key,
+			"default": default,
+			"operations": [
+				{"operation": operation, "value": value},
+			]
+		}
+		Archipelago.send_command("Set", args)
 
 
 func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_item := false, other_buttons: Array[Button] = []) -> void:
