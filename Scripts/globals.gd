@@ -232,7 +232,7 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 	label.text = text
 	label.label_settings = LabelSettings.new()
 	label.label_settings.font_color = color
-	label.label_settings.font_size = 30
+	label.label_settings.font_size = roundi(main.get_preference("GRAPHICS>POPUPS_FONT_SIZE"))
 	label.size_flags_horizontal = Control.SIZE_EXPAND
 	container.add_child(label)
 	if is_item:

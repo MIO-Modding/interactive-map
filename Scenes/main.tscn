@@ -38,7 +38,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 5
+current_tab = 11
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -85,6 +85,7 @@ metadata/_tab_index = 4
 layout_mode = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -1168,7 +1169,6 @@ text = "AP Players Folder"
 icon = ExtResource("14_k12tt")
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
-visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
@@ -1227,11 +1227,9 @@ popup/item_4/id = 4
 
 [node name="GraphicsFoldable" type="FoldableContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=186739576]
 layout_mode = 2
-folded = true
 title = "Graphics"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable" unique_id=1340230476]
-visible = false
 layout_mode = 2
 
 [node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer" unique_id=1625412956]
@@ -1249,6 +1247,18 @@ tick_count = 5
 layout_mode = 2
 button_pressed = true
 text = "Scale Change Hotkeys"
+
+[node name="Label2" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer" unique_id=907935259]
+layout_mode = 2
+text = "Popups Font Size"
+
+[node name="PopupScale" type="HSlider" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer" unique_id=2026989509]
+layout_mode = 2
+min_value = 10.0
+max_value = 50.0
+step = 2.0
+value = 30.0
+tick_count = 5
 
 [node name="RevertFoldable" type="FoldableContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=934204330]
 layout_mode = 2

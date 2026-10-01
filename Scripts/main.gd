@@ -236,6 +236,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	
 	"GRAPHICS>UI_SCALE": $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale,
 	"GRAPHICS>UI_SCALE_HOTKEYS": $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScaleHotkeys,
+	"GRAPHICS>POPUPS_FONT_SIZE": $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/PopupScale,
 }
 
 
