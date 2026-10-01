@@ -1498,6 +1498,14 @@ func _on_give_starting_button_pressed() -> void:
 	update_itempool.emit()
 
 
+func _on_give_displayed_pressed() -> void:
+	for i: Item in %ItemPool.get_children():
+		if i.visible:
+			if not player_state.prog_items.has(i.item_name):
+				player_state.prog_items.append(i.item_name)
+	update_itempool.emit()
+
+
 func _on_starting_location_item_selected(index: int) -> void:
 	if index == 0:
 		$TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.selected = (randi_range(1, $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.item_count))
