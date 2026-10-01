@@ -1,7 +1,10 @@
 extends PanelContainer
 
 
-@onready var filter_nodes: Array[Control] = [$VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search, $VBoxContainer/Operations/ScrollContainer/VBoxContainer/EntryOption]
+@onready var filter_nodes: Array[Control] = [
+	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search,
+	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/EntryOption,
+]
 
 
 func _ready() -> void:
@@ -11,10 +14,13 @@ func _ready() -> void:
 			i.item_selected.connect(update_search.unbind(1))
 		elif i is LineEdit:
 			i.text_changed.connect(update_search.unbind(1))
+		elif i is SpinBox:
+			i.value_changed.connect(update_search.unbind(1))
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/CategoryFilter/ToggleGrid.toggle_toggled.connect(update_search.unbind(2))
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/Sort.item_selected.connect(update_sort.unbind(1))
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/ReverseSort.toggled.connect(update_sort.unbind(1))
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/MapTo.item_selected.connect(update_mappings.unbind(1))
+	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/LimitTo.value_changed.connect(update_limit.unbind(1))
 	Archipelago.connected.connect(func(c: ConnectionInfo, _j: Dictionary): await get_tree().process_frame; c.obtained_item.connect(update_sort.unbind(1)))
 
 
@@ -30,62 +36,61 @@ func update_search() -> void:
 			match $VBoxContainer/Operations/ScrollContainer/VBoxContainer/EntryOption.selected:
 				0:
 					if not i.item_name.containsn($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search.text):
-						i.hide()
+						i.filtered = true
 				1:
 					if not i.save_entry.containsn($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search.text):
-						i.hide()
+						i.filtered = true
 				2:
 					if not i.room.containsn($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search.text):
-						i.hide()
+						i.filtered = true
 		
 		match $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/TypeOption.selected:
 			1:
 				if i.type != Item.ItemTypes.ITEM:
-					i.hide()
+					i.filtered = true
 			2:
 				if i.type != Item.ItemTypes.EVENT:
-					i.hide()
+					i.filtered = true
 		
 		if $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/ClassOption.selected > 0:
 			if i.classification != $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/ClassOption.selected - 1:
-				i.hide()
+				i.filtered = true
 		
 		match $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/HasButton.selected:
 			1:
 				if not Globals.main.player_state.prog_items.has(i.item_name):
-					i.hide()
+					i.filtered = true
 			2:
 				if Globals.main.player_state.prog_items.has(i.item_name):
-					i.hide()
+					i.filtered = true
 		
 		match $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/APHasButton.selected:
 			1:
 				if not Globals.main.player_state.ap_prog_items.has(i.item_name):
-					i.hide()
+					i.filtered = true
 			2:
 				if Globals.ap_items_recieved_this_session.has(i.item_name):
-					i.hide()
+					i.filtered = true
 				if not Globals.main.player_state.ap_prog_items.has(i.item_name):
-					i.hide()
+					i.filtered = true
 			3:
 				if not Globals.ap_items_recieved_this_session.has(i.item_name):
-					i.hide()
+					i.filtered = true
 			4:
 				if Globals.main.player_state.ap_prog_items.has(i.item_name):
-					i.hide()
+					i.filtered = true
 		
 		if $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/CategoryOption.selected > 0:
 			if i.category != $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/CategoryOption.get_item_text($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/CategoryOption.selected):
-				i.hide()
+				i.filtered = true
 		
 		if not i.category in $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/CategoryFilter/ToggleGrid.get_toggled_toggles():
-			i.hide()
+			i.filtered = true
 
 
 func update_sort() -> void:
 	var all_items: Array[Item]
-	for i: Item in %ItemPool.get_children():
-		all_items.append(i)
+	all_items.assign(%ItemPool.get_children())
 	
 	var logic := Callable()
 	
@@ -141,3 +146,16 @@ func update_mappings() -> void:
 			logic = func(e: Item): return e.save_entry
 	for i: Item in %ItemPool.get_children():
 		i.get_node("Name").text = logic.call(i)
+
+
+func update_limit() -> void:
+	var limit_value: int = roundi($VBoxContainer/Operations/ScrollContainer/VBoxContainer/LimitTo.value)
+	if limit_value > -1:
+		var visible_so_far: int = 0
+		for i: Item in %ItemPool.get_children():
+			if not i.filtered:
+				visible_so_far += 1
+				i.limited = visible_so_far > limit_value
+	else:
+		for i: Item in %ItemPool.get_children():
+			i.limited = false

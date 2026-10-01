@@ -240,7 +240,7 @@ horizontal_alignment = 1
 
 [node name="Operations" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=154488815]
 layout_mode = 2
-title = "Search / Filter / Sort / Map"
+title = "Search / Filter / Sort / Map / Limit"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations" unique_id=673978]
 custom_minimum_size = Vector2(0, 250)
@@ -383,6 +383,13 @@ popup/item_0/text = "Map To..."
 popup/item_0/id = 0
 popup/item_1/text = "Save Flags"
 popup/item_1/id = 1
+
+[node name="LimitTo" type="SpinBox" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer" unique_id=1985038064]
+layout_mode = 2
+min_value = -1.0
+value = -1.0
+prefix = "Limit to"
+suffix = "Entries (-1 is inf)"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=1743503771]
 layout_mode = 2

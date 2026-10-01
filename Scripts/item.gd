@@ -61,6 +61,15 @@ var category: String
 
 var panel := ItemPanel.new()
 
+var filtered := false:
+	set(v):
+		filtered = v
+		update_visible()
+var limited := false:
+	set(v):
+		limited = v
+		update_visible()
+
 
 func _ready() -> void:
 	panel.pagename = item_name
@@ -79,6 +88,10 @@ func update() -> void:
 	$Amount.visible = not max_amount == 1
 	$Toggle.visible = max_amount == 1
 	$Toggle.set_pressed_no_signal($Amount.value > 0)
+
+
+func update_visible() -> void:
+	visible = not limited and not filtered
 
 
 func set_wikitext() -> void:
