@@ -42,6 +42,7 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 		if i.has_node("Checked"):
 			i.get_node("Checked").disabled = true
 	Archipelago.conn.obtained_item.connect(get_item)
+	Archipelago.conn.force_scout_all()
 	if is_manual:
 		Archipelago.set_deathlink(Archipelago.conn.slot_data["death_link"])
 	Archipelago.conn.deathlink.connect(receive_deathlink)
@@ -117,7 +118,10 @@ func check_location(location: LocationPanel, send := true) -> void:
 		main.update_itempool.emit()
 		main.update_go_mode()
 	else:
-		Archipelago.collect_location(get_location_id(location))
+		var id: int = get_location_id(location)
+		Archipelago.conn.scout(id, 0, func(e: NetworkItem): 
+			trigger_popup("Archipelago Item: " + Archipelago.conn.get_player_name(e.dest_player_id) + "'s " + e.get_name(), Color.CORNFLOWER_BLUE))
+		Archipelago.collect_location(id)
 
 
 func get_location_id(location: LocationPanel) -> int:
@@ -220,6 +224,12 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 		i.pressed.connect(delete_popup, CONNECT_ONE_SHOT)
 		container.add_child(i)
 	main.get_node("VBoxContainer").add_child(popup)
+	var set_label_size = func():
+		label.custom_minimum_size.x = minf(get_viewport().get_visible_rect().size.x - (container.size.x - label.size.x), label.size.x)
+	set_label_size.call()
+	get_viewport().size_changed.connect(set_label_size)
+	container.tree_exiting.connect(func(): get_viewport().size_changed.disconnect(set_label_size), CONNECT_ONE_SHOT)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	
 	print_rich("[color=%s]%s[/color]" % [label.label_settings.font_color.to_html(false), text])
 	
