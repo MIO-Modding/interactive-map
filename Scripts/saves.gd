@@ -259,6 +259,13 @@ func save_save(_state: Main.PlayerState, file_name: String = "") -> void:
 	pass
 
 
+func save_raw_save(data: String, file_name := ""):
+	if mio_saves_path.is_empty():
+		return
+	var new_file := FileAccess.open(mio_saves_path % file_name, FileAccess.WRITE)
+	new_file.store_string(data)
+
+
 func load_save(file_name: String) -> Main.PlayerState:
 	if mio_saves_path.is_empty():
 		return null
@@ -375,7 +382,7 @@ func update_changes_from_game() -> void:
 		if FileAccess.file_exists(slot_path) and FileAccess.file_exists(save_file_path):
 			var slot_timestamp: int = FileAccess.get_modified_time(slot_path)
 			var save_file_timestamp: int = FileAccess.get_modified_time(save_file_path)
-			if slot_timestamp < save_file_timestamp:
+			if slot_timestamp > save_file_timestamp:
 				overwrite_file(data[i], "slot_%d" % i)
 			else:
 				overwrite_file("slot_%d" % i, data[i])
@@ -421,3 +428,11 @@ func _on_mode_option_item_selected(index: int) -> void:
 	update_display()
 	await get_tree().process_frame
 	mode_changed.emit(index)
+
+
+func _on_empty_save_pressed() -> void:
+	var file_name: String
+	file_name = $VBoxContainer/AsSaveFile/FileSave/VBoxContainer/EmptySave.text
+	if file_name.is_empty():
+		file_name = "empty"
+	save_raw_save(FileAccess.get_file_as_string("res://Saves/empty.txt"), file_name)
