@@ -224,8 +224,8 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"CTRL_PANEL>PROGRESSIVE_STRIDERS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveStriders,
 	"CTRL_PANEL>PROGRESSIVE_HARVESTER": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveHarvester,
 	
-	"ARCHIPELAGO>PERSISTENT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PERSISTENTItems,
-	"ARCHIPELAGO>PERSISTENT_SENT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PERSISTENTLocations,
+	"ARCHIPELAGO>PERSISTENT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
+	"ARCHIPELAGO>PERSISTENT_SENT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantLocations,
 	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
 	"ARCHIPELAGO>ADDRESS": null,
 	"ARCHIPELAGO>PORT": null,
