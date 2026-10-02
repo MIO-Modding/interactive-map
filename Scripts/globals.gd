@@ -130,6 +130,8 @@ func check_location(location: LocationPanel, send := true) -> void:
 	else:
 		var id: int = get_location_id(location)
 		Archipelago.conn.scout(id, 0, func(e: NetworkItem): 
+			if e.dest_player_id == Archipelago.conn.player_id:
+				return
 			trigger_popup("Archipelago Item: " + Archipelago.conn.get_player_name(e.dest_player_id) + "'s " + e.get_name(), Color.CORNFLOWER_BLUE))
 		Archipelago.collect_location(id)
 
