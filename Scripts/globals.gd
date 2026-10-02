@@ -227,7 +227,7 @@ func set_datastorage(key: String, value: Variant, default: Variant, operation :=
 
 func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_item := false, other_buttons: Array[Button] = []) -> void:
 	var popup := PanelContainer.new()
-	var delete_popup: Callable = func(): popup.queue_free()
+	var delete_popup: Callable = popup.reparent.bind(main.get_node("TabContainer/PopupHistory/ScrollContainer/VBoxContainer"))
 	var container := HBoxContainer.new()
 	popup.add_child(container)
 	var label := Label.new()
@@ -273,7 +273,8 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 		return
 	await get_tree().create_timer(3).timeout
 	if is_instance_valid(popup):
-		popup.queue_free()
+		if popup.get_parent() == main.get_node("VBoxContainer"):
+			delete_popup.call()
 
 
 static func fix_underscores(input: String) -> String:

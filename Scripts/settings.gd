@@ -3,7 +3,7 @@ extends Control
 
 const PRESETS: Array[Array] = [
 	["PlayerState", "Map", "Info", "Saves"],
-	["PlayerState", "Map", "Info", "ArchipelagoClient", "Saves", "Rando"],
+	["PlayerState", "Map", "Info", "ArchipelagoClient", "Saves", "Rando", "PopupHistory"],
 	["RoomRequirements", "Items", "TransitionRequirements", "LocationRequirements", "NonLocationComponents"],
 ]
 
