@@ -132,7 +132,7 @@ func check_location(location: LocationPanel, send := true) -> void:
 		Archipelago.conn.scout(id, 0, func(e: NetworkItem): 
 			if e.dest_player_id == Archipelago.conn.player_id:
 				return
-			trigger_popup("Archipelago Item: " + Archipelago.conn.get_player_name(e.dest_player_id) + "'s " + e.get_name(), Color.CORNFLOWER_BLUE))
+			trigger_popup("Archipelago Item: " + Archipelago.conn.get_player_name(e.dest_player_id) + "'s " + e.get_name(), Color.CORNFLOWER_BLUE, main.get_preference("ARCHIPELAGO>PERSISTENT_SENT_ITEMS")))
 		Archipelago.collect_location(id)
 
 
@@ -225,7 +225,7 @@ func set_datastorage(key: String, value: Variant, default: Variant, operation :=
 		Archipelago.send_command("Set", args)
 
 
-func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_item := false, other_buttons: Array[Button] = []) -> void:
+func trigger_popup(text: String, color := Color.WHITE, PERSISTENT := false, is_item := false, other_buttons: Array[Button] = []) -> void:
 	var popup := PanelContainer.new()
 	var delete_popup: Callable = popup.reparent.bind(main.get_node("TabContainer/PopupHistory/ScrollContainer/VBoxContainer"))
 	var container := HBoxContainer.new()
@@ -251,9 +251,9 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 			
 			label.label_settings.font_color = Item.COLORS[node.classification]
 	
-	if (is_item and main.persistant_items) or persistant:
+	if (is_item and main.persistent_items) or PERSISTENT:
 		var button := Button.new()
-		button.text = "Dismiss" if persistant else "Added?"
+		button.text = "Dismiss" if PERSISTENT else "Added?"
 		button.pressed.connect(delete_popup, CONNECT_ONE_SHOT)
 		container.add_child(button)
 	for i in other_buttons:
@@ -269,7 +269,7 @@ func trigger_popup(text: String, color := Color.WHITE, persistant := false, is_i
 	
 	print_rich("[color=%s]%s[/color]" % [label.label_settings.font_color.to_html(false), text])
 	
-	if (is_item and main.persistant_items) or persistant or not other_buttons.is_empty():
+	if (is_item and main.persistent_items) or PERSISTENT or not other_buttons.is_empty():
 		return
 	await get_tree().create_timer(3).timeout
 	if is_instance_valid(popup):

@@ -165,7 +165,7 @@ var starting_room := "ST_security_fall_P1"
 ## If double clicking a location should mark it as checked (and send the archipelago check)
 var double_click_checks_locations := false
 ## If item received popups from archipelago shoul persist until acknowledged
-var persistant_items := true
+var persistent_items := true
 ## If item recieved popups from archipelago should show their save flags
 var show_item_flags := false
 
@@ -224,7 +224,8 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"CTRL_PANEL>PROGRESSIVE_STRIDERS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveStriders,
 	"CTRL_PANEL>PROGRESSIVE_HARVESTER": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveHarvester,
 	
-	"ARCHIPELAGO>PERSISTANT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
+	"ARCHIPELAGO>PERSISTENT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PERSISTENTItems,
+	"ARCHIPELAGO>PERSISTENT_SENT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PERSISTENTLocations,
 	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
 	"ARCHIPELAGO>ADDRESS": null,
 	"ARCHIPELAGO>PORT": null,
@@ -1519,8 +1520,8 @@ func _on_starting_location_item_selected(index: int) -> void:
 	get_room_panel(starting_room).point_node.scale = Vector2.ONE * 2
 
 
-func _on_persistant_items_toggled(toggled_on: bool) -> void:
-	persistant_items = toggled_on
+func _on_persistent_items_toggled(toggled_on: bool) -> void:
+	persistent_items = toggled_on
 
 
 func _on_item_flags_toggled(toggled_on: bool) -> void:

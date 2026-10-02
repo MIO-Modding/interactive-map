@@ -38,7 +38,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 9
+current_tab = 5
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -85,7 +85,6 @@ metadata/_tab_index = 4
 layout_mode = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -129,6 +128,11 @@ layout_mode = 2
 focus_mode = 1
 button_pressed = true
 text = "Persistant item popups"
+
+[node name="PersistantLocations" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer" unique_id=2046095317]
+layout_mode = 2
+focus_mode = 1
+text = "Persistant item sending popups"
 
 [node name="ItemFlags" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer" unique_id=315952180]
 layout_mode = 2
@@ -746,6 +750,7 @@ layout_mode = 2
 metadata/_tab_index = 8
 
 [node name="Saves" type="Control" parent="TabContainer" unique_id=672664825]
+visible = false
 layout_mode = 2
 script = ExtResource("8_344ge")
 metadata/_tab_index = 9
