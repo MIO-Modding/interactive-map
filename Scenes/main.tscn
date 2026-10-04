@@ -21,6 +21,9 @@
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
 font_color = Color(1, 0, 0, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_q256p"]
+font_size = 32
+
 [node name="Main" type="Control" unique_id=717459129]
 layout_mode = 3
 anchors_preset = 15
@@ -38,7 +41,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 5
+current_tab = 14
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -85,6 +88,7 @@ metadata/_tab_index = 4
 layout_mode = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -1443,6 +1447,82 @@ grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/PopupHistory/ScrollContainer" unique_id=564042295]
 layout_mode = 2
+
+[node name="Links" type="Control" parent="TabContainer" unique_id=2045465693]
+layout_mode = 2
+metadata/_tab_index = 14
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Links" unique_id=1656598628]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Links/ScrollContainer" unique_id=612672024]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="Label" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=1672101298]
+layout_mode = 2
+text = "Links"
+label_settings = SubResource("LabelSettings_q256p")
+
+[node name="APRepo2" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=268772699]
+layout_mode = 2
+text = "GitHub Repository"
+uri = "https://github.com/MIO-Modding/interactive-map"
+
+[node name="Sheet" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=1784242267]
+layout_mode = 2
+text = "The Archipelago Dev Sheet (data source)"
+uri = "https://docs.google.com/spreadsheets/d/1yNsXMKEl_6U3PhMhkSsu22E7RjQANwz5b7Xy3tBLJso/"
+
+[node name="Discord" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=904092626]
+layout_mode = 2
+text = "Discord"
+uri = "https://discord.gg/gjSMfETeMH"
+
+[node name="DiscordThread" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=730668773]
+layout_mode = 2
+text = "This Map's Discord Thread (reccomended for issues/help)"
+uri = "https://discord.com/channels/1391166350768078928/1545998757110358126"
+
+[node name="Store" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=1533741798]
+layout_mode = 2
+text = "Steam Page"
+uri = "https://discord.gg/gjSMfETeMH"
+
+[node name="Wiki" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=369496175]
+layout_mode = 2
+text = "Wiki"
+uri = "https://mio.wiki.gg"
+
+[node name="APWiki" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=406227015]
+layout_mode = 2
+text = "Archipelago Wiki"
+uri = "https://archipelago.miraheze.org/wiki/MIO:_Memories_in_Orbit"
+
+[node name="APRepo" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=727653905]
+layout_mode = 2
+text = "Archipelago Client/APWorld Repository (logic issues go here, unless it seems to just be a map problem)"
+uri = "https://github.com/ShackledMars261/mio-archipelago"
+
+[node name="APManualRepo" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=2123010944]
+layout_mode = 2
+text = "Archipelago Manual Repository"
+uri = "https://github.com/MIO-Modding/manual-randomizer"
+
+[node name="APDiscord" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=1447227383]
+layout_mode = 2
+text = "Archipelago Discord"
+uri = "https://github.com/MIO-Modding/manual-randomizer"
+
+[node name="APDiscordThread" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=146656523]
+layout_mode = 2
+text = "This Implementation's Archipelago Discord Thread"
+uri = "https://github.com/MIO-Modding/manual-randomizer"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1

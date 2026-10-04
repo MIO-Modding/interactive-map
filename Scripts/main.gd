@@ -6,9 +6,11 @@ signal update_itempool
 ## Emitted whenever transitions should update (is connected to each individual 
 ##[TransitionPanel], [RoomPanel], and [LocationPanel]) (all [FeaturePanel]s [i]except[/i] for [Item.ItemPanel]s)
 signal update_transitions
+## Emitted whenever logic should be reset (as in, the way to calculate it changed)
 signal reset_logic
 ## Emitted when the [HttpRequest] for the sheet finishes requesting and loading all data
 signal finished_requesting
+## Emitted when the [HttpRequest] finishes requesting non-sheet data
 signal finished_other_requests
 ## Emitted when [member wheel_rotation] is set
 signal rotation_changed
