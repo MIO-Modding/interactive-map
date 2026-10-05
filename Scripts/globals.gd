@@ -238,7 +238,6 @@ func receive_bounce(json: Dictionary) -> void:
 				match json["data"]["bounce_type"]:
 					"UpdateEvents":
 						try_getting_events()
-	print(json)
 
 
 func trigger_popup(text: String, color := Color.WHITE, PERSISTENT := false, is_item := false, other_buttons: Array[Button] = []) -> void:
