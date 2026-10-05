@@ -23,7 +23,7 @@ func _ready() -> void:
 	Archipelago.disconnected.connect(disconnect_script)
 	Archipelago.remove_location.connect(remove_location)
 	
-	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings").hide()
+	main.get_node("TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ArchipelagoSettings").hide()
 	
 	await main.finished_requesting
 	ITEM_NAME_TO_ID = get_item_name_to_id()
@@ -48,11 +48,11 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 		Archipelago.set_deathlink(Archipelago.conn.slot_data["death_link"])
 	Archipelago.conn.deathlink.connect(receive_deathlink)
 	LOCATION_NAME_TO_ID.assign(Archipelago.conn.get_gamedata_for_player(Archipelago.conn.player_id).location_name_to_id)
-	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings").show()
+	main.get_node("TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ArchipelagoSettings").show()
 	
 	var start_index: int = get_yaml_option("starting_room", -1)
 	if start_index > -1:
-		var node: OptionButton = main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation")
+		var node: OptionButton = main.get_node("TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HBoxContainer/StartingLocation")
 		for i in range(node.get_item_count()):
 			if node.get_item_text(i) in STARTING_LOC_LIST:
 				if STARTING_LOC_LIST.find(node.get_item_text(i)) == start_index:
@@ -78,7 +78,7 @@ func disconnect_script() -> void:
 		i.checked = false
 		if i.has_node("Checked"):
 			i.get_node("Checked").disabled = false
-	main.get_node("TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings").hide()
+	main.get_node("TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ArchipelagoSettings").hide()
 
 
 func remove_location(loc_id: int) -> void:

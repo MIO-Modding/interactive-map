@@ -216,20 +216,20 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"FILTERS>SCOUTABLE_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/ScoutableFilter,
 	"FILTERS>HINTED_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/HintedFilter,
 	
-	"CTRL_PANEL>HIGHLIGHT": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle,
-	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,
-	"CTRL_PANEL>TEMP_STATE_POPUPS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/TempStatePopups,
-	"CTRL_PANEL>CHECKED_EVENT_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer/Events,
-	"CTRL_PANEL>CHECKED_REGULAR_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer/Regular,
-	"CTRL_PANEL>INCLUDE_UNCHECKED_EVENTS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/IncludeUncheckedEvents,
-	"CTRL_PANEL>STARTING_ROOM": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation,
-	"CTRL_PANEL>FAST_TRAVEL_UNLOCK": $TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock,
-	"CTRL_PANEL>PROGRESSIVE_STRIDERS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveStriders,
-	"CTRL_PANEL>PROGRESSIVE_HARVESTER": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveHarvester,
+	"CTRL_PANEL>HIGHLIGHT": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HighlightToggle,
+	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HighlightReachable,
+	"CTRL_PANEL>TEMP_STATE_POPUPS": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/TempStatePopups,
+	"CTRL_PANEL>CHECKED_EVENT_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ItemsFromChecking/HBoxContainer/Events,
+	"CTRL_PANEL>CHECKED_REGULAR_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ItemsFromChecking/HBoxContainer/Regular,
+	"CTRL_PANEL>INCLUDE_UNCHECKED_EVENTS": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/IncludeUncheckedEvents,
+	"CTRL_PANEL>STARTING_ROOM": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HBoxContainer/StartingLocation,
+	"CTRL_PANEL>FAST_TRAVEL_UNLOCK": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/FastTravelUnlock,
+	"CTRL_PANEL>PROGRESSIVE_STRIDERS": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ProgressiveStriders,
+	"CTRL_PANEL>PROGRESSIVE_HARVESTER": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ProgressiveHarvester,
 	
-	"ARCHIPELAGO>PERSISTENT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
-	"ARCHIPELAGO>PERSISTENT_SENT_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantLocations,
-	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
+	"ARCHIPELAGO>PERSISTENT_ITEMS": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems,
+	"ARCHIPELAGO>PERSISTENT_SENT_ITEMS": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantLocations,
+	"ARCHIPELAGO>SHOW_ITEM_FLAGS": $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags,
 	"ARCHIPELAGO>ADDRESS": null,
 	"ARCHIPELAGO>PORT": null,
 	"ARCHIPELAGO>SLOT_NAME": null,
@@ -420,7 +420,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					panel.update()
 					
 					if row[columns["Room ID"]] != "ST_security_fall_P1":
-						$TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.add_item(row[columns["Room ID"]])
+						$TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HBoxContainer/StartingLocation.add_item(row[columns["Room ID"]])
 					
 					panel.astar_id = panel_id
 					astar_web.add_point(panel_id, panel.coords)
@@ -1516,9 +1516,9 @@ func _on_give_displayed_pressed() -> void:
 
 func _on_starting_location_item_selected(index: int) -> void:
 	if index == 0:
-		$TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.selected = (randi_range(1, $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.item_count))
-		index = $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.selected
-	starting_room = $TabContainer/PlayerState/ControlPanel/VBoxContainer/HBoxContainer/StartingLocation.get_item_text(index)
+		$TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HBoxContainer/StartingLocation.selected = (randi_range(1, $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HBoxContainer/StartingLocation.item_count))
+		index = $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HBoxContainer/StartingLocation.selected
+	starting_room = $TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HBoxContainer/StartingLocation.get_item_text(index)
 	update_reachable()
 	update_transitions.emit()
 	update_map()
@@ -1549,7 +1549,7 @@ func _on_double_checker_toggled(toggled_on: bool) -> void:
 
 
 func _on_deathlink_send_pressed() -> void:
-	Globals.send_deathlink($TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink/Cause.text)
+	Globals.send_deathlink($TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink/Cause.text)
 
 
 func _on_fast_travel_unlock_toggled(toggled_on: bool) -> void:
