@@ -1522,7 +1522,9 @@ func _on_starting_location_item_selected(index: int) -> void:
 	update_transitions.emit()
 	update_map()
 	await get_tree().process_frame
-	get_room_panel(starting_room).point_node.scale = Vector2.ONE * 2
+	var panel := get_room_panel(starting_room)
+	if panel != null:
+		panel.point_node.scale = Vector2.ONE * 2
 
 
 func _on_persistent_items_toggled(toggled_on: bool) -> void:

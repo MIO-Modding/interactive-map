@@ -9,6 +9,7 @@ extends PanelContainer
 
 
 func _ready() -> void:
+	Globals.main.update_itempool.connect(update_search)
 	filter_nodes.append_array($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple.get_children())
 	for i in filter_nodes:
 		if i is OptionButton:
@@ -169,6 +170,7 @@ func update_limit() -> void:
 
 
 func update_big_panel() -> void:
+	update_grid_columns()
 	for i: Item in %ItemPool.get_children():
 		$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".remove_child(i.alternative_panel)
 		$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".add_child(i.alternative_panel)
