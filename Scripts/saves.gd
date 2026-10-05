@@ -335,9 +335,10 @@ func overwrite_file(old_save: String, new_save: String) -> void:
 	if mio_saves_path.is_empty():
 		return
 	var data: String
-	data = FileAccess.open(mio_saves_path % new_save, FileAccess.READ).get_as_text()
-	var new_file := FileAccess.open(mio_saves_path % old_save, FileAccess.WRITE)
-	new_file.store_string(data)
+	if FileAccess.file_exists(mio_saves_path % old_save) and FileAccess.file_exists(mio_saves_path % new_save):
+		data = FileAccess.open(mio_saves_path % new_save, FileAccess.READ).get_as_text()
+		var new_file := FileAccess.open(mio_saves_path % old_save, FileAccess.WRITE)
+		new_file.store_string(data)
 
 
 func set_slot(index: int, file_name: String) -> void:

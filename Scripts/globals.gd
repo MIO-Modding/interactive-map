@@ -259,7 +259,7 @@ func trigger_popup(text: String, color := Color.WHITE, PERSISTENT := false, is_i
 	for i in other_buttons:
 		i.pressed.connect(delete_popup, CONNECT_ONE_SHOT)
 		container.add_child(i)
-	main.get_node("VBoxContainer").add_child(popup)
+	main.get_node("PopupContainer").add_child(popup)
 	var set_label_size = func():
 		label.custom_minimum_size.x = minf(get_viewport().get_visible_rect().size.x - (container.size.x - label.size.x), label.size.x)
 	set_label_size.call()
@@ -273,7 +273,7 @@ func trigger_popup(text: String, color := Color.WHITE, PERSISTENT := false, is_i
 		return
 	await get_tree().create_timer(3).timeout
 	if is_instance_valid(popup):
-		if popup.get_parent() == main.get_node("VBoxContainer"):
+		if popup.get_parent() == main.get_node("PopupContainer"):
 			delete_popup.call()
 
 

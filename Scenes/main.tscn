@@ -1524,7 +1524,12 @@ layout_mode = 2
 text = "This Implementation's Archipelago Discord Thread"
 uri = "https://github.com/MIO-Modding/manual-randomizer"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319909072]
+[node name="GodotAP" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=516461691]
+layout_mode = 2
+text = "GodotAP (library for archipelago)"
+uri = "https://github.com/EmilyV99/GodotAP"
+
+[node name="PopupContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -1598,7 +1603,7 @@ text = "Skip (I know what I'm doing)"
 
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable" to="." method="_on_highlight_reachable_toggled"]
-[connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems" to="." method="_on_persistant_items_toggled"]
+[connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems" to="." method="_on_persistent_items_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/ItemFlags" to="." method="_on_item_flags_toggled"]
 [connection signal="pressed" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ArchipelagoSettings/VBoxContainer/DeathLink/Send" to="." method="_on_deathlink_send_pressed"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/IncludeUncheckedEvents" to="." method="_on_include_unchecked_events_toggled"]

@@ -244,6 +244,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 
 
 func _ready() -> void:
+	print("ready")
 	add_scrollbar_backgrounds()
 	if OS.has_feature("web_ios") or OS.has_feature("web_android"):
 		get_tree().root.content_scale_factor = 2
@@ -256,6 +257,7 @@ func _ready() -> void:
 	rotation_changed.connect(update_map)
 	update_transitions.connect(update_go_mode)
 	
+	print("loading ap client")
 	var client = preload("res://godot_ap/ui/common_client.tscn").instantiate()
 	Archipelago.load_console(client, false)
 	get_window().theme = window_theme
@@ -283,16 +285,21 @@ func _ready() -> void:
 	preferences_to_save["ARCHIPELAGO>SLOT_NAME"] = content_box.get_node("Slot_Box")
 	preferences_to_save["ARCHIPELAGO>IS_MANUAL"] = checkbox
 	
+	print("waiting")
 	await get_tree().process_frame
 	get_node("TabContainer").get_child(0).get_child(0).focus_mode = Control.FOCUS_CLICK
-	
+	print("waiting again")
 	await get_tree().process_frame
 	
+	print("preference time")
 	for i in preferences_to_save:
+		print("preference: ", i)
 		default_preferences[i] = get_preference(i)
 	for i in non_node_preferences:
+		print("npreference: ", i)
 		default_preferences[i] = non_node_preferences[i]
 	
+	print("loading preferences")
 	load_preferences()
 	for i in preferences_to_save.values():
 		if i is CheckBox or i is CheckButton:
@@ -304,7 +311,9 @@ func _ready() -> void:
 		elif i is Slider:
 			i.drag_ended.connect(func(b: bool): if b: save_all_preferences())
 	
+	print("requesting")
 	request_data()
+	print("after requesting")
 	
 	finished_requesting.connect(run_other_requests, CONNECT_ONE_SHOT)
 
@@ -361,7 +370,7 @@ func iterate_requests(result: int, response_code: int, headers: PackedStringArra
 	await on_finished_request(result, response_code, headers, body, kinds[0])
 	kinds.remove_at(0)
 	if kinds.is_empty():
-		for i in $VBoxContainer.get_children():
+		for i in $PopupContainer.get_children():
 			i.queue_free()
 		$LoadingScreen.visible = false
 		finished_requesting.emit()

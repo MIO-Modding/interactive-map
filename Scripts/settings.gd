@@ -46,7 +46,8 @@ func toggle_all_shown_tabs(toggled_on: bool) -> void:
 
 
 func toggle_tab_by_name(toggled_on: bool, tab_name: String) -> void:
-	toggle_tab_with_set(toggled_on, get_parent().get_node(tab_name).get_index())
+	if get_parent().has_node(tab_name):
+		toggle_tab_with_set(toggled_on, get_parent().get_node(tab_name).get_index())
 
 
 func choose_tab_set(set_list: Array[String]) -> void:
