@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://1bby82fu8vdu"]
+
+[ext_resource type="Script" uid="uid://6lsfmple1071" path="res://Scripts/alternative_item_panel.gd" id="1_aol26"]
+
+[node name="AlternativeItemPanel" type="PanelContainer" unique_id=249965097]
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 3
+script = ExtResource("1_aol26")
+
+[node name="H" type="HBoxContainer" parent="." unique_id=2054956645]
+layout_mode = 2
+
+[node name="Sprite" type="TextureRect" parent="H" unique_id=1246433800]
+layout_mode = 2
+expand_mode = 3
+stretch_mode = 4
+
+[node name="Name" type="Label" parent="H" unique_id=544123756]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)

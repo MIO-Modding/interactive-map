@@ -60,6 +60,7 @@ var in_game_description: String
 var category: String
 
 var panel := ItemPanel.new()
+var alternative_panel: AlternativeItemPanel
 
 var filtered := false:
 	set(v):

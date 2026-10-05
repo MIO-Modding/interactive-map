@@ -251,6 +251,10 @@ theme_override_font_sizes/font_size = 20
 text = "Items"
 horizontal_alignment = 1
 
+[node name="GridView" type="Button" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=319729722]
+layout_mode = 2
+text = "Open Grid View"
+
 [node name="Operations" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=154488815]
 layout_mode = 2
 title = "Search / Filter / Sort / Map / Limit"
@@ -422,8 +426,21 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/PlayerState/BigItemsPanel" unique_id=853063149]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/PlayerState/BigItemsPanel" unique_id=539896904]
 layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/PlayerState/BigItemsPanel/VBoxContainer" unique_id=853063149]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GridContainer" type="GridContainer" parent="TabContainer/PlayerState/BigItemsPanel/VBoxContainer/ScrollContainer" unique_id=853181759]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 3
+
+[node name="Close" type="Button" parent="TabContainer/PlayerState/BigItemsPanel/VBoxContainer" unique_id=1838575568]
+layout_mode = 2
+text = "Close"
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
 visible = false
@@ -1627,6 +1644,8 @@ text = "Skip (I know what I'm doing)"
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/FastTravelUnlock" to="." method="_on_fast_travel_unlock_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveStriders" to="." method="_on_progressive_striders_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/VBoxContainer/ProgressiveHarvester" to="." method="_on_progressive_harvester_toggled"]
+[connection signal="pressed" from="TabContainer/PlayerState/ItemsPanel/VBoxContainer/GridView" to="TabContainer/PlayerState/ItemsPanel" method="_on_grid_view_pressed"]
+[connection signal="pressed" from="TabContainer/PlayerState/BigItemsPanel/VBoxContainer/Close" to="TabContainer/PlayerState/ItemsPanel" method="_on_close_pressed"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/DoubleChecker" to="." method="_on_double_checker_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/RoomPoints" to="TabContainer/Map" method="_on_room_points_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]

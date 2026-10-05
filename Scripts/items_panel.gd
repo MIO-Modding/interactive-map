@@ -22,6 +22,7 @@ func _ready() -> void:
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/MapTo.item_selected.connect(update_mappings.unbind(1))
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/LimitTo.value_changed.connect(update_limit.unbind(1))
 	Archipelago.connected.connect(func(c: ConnectionInfo, _j: Dictionary): await get_tree().process_frame; c.obtained_item.connect(update_sort.unbind(1)))
+	get_viewport().size_changed.connect(func(): $"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".columns = floori(get_viewport_rect().size.x / 320))
 
 
 func _process(_delta: float) -> void:
@@ -159,3 +160,19 @@ func update_limit() -> void:
 	else:
 		for i: Item in %ItemPool.get_children():
 			i.limited = false
+
+
+func update_big_panel() -> void:
+	for i: Item in %ItemPool.get_children():
+		$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".remove_child(i.alternative_panel)
+		$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".add_child(i.alternative_panel)
+		i.alternative_panel.update()
+
+
+func _on_grid_view_pressed() -> void:
+	$"../BigItemsPanel".show()
+	update_big_panel()
+
+
+func _on_close_pressed() -> void:
+	$"../BigItemsPanel".hide()

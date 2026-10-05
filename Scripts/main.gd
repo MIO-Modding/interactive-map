@@ -453,6 +453,10 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 							$TabContainer/Saves.old_core_dialog.append(item.save_entry)
 						all_cores.append(item.save_entry)
 					
+					item.alternative_panel = preload("res://Scenes/alternative_item_panel.tscn").instantiate()
+					item.alternative_panel.item = item
+					$TabContainer/PlayerState/BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer.add_child(item.alternative_panel)
+					
 					%ItemPool.add_child(item)
 					item.update()
 				else:
