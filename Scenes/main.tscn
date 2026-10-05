@@ -41,7 +41,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 14
+current_tab = 5
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -88,7 +88,6 @@ metadata/_tab_index = 4
 layout_mode = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -413,6 +412,18 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="BigItemsPanel" type="PanelContainer" parent="TabContainer/PlayerState" unique_id=371719587]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/PlayerState/BigItemsPanel" unique_id=853063149]
+layout_mode = 2
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
 visible = false
@@ -1449,6 +1460,7 @@ grow_vertical = 2
 layout_mode = 2
 
 [node name="Links" type="Control" parent="TabContainer" unique_id=2045465693]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 14
 
