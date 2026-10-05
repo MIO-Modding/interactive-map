@@ -43,6 +43,7 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 			i.get_node("Checked").disabled = true
 	Archipelago.conn.obtained_item.connect(get_item)
 	Archipelago.conn.force_scout_all()
+	Archipelago.conn.bounce.connect(receive_bounce)
 	if is_manual:
 		Archipelago.set_deathlink(Archipelago.conn.slot_data["death_link"])
 	Archipelago.conn.deathlink.connect(receive_deathlink)
@@ -62,17 +63,12 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 	main.update_itempool.emit()
 	
 	await get_tree().process_frame
-	for i in main.get_node("VBoxContainer").get_children():
+	for i in main.get_node("PopupContainer").get_children():
 		i.queue_free()
 	Archipelago.conn.obtained_item.connect(func(e: NetworkItem): ap_items_recieved_this_session.append(Main.PlayerState.convert_if_manual(e.get_name())))
-	#set_datastorage("EVENTS", [], [])
-	get_datastorage("events", func(e):
-			if e == null: 
-				set_datastorage("events", [], [])
-			else:
-				for i in e:
-					main.player_state.ap_prog_items.append(i)
-				main.update_itempool.emit())
+	
+	try_getting_events()
+	Archipelago.conn.send_bounce({}, ["Memories in Orbit"], [Archipelago.conn.get_player_name()], [])
 
 
 func disconnect_script() -> void:
@@ -203,7 +199,7 @@ func get_yaml_option(key: String, default: Variant) -> Variant:
 
 func datastorage_prefix() -> String:
 	if Archipelago.is_ap_connected():
-		return "MioIM_%d_%d_" % [Archipelago.conn.player_id, Archipelago.conn.team_id]
+		return "Mio_%d_%d_" % [Archipelago.conn.player_id, Archipelago.conn.team_id]
 	else:
 		return ""
 
@@ -223,6 +219,26 @@ func set_datastorage(key: String, value: Variant, default: Variant, operation :=
 			]
 		}
 		Archipelago.send_command("Set", args)
+
+
+func try_getting_events() -> void:
+	get_datastorage("events", func(e):
+			if e == null: 
+				set_datastorage("events", [], [])
+			else:
+				for i in e:
+					main.player_state.ap_prog_items.append(i)
+				main.update_itempool.emit())
+
+
+func receive_bounce(json: Dictionary) -> void:
+	if "games" in json and "slots" in json and "data" in json:
+		if "Memories in Orbit" in json["games"] and Archipelago.conn.get_player_name() in json["slots"]:
+			if "bounce_type" in json["data"]:
+				match json["data"]["bounce_type"]:
+					"UpdateEvents":
+						try_getting_events()
+	print(json)
 
 
 func trigger_popup(text: String, color := Color.WHITE, PERSISTENT := false, is_item := false, other_buttons: Array[Button] = []) -> void:

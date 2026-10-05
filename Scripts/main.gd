@@ -218,6 +218,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	
 	"CTRL_PANEL>HIGHLIGHT": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightToggle,
 	"CTRL_PANEL>HIGHLIGHT_REACHABLE": $TabContainer/PlayerState/ControlPanel/VBoxContainer/HighlightReachable,
+	"CTRL_PANEL>TEMP_STATE_POPUPS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/TempStatePopups,
 	"CTRL_PANEL>CHECKED_EVENT_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer/Events,
 	"CTRL_PANEL>CHECKED_REGULAR_LOCATIONS_GIVE_ITEMS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/ItemsFromChecking/HBoxContainer/Regular,
 	"CTRL_PANEL>INCLUDE_UNCHECKED_EVENTS": $TabContainer/PlayerState/ControlPanel/VBoxContainer/IncludeUncheckedEvents,

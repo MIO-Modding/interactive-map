@@ -29,13 +29,14 @@ func _ready() -> void:
 	else:
 		Globals.main.tree_exiting.connect(set_temp_state)
 	
-	if state_exists("temp"):
+	await Globals.main.finished_requesting
+	if state_exists("temp") and Globals.main.get_preference("CTRL_PANEL>TEMP_STATE_POPUPS"):
 		var button := Button.new()
 		button.text = "Yes"
 		button.pressed.connect(load_state.bind("temp"), CONNECT_ONE_SHOT)
 		var button_array: Array[Button]
 		button_array.append(button)
-		Globals.main.finished_requesting.connect(Globals.trigger_popup.bind("Load the temporary player state?", Color.AQUA, true, false, button_array))
+		Globals.trigger_popup("Load the temporary player state?", Color.AQUA, true, false, button_array)
 
 
 func update_display() -> void:

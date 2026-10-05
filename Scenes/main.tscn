@@ -119,6 +119,10 @@ focus_mode = 1
 button_pressed = true
 text = "Highlight by reachable"
 
+[node name="TempStatePopups" type="CheckButton" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=884934042]
+layout_mode = 2
+text = "Popups for temporary states"
+
 [node name="ArchipelagoSettings" type="FoldableContainer" parent="TabContainer/PlayerState/ControlPanel/VBoxContainer" unique_id=575212038]
 layout_mode = 2
 title = "Archipelago Settings"
