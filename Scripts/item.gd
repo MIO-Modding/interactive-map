@@ -70,6 +70,10 @@ var limited := false:
 	set(v):
 		limited = v
 		update_visible()
+var highlighted := true:
+	set(v):
+		highlighted = v
+		modulate = Color.WHITE if v else Color(0.5, 0.5, 0.5)
 
 
 func _ready() -> void:

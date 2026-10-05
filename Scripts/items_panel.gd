@@ -4,6 +4,7 @@ extends PanelContainer
 @onready var filter_nodes: Array[Control] = [
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search,
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/EntryOption,
+	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/HighlightInstead,
 ]
 
 
@@ -16,6 +17,10 @@ func _ready() -> void:
 			i.text_changed.connect(update_search.unbind(1))
 		elif i is SpinBox:
 			i.value_changed.connect(update_search.unbind(1))
+		elif i is CheckButton:
+			i.pressed.connect(update_search)
+		elif i is CheckBox:
+			i.pressed.connect(update_search)
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/CategoryFilter/ToggleGrid.toggle_toggled.connect(update_search.unbind(2))
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/Sort.item_selected.connect(update_sort.unbind(1))
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/ReverseSort.toggled.connect(update_sort.unbind(1))
@@ -32,61 +37,62 @@ func _process(_delta: float) -> void:
 func update_search() -> void:
 	for i: Item in %ItemPool.get_children():
 		i.show()
+		i.highlighted = true
 		
 		if not $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search.text.is_empty():
 			match $VBoxContainer/Operations/ScrollContainer/VBoxContainer/EntryOption.selected:
 				0:
 					if not i.item_name.containsn($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search.text):
-						i.filtered = true
+						filter_item(i)
 				1:
 					if not i.save_entry.containsn($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search.text):
-						i.filtered = true
+						filter_item(i)
 				2:
 					if not i.room.containsn($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search.text):
-						i.filtered = true
+						filter_item(i)
 		
 		match $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/TypeOption.selected:
 			1:
 				if i.type != Item.ItemTypes.ITEM:
-					i.filtered = true
+					filter_item(i)
 			2:
 				if i.type != Item.ItemTypes.EVENT:
-					i.filtered = true
+					filter_item(i)
 		
 		if $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/ClassOption.selected > 0:
 			if i.classification != $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/ClassOption.selected - 1:
-				i.filtered = true
+				filter_item(i)
 		
 		match $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/HasButton.selected:
 			1:
 				if not Globals.main.player_state.prog_items.has(i.item_name):
-					i.filtered = true
+					filter_item(i)
 			2:
 				if Globals.main.player_state.prog_items.has(i.item_name):
-					i.filtered = true
+					filter_item(i)
 		
 		match $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/APHasButton.selected:
 			1:
 				if not Globals.main.player_state.ap_prog_items.has(i.item_name):
-					i.filtered = true
+					filter_item(i)
 			2:
 				if Globals.ap_items_recieved_this_session.has(i.item_name):
-					i.filtered = true
+					filter_item(i)
 				if not Globals.main.player_state.ap_prog_items.has(i.item_name):
-					i.filtered = true
+					filter_item(i)
 			3:
 				if not Globals.ap_items_recieved_this_session.has(i.item_name):
-					i.filtered = true
+					filter_item(i)
 			4:
 				if Globals.main.player_state.ap_prog_items.has(i.item_name):
-					i.filtered = true
+					filter_item(i)
 		
 		if $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/CategoryOption.selected > 0:
 			if i.category != $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/CategoryOption.get_item_text($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple/CategoryOption.selected):
-				i.filtered = true
+				filter_item(i)
 		
 		if not i.category in $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/CategoryFilter/ToggleGrid.get_toggled_toggles():
-			i.filtered = true
+			filter_item(i)
 
 
 func update_sort() -> void:
@@ -167,6 +173,13 @@ func update_big_panel() -> void:
 		$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".remove_child(i.alternative_panel)
 		$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".add_child(i.alternative_panel)
 		i.alternative_panel.update()
+
+
+func filter_item(item: Item) -> void:
+	if $VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/HighlightInstead.button_pressed:
+		item.highlighted = false
+	else:
+		item.filtered = true
 
 
 func _on_grid_view_pressed() -> void:

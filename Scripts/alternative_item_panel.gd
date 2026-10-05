@@ -20,6 +20,7 @@ func setup() -> void:
 func update() -> void:
 	$H/Name.text = item.get_node("Name").text
 	visible = item.visible
+	modulate = Color.WHITE if item.highlighted else Color(0.5, 0.5, 0.5)
 
 
 func set_texture() -> void:

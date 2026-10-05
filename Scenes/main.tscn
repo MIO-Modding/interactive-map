@@ -377,6 +377,10 @@ all_toggles = Dictionary[String, bool]({
 toggle_for_all_default_value = true
 toggle_for_all = true
 
+[node name="HighlightInstead" type="CheckButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box" unique_id=633167823]
+layout_mode = 2
+text = "Highlight Instead of Filtering"
+
 [node name="Sort" type="OptionButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer/Operations/ScrollContainer/VBoxContainer" unique_id=756726446]
 layout_mode = 2
 selected = 0
