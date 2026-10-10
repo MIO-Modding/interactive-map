@@ -18,6 +18,8 @@ var is_solo_rando := false
 
 
 func _ready() -> void:
+	if not has_node("/root/Main"):
+		return
 	main = get_node("/root/Main")
 	Archipelago.connected.connect(connect_script)
 	Archipelago.disconnected.connect(disconnect_script)

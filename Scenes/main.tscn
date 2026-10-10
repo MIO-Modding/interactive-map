@@ -400,7 +400,7 @@ layout_mode = 2
 columns = 2
 script = ExtResource("4_h1bgf")
 all_toggles = Dictionary[String, bool]({
-"All": false
+"All": true
 })
 toggle_for_all_default_value = true
 toggle_for_all = true
