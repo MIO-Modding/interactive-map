@@ -240,9 +240,18 @@ func receive_bounce(json: Dictionary) -> void:
 				match json["data"]["bounce_type"]:
 					"UpdateEvents":
 						try_getting_events()
+					"TriggerPopup":
+						if "text" in json["data"]:
+							var color := Color.WHITE
+							var persistent := false
+							if "color" in json["data"]:
+								color = Color.from_string(json["data"]["color"], color)
+							if "persistant" in json["data"]:
+								persistent = json["data"]["persistent"]
+							trigger_popup(json["data"]["text"], color, persistent)
 
 
-func trigger_popup(text: String, color := Color.WHITE, PERSISTENT := false, is_item := false, other_buttons: Array[Button] = []) -> void:
+func trigger_popup(text: String, color := Color.WHITE, persistent := false, is_item := false, other_buttons: Array[Button] = []) -> void:
 	var popup := PanelContainer.new()
 	var delete_popup: Callable = popup.reparent.bind(main.get_node("TabContainer/PopupHistory/ScrollContainer/VBoxContainer"))
 	var container := HBoxContainer.new()
@@ -268,9 +277,9 @@ func trigger_popup(text: String, color := Color.WHITE, PERSISTENT := false, is_i
 			
 			label.label_settings.font_color = Item.COLORS[node.classification]
 	
-	if (is_item and main.persistent_items) or PERSISTENT:
+	if (is_item and main.persistent_items) or persistent:
 		var button := Button.new()
-		button.text = "Dismiss" if PERSISTENT else "Added?"
+		button.text = "Dismiss" if persistent else "Added?"
 		button.pressed.connect(delete_popup, CONNECT_ONE_SHOT)
 		container.add_child(button)
 	for i in other_buttons:
@@ -286,7 +295,7 @@ func trigger_popup(text: String, color := Color.WHITE, PERSISTENT := false, is_i
 	
 	print_rich("[color=%s]%s[/color]" % [label.label_settings.font_color.to_html(false), text])
 	
-	if (is_item and main.persistent_items) or PERSISTENT or not other_buttons.is_empty():
+	if (is_item and main.persistent_items) or persistent or not other_buttons.is_empty():
 		return
 	await get_tree().create_timer(3).timeout
 	if is_instance_valid(popup):
