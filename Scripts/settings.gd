@@ -87,7 +87,7 @@ func request_ap_data(version: String) -> void:
 		await get_tree().process_frame
 	
 	Globals.main.requester_busy = true
-	Globals.main.get_child(-1).request_completed.connect(recieve_ap_data.bind(version))
+	Globals.main.get_child(-1).request_completed.connect(recieve_ap_data.bind(version), CONNECT_ONE_SHOT)
 	Globals.main.get_child(-1).request("https://github.com/%s/releases/download/v%s/devsheet.xlsx" % [app_res.repo, version])
 
 
@@ -101,7 +101,7 @@ func recieve_ap_data(_result: int, response_code: int, _headers: PackedStringArr
 	var data := XlsxParser.parse_data(body)
 	for sheet: String in data["sheets"]:
 		var lowered: String = sheet.to_lower()
-		if lowered in Main.DATA_LINKS:
+		if lowered.replace("bosscombat", "boss/combat") in Main.DATA_LINKS:
 			var file := FileAccess.open("%s/%s.csv" % [folder_path, lowered], FileAccess.WRITE)
 			file.store_csv_line(PackedStringArray(data["sheets"][sheet]["headers"]))
 			for row: PackedStringArray in data["sheets"][sheet]["rows"]:

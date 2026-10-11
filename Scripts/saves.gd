@@ -151,7 +151,8 @@ func grab_overrides(from_folder: String = "") -> Dictionary[String, String]:
 	var file_names: Array[String]
 	file_names.assign(DirAccess.get_files_at(from_folder))
 	for file in file_names:
-		result[file.get_basename()] = FileAccess.get_file_as_string("%s/%s.csv" % [from_folder, file.get_basename()])
+		var data: String = FileAccess.get_file_as_string("%s/%s.csv" % [from_folder, file.get_basename()])
+		result[(file.replace("bosscombat", "boss/combat")).get_basename()] = data
 	
 	return result
 
