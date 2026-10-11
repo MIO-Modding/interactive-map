@@ -120,6 +120,12 @@ const MEL_LEVELS: Array[String] = [
 ]
 
 
+var applications: Array[Application] = [
+	Application.new("Interactive Map", "MIO-Modding/interactive-map", [], "SEEN_PATCH_NOTES"),
+	Application.new("Manual Randomizer", "MIO-Modding/manual-randomizer", [], "MANUAL_PATCH_NOTES"),
+	Application.new("Mio Archipelago", "ShackledMars261/mio-archipelago", [], "AP_PATCH_NOTES"),
+]
+
 var all_cores: Array[String] = []
 var all_event_items: Array[String] = []
 var include_unchecked_events := false
@@ -141,6 +147,8 @@ var location_requirements_sheet: Array[Array]
 var combat_requirements_sheet: Array[Array]
 ## The values of the non location components sheet, as a 2D array of strings.
 var non_location_components_sheet: Array[Array]
+
+var requester_busy: bool = true
 
 ## Wether to highlight rows of sheets that their logic can be completed
 var highlight_rows_in_logic := true
@@ -189,13 +197,11 @@ var wheel_rotation := "0":
 		wheel_rotation = v
 		rotation_changed.emit()
 
-var all_release_tags: Array[String]
-var manual_release_tags: Array[String]
-
 var default_preferences: Dictionary[String, Variant] = {}
 var non_node_preferences: Dictionary[String, Variant] = {
-	"MISC>SEEN_PATCH_NOTES": "0.0.0",
-	"MISC>MANUAL_PATCH_NOTES": "0.0.0",
+	"UPDATES>SEEN_PATCH_NOTES": "0.0.0",
+	"UPDATES>MANUAL_PATCH_NOTES": "0.0.0",
+	"UPDATES>AP_PATCH_NOTES": "0.0.0",
 }
 
 ## The save keys to preference nodes
@@ -236,11 +242,13 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"ARCHIPELAGO>IS_MANUAL": null,
 	
 	"SETTINGS>VISIBLE_TABS": $TabContainer/Settings,
-	"SETTINGS>DATA_OVERRIDE_MODE": $TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer/DataOverrideMode,
 	
 	"GRAPHICS>UI_SCALE": $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale,
 	"GRAPHICS>UI_SCALE_HOTKEYS": $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScaleHotkeys,
 	"GRAPHICS>POPUPS_FONT_SIZE": $TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/PopupScale,
+	
+	"DATA>DATA_OVERRIDE_MODE": $TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/HBoxContainer/DataOverrideMode,
+	"DATA>USE_AP_DATA_AS_OVERRIDE_WHEN_PLAYING": $TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/OverrideWithAPData,
 }
 
 
@@ -256,6 +264,7 @@ func _ready() -> void:
 	update_itempool.connect(update_reachable)
 	rotation_changed.connect(update_map)
 	update_transitions.connect(update_go_mode)
+	finished_other_requests.connect(func(): requester_busy = false)
 	
 	var client = preload("res://godot_ap/ui/common_client.tscn").instantiate()
 	Archipelago.load_console(client, false)
@@ -333,7 +342,7 @@ func request_data():
 	
 	var non_overrid_sheets: Array[String] = DATA_LINKS.keys()
 	var overrides: Dictionary[String, String] = get_node("TabContainer/Saves").grab_overrides()
-	match $TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer/DataOverrideMode.selected:
+	match $TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/HBoxContainer/DataOverrideMode.selected:
 		0:
 			overrides.clear()
 		1:
@@ -616,18 +625,13 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 func run_other_requests() -> void:
 	await request_all_releases()
 	
-	if non_node_preferences["MISC>SEEN_PATCH_NOTES"] != all_release_tags[0]:
-		request_release_notes()
-		non_node_preferences["MISC>SEEN_PATCH_NOTES"] = all_release_tags[0]
-		save_all_preferences()
-		
-		await get_child(-1).request_completed
-	if non_node_preferences["MISC>MANUAL_PATCH_NOTES"] != manual_release_tags[0]:
-		request_release_notes("latest", true)
-		non_node_preferences["MISC>MANUAL_PATCH_NOTES"] = manual_release_tags[0]
-		save_all_preferences()
-		
-		await get_child(-1).request_completed
+	
+	for app: Application in applications:
+		if non_node_preferences["UPDATES>" + app.patch_notes_preference_entry] != app.release_tags[0]:
+			request_release_notes("latest", app)
+			non_node_preferences["UPDATES>" + app.patch_notes_preference_entry] = app.release_tags[0]
+			save_all_preferences()
+			await get_child(-1).request_completed
 	
 	request_bingo()
 	await get_child(-1).request_completed
@@ -636,20 +640,24 @@ func run_other_requests() -> void:
 
 
 ## Requests release notes from github
-func request_release_notes(target_release := "latest", manual := false) -> void:
+func request_release_notes(target_release := "latest", application: Application = null) -> void:
 	if target_release != "latest" and not target_release.contains("tag/"):
 		target_release = "tag/" + target_release
-	get_child(-1).request_completed.connect(on_manual_release_notes_recieved if manual else on_release_notes_recieved, CONNECT_ONE_SHOT)
-	get_child(-1).request(("https://api.github.com/repos/MIO-Modding/%s/releases/" % ("manual-randomizer" if manual else "interactive-map")) + target_release)
+	var connector: Callable = func(_r, _r_c, _h, body): make_release_notes_page(body, application.app_name + " ")
+	var repo_name: String = application.repo
+	if application.app_name == "Interactive Map":
+		connector = on_release_notes_recieved
+	get_child(-1).request_completed.connect(connector, CONNECT_ONE_SHOT)
+	get_child(-1).request(("https://api.github.com/repos/%s/releases/" % repo_name) + target_release)
 
 
-func on_manual_release_notes_recieved(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+func make_release_notes_page(body: PackedByteArray, name_prefix: String) -> void:
 	var text := body.get_string_from_utf8()
 	var json: Dictionary = JSON.parse_string(text)
 	
 	var page := InfoPage.new()
 	page.text = json["body"]
-	page.name = "Manual Randomizer " + json["name"]
+	page.name = name_prefix + json["name"]
 	$TabContainer/Info.add_page_node(page)
 	$TabContainer/Info.select_last_page()
 
@@ -662,7 +670,7 @@ func on_release_notes_recieved(_result: int, _response_code: int, _headers: Pack
 	var page := InfoPage.new()
 	page.text = "**Mio Interactive Map " + json["body"].trim_prefix("**")
 	page.name = page.text.get_slice("**", 1)
-	if is_version_less(ProjectSettings.get_setting("application/config/version"), non_node_preferences["MISC>SEEN_PATCH_NOTES"]):
+	if is_version_less(ProjectSettings.get_setting("application/config/version"), non_node_preferences["UPDATES>SEEN_PATCH_NOTES"]):
 		page.text += "\n\nThis version is more recent than the one you have installed, you should update to it."
 	$TabContainer/Info.add_page_node(page)
 	$TabContainer/Info.select_last_page()
@@ -670,18 +678,14 @@ func on_release_notes_recieved(_result: int, _response_code: int, _headers: Pack
 
 ## Requests a list of all releases from github
 func request_all_releases() -> void:
-	var repos: Dictionary[String, Array] = {"interactive-map": all_release_tags, "manual-randomizer": manual_release_tags}
-	for i in repos:
-		var list: Array[String]
-		list = repos[i]
-		
-		get_child(-1).request_completed.connect(on_releases_recieved.bind(list), CONNECT_ONE_SHOT)
-		get_child(-1).request("https://api.github.com/repos/MIO-Modding/%s/releases?per_page=100" % i)
+	for app: Application in applications:
+		get_child(-1).request_completed.connect(on_releases_recieved.bind(app.release_tags), CONNECT_ONE_SHOT)
+		get_child(-1).request("https://api.github.com/repos/%s/releases?per_page=100" % app.repo)
 		await get_child(-1).request_completed
-		list.assign(list.map(func(e): return e.trim_prefix("v")))
+		app.release_tags.assign(app.release_tags.map(func(e): return e.trim_prefix("v")))
 
 
-## Sets [member all_release_tags] with the info from github
+## Sets [param target_list] with the info from github
 func on_releases_recieved(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray, target_list: Array[String]) -> void:
 	var text := body.get_string_from_utf8()
 	var list: Array = JSON.parse_string(text)
@@ -1738,3 +1742,18 @@ class PlayerState:
 			
 			for i in Globals.main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
 				i.update()
+
+
+class Application extends Resource:
+	
+	var app_name: String
+	var repo: String
+	var release_tags: Array[String]
+	var patch_notes_preference_entry: String
+	
+	
+	func _init(app_name_val: String = "", repo_val: String = "", release_tags_val: Array[String] = [], patch_notes_preference_entry_val: String = "") -> void:
+		app_name = app_name_val
+		repo = repo_val
+		release_tags = release_tags_val
+		patch_notes_preference_entry = patch_notes_preference_entry_val
