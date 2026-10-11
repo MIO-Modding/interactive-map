@@ -21,8 +21,8 @@ const DATA_LINKS: Dictionary[String, String] = {
 	"items": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=972951089&single=true&output=csv",
 	"transition requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=1532215933&single=true&output=csv",
 	"location requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=0&single=true&output=csv",
-	"combat requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=760960441&single=true&output=csv",
-	"non location components": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=872985578&single=true&output=csv",
+	"boss/combat requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=760960441&single=true&output=csv",
+	"non-location components": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=872985578&single=true&output=csv",
 }
 
 ## The columns used for each data set
@@ -31,8 +31,8 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"items": 10,
 	"transition requirements": 8,
 	"location requirements": 13,
-	"combat requirements": 5,
-	"non location components": 15,
+	"boss/combat requirements": 5,
+	"non-location components": 15,
 }
 
 ## The transitions that are wrapped around the map for each rotation
@@ -135,6 +135,8 @@ var overseer_connections = {}
 ## The state of this player, including items given through this client and items received through archipelago.
 static var player_state: PlayerState
 
+var ap_data_available: Array[String]
+
 ## The values of the room requirements sheet, as a 2D array of strings.
 var room_requirements_sheet: Array[Array]
 ## The values of the items sheet, as a 2D array of strings.
@@ -143,9 +145,9 @@ var items_sheet: Array[Array]
 var transition_requirements_sheet: Array[Array]
 ## The values of the location requirements sheet, as a 2D array of strings.
 var location_requirements_sheet: Array[Array]
-## The values of the combat requirements sheet, as a 2D array of strings.
+## The values of the boss/combat requirements sheet, as a 2D array of strings.
 var combat_requirements_sheet: Array[Array]
-## The values of the non location components sheet, as a 2D array of strings.
+## The values of the non-location components sheet, as a 2D array of strings.
 var non_location_components_sheet: Array[Array]
 
 var requester_busy: bool = true
@@ -354,13 +356,14 @@ func request_data():
 		2:
 			pass
 	
-	requester.request_completed.connect(iterate_requests.bind(non_overrid_sheets, overrides), CONNECT_ONE_SHOT)
 	$LoadingScreen/VBoxContainer/ProgressBar.value += 1
 	var kind: String = non_overrid_sheets[0]
-	if "room requirements" in overrides:
-		on_finished_request(0, 0, [], overrides["room requirements"].to_utf8_buffer(), "room requirements")
 	$LoadingScreen/VBoxContainer/Label.text = "Requesting " + kind
-	requester.request(DATA_LINKS[kind])
+	if "room requirements" in overrides:
+		iterate_requests(0, 0, [], overrides["room requirements"].to_utf8_buffer(), non_overrid_sheets, overrides)
+	else:
+		requester.request_completed.connect(iterate_requests.bind(non_overrid_sheets, overrides), CONNECT_ONE_SHOT)
+		requester.request(DATA_LINKS[kind])
 	Globals.trigger_popup("Queued " + kind)
 
 
@@ -529,7 +532,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				reset_logic.connect(panel.reset_logic)
 				update_transitions.connect(panel.update)
 				$TabContainer/LocationRequirements/VBoxContainer.add_child(panel)
-		"combat requirements":
+		"boss/combat requirements":
 			var boss_locations: Array[LocationPanel]
 			for location: LocationPanel in $TabContainer/LocationRequirements/VBoxContainer.get_children():
 				if location.save_flag.contains("BOSS"):
@@ -569,7 +572,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				await get_tree().process_frame
 			update_map()
 			update_itempool.connect(update_map)
-		"non location components":
+		"non-location components":
 			non_location_components_sheet = non_location_components_sheet.filter(func(e): return not e[0].is_empty())
 			var skip_first := true
 			var columns := parse_header_row(non_location_components_sheet[0])
@@ -608,7 +611,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 							"location_panel": panel,
 						}
 						checkpoint_rooms[panel.save_flag] = panel.room_id
-						
+			
 			for room in overseer_connections.keys():
 				for connected in overseer_connections[room]["connected_checkpoints"]:
 					var connected_room = checkpoint_rooms[connected.strip_edges()]
@@ -618,13 +621,43 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					})
 			
 			update_map()
-			
+
+
+func clear_all_data() -> void:
+	var nodes_to_remove_children_of: Array[Node] = [
+		$TabContainer/RoomRequirements/GridContainer,
+		$TabContainer/Map/SubViewportContainer/SubViewport/Node2D/Panels,
+		$TabContainer/PlayerState/BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer,
+		%ItemPool,
+		$TabContainer/Items/GridContainer,
+		$TabContainer/TransitionRequirements/VBoxContainer,
+		$TabContainer/LocationRequirements/VBoxContainer,
+		$TabContainer/NonLocationComponents/VBoxContainer,
+	]
+	for node: Node in nodes_to_remove_children_of:
+		for child: Node in node.get_children():
+			child.queue_free()
+	var things_to_clear: Array = [
+		$TabContainer/Saves.old_core_dialog,
+		items_sheet,
+		room_requirements_sheet,
+		combat_requirements_sheet,
+		location_requirements_sheet,
+		non_location_components_sheet,
+		transition_requirements_sheet,
+		overseer_connections,
+		room_order,
+		all_cores,
+		all_event_items,
+	]
+	for thing in things_to_clear:
+		thing.clear()
+	astar_web.clear()
 
 
 ## Requests the other info needed
 func run_other_requests() -> void:
 	await request_all_releases()
-	
 	
 	for app: Application in applications:
 		if non_node_preferences["UPDATES>" + app.patch_notes_preference_entry] != app.release_tags[0]:
@@ -632,6 +665,10 @@ func run_other_requests() -> void:
 			non_node_preferences["UPDATES>" + app.patch_notes_preference_entry] = app.release_tags[0]
 			save_all_preferences()
 			await get_child(-1).request_completed
+		
+		if app.app_name == "Mio Archipelago":
+			for v: String in app.release_tags:
+				$TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Versions.add_item(v)
 	
 	request_bingo()
 	await get_child(-1).request_completed
@@ -720,11 +757,12 @@ func on_bingo_recieved(_result: int, _response_code: int, _headers: PackedString
 
 ## Fills a sheet with data from [param body], limiting the amount of columns to [param cap]
 func fill_sheet(sheet_kind: String, body: PackedByteArray, cap: int = -1) -> void:
-	for i in body.get_string_from_utf8().split("\r\n"):
+	for i in body.get_string_from_utf8().split("\n"):
+		i = i.replace("\r", "")
 		var current = row_to_list(i, cap)
 		if not is_empty_string_list(current):
 			if current[0] != "":
-				get("%s_sheet" % sheet_kind.to_snake_case()).append(current)
+				get("%s_sheet" % sheet_kind.to_snake_case().replace("boss/","")).append(current)
 
 
 ## Converts a stringified row to an array, limiting the amount of columns to [param cap]
@@ -1370,6 +1408,13 @@ func get_location_panel(serial: String) -> LocationPanel:
 func get_item_node(item_name: String) -> Item:
 	for i: Item in %ItemPool.get_children():
 		if i.item_name == item_name:
+			return i
+	return null
+
+
+func get_application_res(app_name: String) -> Application:
+	for i in applications:
+		if i.app_name == app_name:
 			return i
 	return null
 

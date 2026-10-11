@@ -1383,11 +1383,17 @@ title = "Archipelago Data"
 layout_mode = 2
 
 [node name="OverrideWithAPData" type="CheckButton" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer" unique_id=1887258492]
+visible = false
 layout_mode = 2
 text = "Use AP Data when APing"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer" unique_id=102568620]
 layout_mode = 2
+
+[node name="Load" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer" unique_id=626510831]
+layout_mode = 2
+disabled = true
+text = "Load Data"
 
 [node name="Install" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer" unique_id=104951015]
 layout_mode = 2
@@ -1749,5 +1755,8 @@ text = "Skip (I know what I'm doing)"
 [connection signal="pressed" from="TabContainer/Settings/FileLoc" to="TabContainer/Settings" method="_on_file_loc_pressed"]
 [connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer/SetPreset" to="TabContainer/Settings" method="_on_set_preset_item_selected"]
 [connection signal="drag_ended" from="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale" to="TabContainer/Settings" method="_on_ui_scale_drag_ended"]
+[connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Load" to="TabContainer/Settings" method="_on_load_pressed"]
+[connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Install" to="TabContainer/Settings" method="_on_install_ap_data_pressed"]
+[connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Versions" to="TabContainer/Settings" method="_on_versions_item_selected"]
 [connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer/RevertAll" to="TabContainer/Settings" method="_on_revert_all_pressed"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]

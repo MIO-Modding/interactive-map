@@ -119,7 +119,9 @@ static func _collect_shared_strings(p: XMLParser) -> Array:
 	var buf := ""
 	while p.read() == OK:
 		var nt := p.get_node_type()
-		var nm := p.get_node_name()
+		var nm := ""
+		if nt != XMLParser.NODE_TEXT:
+			nm = p.get_node_name()
 		if nt == XMLParser.NODE_ELEMENT:
 			if nm == "si":
 				if in_si and buf.is_empty():

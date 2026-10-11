@@ -7,6 +7,8 @@ const PRESETS: Array[Array] = [
 	["RoomRequirements", "Items", "TransitionRequirements", "LocationRequirements", "NonLocationComponents", "Links"],
 ]
 
+@onready var versions_option: OptionButton = $ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Versions
+
 
 func _ready() -> void:
 	for tab: Control in get_parent().get_children():
@@ -27,6 +29,9 @@ func _ready() -> void:
 		var box := RevertBox.new(type)
 		$ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer.add_child(box)
 	get_parent().current_tab = 6
+	await Globals.main.finished_other_requests
+	
+	update_available_ap_data()
 
 
 func tab_toggle_toggled(toggled_on: bool, tab_idx: int) -> void:
@@ -62,6 +67,49 @@ func get_visible_tabs() -> Array[String]:
 	return result
 
 
+func update_available_ap_data() -> void:
+	Globals.main.ap_data_available.clear()
+	for folder in DirAccess.get_directories_at("user://Data/APData"):
+		Globals.main.ap_data_available.append(folder)
+	
+	for i in range(versions_option.item_count):
+		versions_option.set_item_icon(i, preload("res://Sprites/ui/diamond_checked.svg") 
+				if Globals.main.ap_data_available.has(versions_option.get_item_text(i)) else preload("res://Sprites/ui/diamond.svg"))
+	
+	_on_versions_item_selected(versions_option.selected)
+
+
+func request_ap_data(version: String) -> void:
+	var app_res := Globals.main.get_application_res("Mio Archipelago")
+	assert(version in app_res.release_tags)
+	while Globals.main.requester_busy:
+		await Globals.main.get_child(-1).request_completed
+		await get_tree().process_frame
+	
+	Globals.main.requester_busy = true
+	Globals.main.get_child(-1).request_completed.connect(recieve_ap_data.bind(version))
+	Globals.main.get_child(-1).request("https://github.com/%s/releases/download/v%s/devsheet.xlsx" % [app_res.repo, version])
+
+
+func recieve_ap_data(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray, version: String) -> void:
+	Globals.main.requester_busy = false
+	if response_code == 404:
+		return
+	var folder_path: String = "user://Data/APData/" + version
+	if not DirAccess.dir_exists_absolute(folder_path):
+		DirAccess.make_dir_absolute(folder_path)
+	var data := XlsxParser.parse_data(body)
+	for sheet: String in data["sheets"]:
+		var lowered: String = sheet.to_lower()
+		if lowered in Main.DATA_LINKS:
+			var file := FileAccess.open("%s/%s.csv" % [folder_path, lowered], FileAccess.WRITE)
+			file.store_csv_line(PackedStringArray(data["sheets"][sheet]["headers"]))
+			for row: PackedStringArray in data["sheets"][sheet]["rows"]:
+				file.store_csv_line(row)
+			file.close()
+	update_available_ap_data()
+
+
 func _on_file_loc_pressed() -> void:
 	if not OS.has_feature("web"):
 		OS.shell_open(ProjectSettings.globalize_path("user://Data/"))
@@ -91,3 +139,26 @@ func _on_ui_scale_drag_ended(value_changed: bool) -> void:
 func _on_revert_all_pressed() -> void:
 	for setting in Globals.main.default_preferences:
 		Globals.main.set_preference(setting, Globals.main.default_preferences[setting])
+
+
+func _on_install_ap_data_pressed() -> void:
+	request_ap_data(versions_option.get_item_text(versions_option.selected))
+
+
+func _on_load_pressed() -> void:
+	var app_res := Globals.main.get_application_res("Mio Archipelago")
+	var version := versions_option.get_item_text(versions_option.selected)
+	assert(version in app_res.release_tags)
+	var path: String = "user://Data/APData/%s/" % version
+	assert(DirAccess.dir_exists_absolute(path))
+	
+	Globals.main.clear_all_data()
+	var overrides: Dictionary[String, String] = get_parent().get_node("Saves").grab_overrides(path)
+	for key in Main.DATA_LINKS:
+		if key in overrides:
+			Globals.main.on_finished_request(0, 0, [], overrides[key].to_utf8_buffer(), key)
+
+
+func _on_versions_item_selected(index: int) -> void:
+	var app_res := Globals.main.get_application_res("Mio Archipelago")
+	$ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Load.disabled = not versions_option.get_item_text(index) in app_res.release_tags

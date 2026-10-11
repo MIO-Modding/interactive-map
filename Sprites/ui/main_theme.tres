@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://q1j5jttubgvw" path="res://Sprites/ui/decrement.png" id="1_mw5vy"]
 [ext_resource type="FontFile" uid="uid://uuqfviuc7ns4" path="res://Speeches/Gilroy-Light.otf" id="1_nhxe1"]
 [ext_resource type="Texture2D" uid="uid://m6jesbx5jdtg" path="res://Sprites/ui/decrement_h.png" id="1_o5ahs"]
+[ext_resource type="Texture2D" uid="uid://cyy23g0iqco0b" path="res://Sprites/ui/diamond_checked.svg" id="1_w3v1t"]
 [ext_resource type="Texture2D" uid="uid://b5a8vpd8uka6h" path="res://Sprites/ui/toggle_switched.svg" id="2_5mvfg"]
 [ext_resource type="Texture2D" uid="uid://6mrwmwpyscne" path="res://Sprites/ui/incrament_h.png" id="2_52chh"]
 [ext_resource type="Texture2D" uid="uid://bakh1xlnhl6u4" path="res://Sprites/ui/incrament.png" id="2_m0k6t"]
@@ -324,6 +325,10 @@ Button/styles/focus = SubResource("StyleBoxFlat_ph50u")
 Button/styles/hover = SubResource("StyleBoxFlat_ph50u")
 Button/styles/normal = SubResource("StyleBoxFlat_ph50u")
 Button/styles/pressed = SubResource("StyleBoxFlat_pek65")
+CheckBox/icons/checked = ExtResource("1_w3v1t")
+CheckBox/icons/checked_disabled = ExtResource("1_w3v1t")
+CheckBox/icons/unchecked = ExtResource("5_n1l7y")
+CheckBox/icons/unchecked_disabled = ExtResource("5_n1l7y")
 CheckButton/colors/font_color = Color(0.9411765, 0.83137256, 0.5019608, 1)
 CheckButton/colors/font_disabled_color = Color(0.94, 0.91650003, 0.84599996, 1)
 CheckButton/colors/font_focus_color = Color(0.9411765, 0.83137256, 0.5019608, 1)

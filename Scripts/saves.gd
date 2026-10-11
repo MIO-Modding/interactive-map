@@ -16,7 +16,7 @@ var mio_saves_path: String
 
 
 func _ready() -> void:
-	for i in [STATE_PATH, SAVE_FILES_PATH, METADATA_PATH, OVERRIDES_PATH]:
+	for i in [STATE_PATH, SAVE_FILES_PATH, METADATA_PATH, OVERRIDES_PATH, "user://Data/APData/"]:
 		validate_folders(i)
 	
 	Globals.main.finished_requesting.connect(update_display)
@@ -144,12 +144,14 @@ func validate_folders(path: String) -> void:
 			DirAccess.make_dir_absolute(current_path)
 
 
-func grab_overrides() -> Dictionary[String, String]:
+func grab_overrides(from_folder: String = "") -> Dictionary[String, String]:
+	if from_folder.is_empty():
+		from_folder = OVERRIDES_PATH.trim_suffix("%s.csv")
 	var result: Dictionary[String, String]
 	var file_names: Array[String]
-	file_names.assign(DirAccess.get_files_at(OVERRIDES_PATH.trim_suffix("%s.csv")))
+	file_names.assign(DirAccess.get_files_at(from_folder))
 	for file in file_names:
-		result[file.get_basename()] = FileAccess.get_file_as_string(OVERRIDES_PATH % file.get_basename())
+		result[file.get_basename()] = FileAccess.get_file_as_string("%s/%s.csv" % [from_folder, file.get_basename()])
 	
 	return result
 
