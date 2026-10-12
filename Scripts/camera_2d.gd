@@ -11,12 +11,15 @@ var pos_last_frame: Vector2
 
 func _ready() -> void:
 	pos_last_frame = get_viewport().get_mouse_position()
+	get_viewport().size_changed.connect(set_mouse_label)
 	draw_node.draw.connect(update_shape_visualization)
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and not Input.is_action_pressed("mouse1"):
-		return
+	if event is InputEventMouseMotion:
+		set_mouse_label()
+		if not Input.is_action_pressed("mouse1"):
+			return
 	if event is InputEventJoypadMotion:
 		return
 	
@@ -47,12 +50,12 @@ func _input(event: InputEvent) -> void:
 				DisplayServer.clipboard_set(get_mouse_pos_string())
 
 
-func _process(_delta: float) -> void:
-	map_node.get_node("MousePos").text = get_mouse_pos_string() + "\nCtrl+Shift+C to copy"
-
-
 func clamp_zoom() -> void:
 	zoom = zoom.clamp(Vector2(0.5, 0.5), Vector2(30, 30))
+
+
+func set_mouse_label() -> void:
+	map_node.get_node("MousePos").text = get_mouse_pos_string() + "\nCtrl+Shift+C to copy"
 
 
 func get_mouse_pos_string() -> String:

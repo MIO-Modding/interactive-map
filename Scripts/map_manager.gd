@@ -22,25 +22,24 @@ const MAP_IMAGE_X_POSITIONS: Dictionary[String, Dictionary] = {
 	},
 }
 
-var old_size: Vector2
-
 @onready var shape_option: OptionButton = $MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/PositionContainer/VBoxContainer/ShapeOption
 
 @onready var map_node: Node2D = $SubViewportContainer/SubViewport/Node2D
 
 
-func _process(_delta: float) -> void:
+func _ready() -> void:
+	get_viewport().size_changed.connect(update_sizing)
+
+
+func update_sizing() -> void:
 	var viewport_size := get_viewport_rect().size
-	if viewport_size != old_size:
-		$SubViewportContainer/SubViewport.size = viewport_size - Vector2(0, 31)
-		$ScrollContainer.size.x = viewport_size.x
-		$ScrollContainer/PanelContainer.custom_minimum_size.x = viewport_size.x
-		
-		map_node.get_node("Camera2D").clamp_zoom()
-		$"ZoomBox/+".disabled = map_node.get_node("Camera2D").zoom >= Vector2(20, 20)
-		$"ZoomBox/-".disabled = map_node.get_node("Camera2D").zoom <= Vector2(0.5, 0.5)
-		
-		old_size = viewport_size
+	$SubViewportContainer/SubViewport.size = viewport_size - Vector2(0, 31)
+	$ScrollContainer.size.x = viewport_size.x
+	$ScrollContainer/PanelContainer.custom_minimum_size.x = viewport_size.x
+	
+	map_node.get_node("Camera2D").clamp_zoom()
+	$"ZoomBox/+".disabled = map_node.get_node("Camera2D").zoom >= Vector2(20, 20)
+	$"ZoomBox/-".disabled = map_node.get_node("Camera2D").zoom <= Vector2(0.5, 0.5)
 
 
 func update_filter() -> void:

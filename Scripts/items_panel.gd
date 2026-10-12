@@ -29,9 +29,11 @@ func _ready() -> void:
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/LimitTo.value_changed.connect(update_limit.unbind(1))
 	Archipelago.connected.connect(func(c: ConnectionInfo, _j: Dictionary): await get_tree().process_frame; c.obtained_item.connect(update_sort.unbind(1)))
 	get_viewport().size_changed.connect(update_grid_columns)
+	get_viewport().size_changed.connect(set_scroll_size)
+	$VBoxContainer/Operations/ScrollContainer/VBoxContainer.resized.connect(set_scroll_size)
 
 
-func _process(_delta: float) -> void:
+func set_scroll_size() -> void:
 	$VBoxContainer/Operations/ScrollContainer.custom_minimum_size.y = clamp($VBoxContainer/Operations/ScrollContainer/VBoxContainer.get_global_rect().size.y, 0, get_viewport_rect().size.y / 2)
 
 

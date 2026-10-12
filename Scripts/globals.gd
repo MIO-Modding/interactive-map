@@ -10,7 +10,13 @@ var ITEM_NAME_TO_ID: Dictionary[String, int]
 
 var ap_items_recieved_this_session: Array[String]
 
-var queued_refresh := false
+var queued_refresh := false:
+	set(v):
+		queued_refresh = v
+		if v:
+			await get_tree().process_frame
+			main.update_itempool.emit()
+			queued_refresh = false
 
 var is_manual := false
 
@@ -29,12 +35,6 @@ func _ready() -> void:
 	
 	await main.finished_requesting
 	ITEM_NAME_TO_ID = get_item_name_to_id()
-
-
-func _process(_delta: float) -> void:
-	if queued_refresh:
-		main.update_itempool.emit()
-		queued_refresh = false
 
 
 func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
