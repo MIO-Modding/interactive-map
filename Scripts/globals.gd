@@ -152,6 +152,8 @@ func get_location_id(location: LocationPanel) -> int:
 				serialized = serialized.replace("Nacre", "Nacre_upper")
 	else:
 		serialized = Main.PlayerState.serialize_location(location)
+		if serialized == "GA_vin_terrace_P2--(Pearl Record - No Future)":
+			serialized = "GA_vin_bridge_P1--(Pearl Record - No Future)"
 		if serialized.contains("Capucine") and not LOCATION_NAME_TO_ID.keys().has(serialized):
 			serialized = "Capucine: " + location.loc_description
 	
