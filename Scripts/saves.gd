@@ -376,21 +376,23 @@ func reset_slot_mappings() -> void:
 
 
 func update_changes_from_game() -> void:
-	if not FileAccess.file_exists(SAVES_FOLDER + "/slot_assignments.dat"):
-		return
-	var file = FileAccess.open(SAVES_FOLDER + "/slot_assignments.dat", FileAccess.READ)
-	var data: Array = JSON.parse_string(file.get_as_text())
+	return
 	
-	for i in range(3):
-		var slot_path := mio_saves_path % ("slot_%d" % i)
-		var save_file_path := mio_saves_path % data[i]
-		if FileAccess.file_exists(slot_path) and FileAccess.file_exists(save_file_path):
-			var slot_timestamp: int = FileAccess.get_modified_time(slot_path)
-			var save_file_timestamp: int = FileAccess.get_modified_time(save_file_path)
-			if slot_timestamp > save_file_timestamp:
-				overwrite_file(data[i], "slot_%d" % i)
-			else:
-				overwrite_file("slot_%d" % i, data[i])
+	#if not FileAccess.file_exists(SAVES_FOLDER + "/slot_assignments.dat"):
+		#return
+	#var file = FileAccess.open(SAVES_FOLDER + "/slot_assignments.dat", FileAccess.READ)
+	#var data: Array = JSON.parse_string(file.get_as_text())
+	#
+	#for i in range(3):
+		#var slot_path := mio_saves_path % ("slot_%d" % i)
+		#var save_file_path := mio_saves_path % data[i]
+		#if FileAccess.file_exists(slot_path) and FileAccess.file_exists(save_file_path):
+			#var slot_timestamp: int = FileAccess.get_modified_time(slot_path)
+			#var save_file_timestamp: int = FileAccess.get_modified_time(save_file_path)
+			#if slot_timestamp > save_file_timestamp:
+				#overwrite_file(data[i], "slot_%d" % i)
+			#else:
+				#overwrite_file("slot_%d" % i, data[i])
 
 
 func convert_to_og(slot: String) -> String:

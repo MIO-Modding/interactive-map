@@ -12,6 +12,8 @@ var ap_items_recieved_this_session: Array[String]
 
 var queued_refresh := false:
 	set(v):
+		if queued_refresh and v:
+			return
 		queued_refresh = v
 		if v:
 			await get_tree().process_frame
@@ -70,7 +72,7 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 	Archipelago.conn.obtained_item.connect(func(e: NetworkItem): ap_items_recieved_this_session.append(Main.PlayerState.convert_if_manual(e.get_name())))
 	
 	try_getting_events()
-	Archipelago.conn.send_bounce({}, ["Memories in Orbit"], [Archipelago.conn.get_player_name()], [])
+	#Archipelago.conn.send_bounce({}, ["Memories in Orbit"], [str(Archipelago.conn.get_player_name())], [])
 
 
 func disconnect_script() -> void:
