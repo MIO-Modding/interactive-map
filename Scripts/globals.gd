@@ -72,7 +72,7 @@ func connect_script(_conn: ConnectionInfo, _json: Dictionary) -> void:
 	Archipelago.conn.obtained_item.connect(func(e: NetworkItem): ap_items_recieved_this_session.append(Main.PlayerState.convert_if_manual(e.get_name())))
 	
 	try_getting_events()
-	#Archipelago.conn.send_bounce({}, ["Memories in Orbit"], [str(Archipelago.conn.get_player_name())], [])
+	#Archipelago.conn.send_bounce({}, ["Memories in Orbit"], [Archipelago.conn.player_id], [])
 
 
 func disconnect_script() -> void:
@@ -234,13 +234,17 @@ func try_getting_events() -> void:
 				set_datastorage("events", [], [])
 			else:
 				for i in e:
-					main.player_state.ap_prog_items.append(i)
+					if not main.player_state.ap_prog_items.has(i):
+						main.player_state.ap_prog_items.append(i)
+				for loc: LocationPanel in main.get_node("TabContainer/LocationRequirements/VBoxContainer").get_children():
+					if loc.vanilla_item in e:
+						loc.checked = true
 				main.update_itempool.emit())
 
 
 func receive_bounce(json: Dictionary) -> void:
 	if "games" in json and "slots" in json and "data" in json:
-		if "Memories in Orbit" in json["games"] and Archipelago.conn.get_player_name() in json["slots"]:
+		if Archipelago.conn.player_id in json["slots"].map(func(e): return roundi(e)):
 			if "bounce_type" in json["data"]:
 				match json["data"]["bounce_type"]:
 					"UpdateEvents":
