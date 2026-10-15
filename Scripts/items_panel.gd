@@ -1,4 +1,4 @@
-extends PanelContainer
+class_name ItemsPanel extends PanelContainer
 
 
 const CATEGORIES_TO_GROUP: Array[String] = [

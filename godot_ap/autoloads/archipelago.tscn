@@ -7,6 +7,7 @@
 script = ExtResource("2_2e7gq")
 major = 1
 minor = 2
+build = 1
 
 [sub_resource type="Resource" id="Resource_m1v20"]
 script = ExtResource("2_2e7gq")
