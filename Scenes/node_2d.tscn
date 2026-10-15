@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://8180katr04wv" path="res://Scripts/camera_2d.gd" id="1_v1qfn"]
 [ext_resource type="Texture2D" uid="uid://duu5kvjb0mgra" path="res://Sprites/map/dwellings.png" id="2_6whob"]
 [ext_resource type="Texture2D" uid="uid://c6iw0bpq6dx8v" path="res://Sprites/map/hub.png" id="2_hh5uf"]
-[ext_resource type="FontFile" uid="uid://uuqfviuc7ns4" path="res://Speeches/Gilroy-Light.otf" id="2_uybdb"]
+[ext_resource type="FontFile" uid="uid://uuqfviuc7ns4" path="res://Speeches/Fonts/Gilroy-Light.otf" id="2_uybdb"]
 [ext_resource type="Texture2D" uid="uid://djw3co0cckeuv" path="res://Sprites/map/foundations.png" id="4_6whob"]
 [ext_resource type="Texture2D" uid="uid://fe6dkemuycns" path="res://Sprites/map/city.png" id="4_u7krg"]
 [ext_resource type="Texture2D" uid="uid://5fu6us5op4s" path="res://Sprites/map/embedding.png" id="6_tx0tn"]

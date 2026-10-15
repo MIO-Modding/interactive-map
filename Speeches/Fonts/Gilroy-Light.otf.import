@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://uuqfviuc7ns4"
-path="res://.godot/imported/Gilroy-Light.otf-1f37e6aea1b5d29b4a06341f05d1276a.fontdata"
+path="res://.godot/imported/Gilroy-Light.otf-db925b22e20c2b1a8f8db4042d0f3a52.fontdata"
 
 [deps]
 
-source_file="res://Speeches/Gilroy-Light.otf"
-dest_files=["res://.godot/imported/Gilroy-Light.otf-1f37e6aea1b5d29b4a06341f05d1276a.fontdata"]
+source_file="res://Speeches/Fonts/Gilroy-Light.otf"
+dest_files=["res://.godot/imported/Gilroy-Light.otf-db925b22e20c2b1a8f8db4042d0f3a52.fontdata"]
 
 [params]
 

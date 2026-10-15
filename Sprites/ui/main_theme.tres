@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bha4ymt42iadg" path="res://Sprites/ui/toggle.svg" id="1_52chh"]
 [ext_resource type="Texture2D" uid="uid://q1j5jttubgvw" path="res://Sprites/ui/decrement.png" id="1_mw5vy"]
-[ext_resource type="FontFile" uid="uid://uuqfviuc7ns4" path="res://Speeches/Gilroy-Light.otf" id="1_nhxe1"]
+[ext_resource type="FontFile" uid="uid://uuqfviuc7ns4" path="res://Speeches/Fonts/Gilroy-Light.otf" id="1_nhxe1"]
 [ext_resource type="Texture2D" uid="uid://m6jesbx5jdtg" path="res://Sprites/ui/decrement_h.png" id="1_o5ahs"]
 [ext_resource type="Texture2D" uid="uid://cyy23g0iqco0b" path="res://Sprites/ui/diamond_checked.svg" id="1_w3v1t"]
 [ext_resource type="Texture2D" uid="uid://b5a8vpd8uka6h" path="res://Sprites/ui/toggle_switched.svg" id="2_5mvfg"]

@@ -3,6 +3,7 @@ extends Control
 
 func _ready() -> void:
 	await get_tree().process_frame
+	$VBoxContainer/Tabs/Main.text = load_page("Main")
 	$VBoxContainer/Tabs/Main.update()
 
 
@@ -21,13 +22,7 @@ func close_tab(tab: int) -> void:
 	$VBoxContainer/TabBar.remove_tab(tab)
 	
 	if $VBoxContainer/Tabs.get_child_count() <= 1:
-		var page := InfoPage.new()
-		page.name = "Main"
-		page.text = """
-#### Info Tab
-This is the main page for the Information Tab, a section of this tool that lets you see info about features in a wiki-like way.
-This feature is in no way finished."""
-		add_page_node(page)
+		add_page_node(make_new_page_from_file("Main"))
 	
 	select_tab(tab - 1)
 
@@ -57,7 +52,20 @@ func create_page(feature_info: FeaturePanel) -> InfoPage:
 
 
 func add_page_node(page: InfoPage) -> void:
-	@warning_ignore("redundant_await")
 	$VBoxContainer/TabBar.add_tab(str(page.name))
 	$VBoxContainer/Tabs.add_child(page)
 	page.update()
+
+
+func load_page(page_name: String) -> String:
+	var path: String = "res://Speeches/InfoPages/%s.md" % page_name.to_snake_case()
+	if FileAccess.file_exists(path):
+		return FileAccess.open(path, FileAccess.READ).get_as_text()
+	return ""
+
+
+func make_new_page_from_file(page_name: String) -> InfoPage:
+	var page := InfoPage.new()
+	page.name = page_name
+	page.text = load_page(page_name)
+	return page
