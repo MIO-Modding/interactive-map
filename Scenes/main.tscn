@@ -1073,6 +1073,13 @@ text = "Player Name:"
 layout_mode = 2
 text = "mio_player"
 
+[node name="ManualLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=801544892]
+layout_mode = 2
+text = "Manual:"
+
+[node name="Manual" type="CheckButton" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=145756960]
+layout_mode = 2
+
 [node name="LogicLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1110468907]
 layout_mode = 2
 text = "Logic Level:"
@@ -1599,9 +1606,14 @@ layout_mode = 2
 text = "Wiki"
 uri = "https://mio.wiki.gg"
 
+[node name="AP" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=20433084]
+layout_mode = 2
+text = "Archipelago"
+uri = "https://archipelago.gg"
+
 [node name="APWiki" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=406227015]
 layout_mode = 2
-text = "Archipelago Wiki"
+text = "Archipelago Wiki Page"
 uri = "https://archipelago.miraheze.org/wiki/MIO:_Memories_in_Orbit"
 
 [node name="APRepo" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=727653905]

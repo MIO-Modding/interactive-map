@@ -58,9 +58,10 @@ func update_alignment() -> void:
 
 
 func construct_yaml() -> String:
+	var game_name: String = "Manual_MIO_Samwell" if $SplitContainer/Options/Control/GridContainer/Manual.button_pressed else "Memories in Orbit"
 	return YAML_FILE_LAYOUT % [
 		$SplitContainer/Options/Control/GridContainer/Name.text,
-		"Manual_MIO_Samwell", "Manual_MIO_Samwell",
+		game_name, game_name,
 		join_dictionary(get_current_options(), ": ", "\n  ", "\n  ")
 	]
 
