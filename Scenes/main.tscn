@@ -51,7 +51,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 14
+current_tab = 11
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -1276,7 +1276,6 @@ text = "AP Players Folder"
 icon = ExtResource("14_k12tt")
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
-visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
@@ -1286,10 +1285,24 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -8.0
-offset_bottom = 8.0
+offset_left = -140.0
+offset_bottom = 38.0
 grow_horizontal = 0
+text = "Browse Files"
 icon = ExtResource("14_k12tt")
+
+[node name="Quit" type="Button" parent="TabContainer/Settings" unique_id=364558166]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -140.0
+offset_top = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Quit Application"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings" unique_id=1865609048]
 layout_mode = 1
@@ -1428,6 +1441,10 @@ layout_mode = 2
 layout_mode = 2
 text = "All"
 
+[node name="DeleteAll" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer" unique_id=1581868279]
+layout_mode = 2
+text = "Delete All Preferences (and quit)"
+
 [node name="Bingo" type="Control" parent="TabContainer" unique_id=756016963]
 visible = false
 layout_mode = 2
@@ -1556,6 +1573,7 @@ grow_vertical = 2
 layout_mode = 2
 
 [node name="Links" type="Control" parent="TabContainer" unique_id=2045465693]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 14
 
@@ -1840,12 +1858,14 @@ text = "Confirm"
 [connection signal="pressed" from="TabContainer/Rando/OpenFolder" to="TabContainer/Rando" method="_on_open_folder_pressed"]
 [connection signal="pressed" from="TabContainer/Rando/APOpenFolder" to="TabContainer/Rando" method="_on_ap_open_folder_pressed"]
 [connection signal="pressed" from="TabContainer/Settings/FileLoc" to="TabContainer/Settings" method="_on_file_loc_pressed"]
+[connection signal="pressed" from="TabContainer/Settings/Quit" to="TabContainer/Settings" method="_on_quit_pressed"]
 [connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer/SetPreset" to="TabContainer/Settings" method="_on_set_preset_item_selected"]
 [connection signal="drag_ended" from="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale" to="TabContainer/Settings" method="_on_ui_scale_drag_ended"]
 [connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Load" to="TabContainer/Settings" method="_on_load_pressed"]
 [connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Install" to="TabContainer/Settings" method="_on_install_ap_data_pressed"]
 [connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Versions" to="TabContainer/Settings" method="_on_versions_item_selected"]
 [connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer/RevertAll" to="TabContainer/Settings" method="_on_revert_all_pressed"]
+[connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer/DeleteAll" to="TabContainer/Settings" method="_on_delete_all_pressed"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]
 [connection signal="item_selected" from="WelcomePopup/VBoxContainer/Options" to="WelcomePopup" method="_on_options_item_selected"]
 [connection signal="pressed" from="WelcomePopup/VBoxContainer/Confirm" to="WelcomePopup" method="_on_confirm_pressed"]

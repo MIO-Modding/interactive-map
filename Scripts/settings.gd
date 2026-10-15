@@ -145,6 +145,12 @@ func _on_revert_all_pressed() -> void:
 		Globals.main.set_preference(setting, Globals.main.default_preferences[setting])
 
 
+func _on_delete_all_pressed() -> void:
+	if FileAccess.file_exists("user://Data/prefs.dat"):
+		DirAccess.remove_absolute("user://Data/prefs.dat")
+	get_tree().quit()
+
+
 func _on_install_ap_data_pressed() -> void:
 	request_ap_data(versions_option.get_item_text(versions_option.selected))
 
@@ -166,6 +172,10 @@ func _on_load_pressed() -> void:
 func _on_versions_item_selected(index: int) -> void:
 	var app_res := Globals.main.get_application_res("Mio Archipelago")
 	$ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Load.disabled = not versions_option.get_item_text(index) in app_res.release_tags
+
+
+func _on_quit_pressed() -> void:
+	get_tree().quit()
 
 
 class TabsPreset extends Resource:
