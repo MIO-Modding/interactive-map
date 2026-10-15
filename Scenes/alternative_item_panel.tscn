@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://6lsfmple1071" path="res://Scripts/alternative_item_panel.gd" id="1_aol26"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
-font_size = 10
 
 [node name="AlternativeItemPanel" type="PanelContainer" unique_id=249965097]
 offset_right = 40.0
@@ -34,7 +33,8 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -40.0
-offset_top = -23.0
+offset_top = -14.0
 grow_horizontal = 0
 grow_vertical = 0
 label_settings = SubResource("LabelSettings_1dvcg")
+horizontal_alignment = 2

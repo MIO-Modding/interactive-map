@@ -1,6 +1,17 @@
 extends PanelContainer
 
 
+const CATEGORIES_TO_GROUP: Array[String] = [
+	"Coating Component",
+	"Old Core",
+	"Serial Number",
+	"Forebears' Legacy",
+	"Modifier Extension",
+	"Candle",
+]
+
+var category_alternatives: Array[AlternativeItemPanel] = []
+
 @onready var filter_nodes: Array[Control] = [
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/Search,
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer/EntryOption,
@@ -9,6 +20,9 @@ extends PanelContainer
 
 
 func _ready() -> void:
+	for catg: String in CATEGORIES_TO_GROUP:
+		category_alternatives.append(make_category_alternative_panel(catg))
+	
 	Globals.main.update_itempool.connect(update_search)
 	filter_nodes.append_array($VBoxContainer/Operations/ScrollContainer/VBoxContainer/Filters/Box/Simple.get_children())
 	for i in filter_nodes:
@@ -175,10 +189,26 @@ func update_limit() -> void:
 
 func update_big_panel() -> void:
 	update_grid_columns()
+	
+	var grouping: bool = $VBoxContainer/GroupCategory.button_pressed
+	var categories_used: Array[String]
+	for alt_panel: AlternativeItemPanel in category_alternatives:
+		alt_panel.visible = grouping # change
+		alt_panel.update($VBoxContainer/HBoxContainer/GridType.selected)
+		if alt_panel.get_parent() == null:
+			$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".add_child(alt_panel)
+		if grouping: # change
+			categories_used.append(alt_panel.item_category)
+	
 	for i: Item in %ItemPool.get_children():
 		$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".remove_child(i.alternative_panel)
 		$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".add_child(i.alternative_panel)
 		i.alternative_panel.update($VBoxContainer/HBoxContainer/GridType.selected)
+		if i.category in categories_used:
+			i.alternative_panel.hide()
+	
+	for alt_panel: AlternativeItemPanel in category_alternatives:
+		alt_panel.visible = grouping
 
 
 func filter_item(item: Item) -> void:
@@ -191,6 +221,12 @@ func filter_item(item: Item) -> void:
 func update_grid_columns() -> void:
 	var amount: int = [320, 110][$VBoxContainer/HBoxContainer/GridType.selected]
 	$"../BigItemsPanel/VBoxContainer/ScrollContainer/GridContainer".columns = floori(get_viewport_rect().size.x / amount)
+
+
+static func make_category_alternative_panel(catg: String) -> AlternativeItemPanel:
+	var panel: AlternativeItemPanel = preload("res://Scenes/alternative_item_panel.tscn").instantiate()
+	panel.item_category = catg
+	return panel
 
 
 func _on_grid_view_pressed() -> void:

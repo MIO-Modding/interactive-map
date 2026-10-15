@@ -35,7 +35,7 @@ func _ready() -> void:
 func update_sizing() -> void:
 	var viewport_size := get_viewport_rect().size
 	$SubViewportContainer/SubViewport.size = viewport_size - Vector2(0, 31)
-	$ScrollContainer.size.x = viewport_size.x
+	$ScrollContainer.set_deferred("size", Vector2(viewport_size.x, $ScrollContainer.size.y))
 	$ScrollContainer/PanelContainer.custom_minimum_size.x = viewport_size.x
 	
 	map_node.get_node("Camera2D").clamp_zoom()

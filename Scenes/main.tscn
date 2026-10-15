@@ -51,7 +51,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 11
+current_tab = 5
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -98,7 +98,6 @@ metadata/_tab_index = 4
 layout_mode = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -293,6 +292,10 @@ popup/item_0/text = "Category Icons + Name"
 popup/item_0/id = 0
 popup/item_1/text = "Icons"
 popup/item_1/id = 1
+
+[node name="GroupCategory" type="CheckButton" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=759787293]
+layout_mode = 2
+text = "Group Items by Category"
 
 [node name="Operations" type="FoldableContainer" parent="TabContainer/PlayerState/ItemsPanel/VBoxContainer" unique_id=154488815]
 layout_mode = 2
@@ -1276,6 +1279,7 @@ text = "AP Players Folder"
 icon = ExtResource("14_k12tt")
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
+visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
