@@ -26,6 +26,10 @@ font_color = Color(1, 0, 0, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_q256p"]
 font_size = 32
 
+[sub_resource type="LabelSettings" id="LabelSettings_v2jg6"]
+font_size = 10
+font_color = Color(0.66, 0.66, 0.66, 1)
+
 [node name="Main" type="Control" unique_id=717459129]
 layout_mode = 3
 anchors_preset = 15
@@ -1736,6 +1740,12 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 horizontal_alignment = 1
 autowrap_mode = 3
+
+[node name="Label" type="Label" parent="WelcomePopup/VBoxContainer" unique_id=1928256614]
+layout_mode = 2
+text = "These can be changed at any time in the Settings tab."
+label_settings = SubResource("LabelSettings_v2jg6")
+horizontal_alignment = 1
 
 [node name="Confirm" type="Button" parent="WelcomePopup/VBoxContainer" unique_id=896599042]
 layout_mode = 2
