@@ -148,7 +148,7 @@ func _on_revert_all_pressed() -> void:
 func _on_delete_all_pressed() -> void:
 	if FileAccess.file_exists("user://Data/prefs.dat"):
 		DirAccess.remove_absolute("user://Data/prefs.dat")
-	get_tree().quit()
+	_on_quit_pressed()
 
 
 func _on_install_ap_data_pressed() -> void:
@@ -175,7 +175,10 @@ func _on_versions_item_selected(index: int) -> void:
 
 
 func _on_quit_pressed() -> void:
-	get_tree().quit()
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("location.reload()")
+	else:
+		get_tree().quit()
 
 
 class TabsPreset extends Resource:

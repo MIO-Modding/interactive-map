@@ -1,7 +1,9 @@
 class_name AlternativeItemPanel extends PanelContainer
 
 
-var item: Item
+var item: Item = null
+
+var item_category: String = ""
 
 
 func _ready() -> void:
@@ -32,7 +34,11 @@ func update(grid_type: int = 0) -> void:
 
 
 func set_texture() -> void:
-	if Main.MAP_ICON_TEXTURES.has(item.category):
-		$H/Sprite.texture = Main.MAP_ICON_TEXTURES[item.category]
+	var catg: String
+	
+	catg = item.category if item_category.is_empty() else item_category
+	
+	if Main.MAP_ICON_TEXTURES.has(catg):
+		$H/Sprite.texture = Main.MAP_ICON_TEXTURES[catg]
 	else:
 		$H/Sprite.texture = Main.MAP_ICON_TEXTURES["Misc"]
