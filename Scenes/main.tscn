@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://cpaf75dggyui2" path="res://Sprites/ui/file_icon.svg" id="14_k12tt"]
 [ext_resource type="PackedScene" uid="uid://yfaci5qkopjk" path="res://Scenes/bingo_board_panel.tscn" id="15_wsu2k"]
 [ext_resource type="Script" uid="uid://dyyfgwmi4yrpp" path="res://Scripts/welcome_popup.gd" id="18_b3802"]
+[ext_resource type="Script" uid="uid://brxeotmrauqde" path="res://Scripts/info_link_button.gd" id="18_hibaj"]
 [ext_resource type="Script" uid="uid://j5ty7u3yqeeu" path="res://Scripts/check_option_button.gd" id="19_fevyy"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
@@ -25,6 +26,9 @@ font_color = Color(1, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_q256p"]
 font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_fevyy"]
+font_size = 20
 
 [sub_resource type="LabelSettings" id="LabelSettings_v2jg6"]
 font_size = 10
@@ -47,7 +51,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 11
+current_tab = 14
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -1265,6 +1269,7 @@ text = "AP Players Folder"
 icon = ExtResource("14_k12tt")
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
+visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
@@ -1544,7 +1549,6 @@ grow_vertical = 2
 layout_mode = 2
 
 [node name="Links" type="Control" parent="TabContainer" unique_id=2045465693]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 14
 
@@ -1624,6 +1628,23 @@ uri = "https://github.com/MIO-Modding/manual-randomizer"
 layout_mode = 2
 text = "GodotAP (library for archipelago)"
 uri = "https://github.com/EmilyV99/GodotAP"
+
+[node name="Label" type="Label" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=1657781381]
+layout_mode = 2
+text = "Tutorials/Guides"
+label_settings = SubResource("LabelSettings_fevyy")
+
+[node name="APYTTutorial" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=1242648925]
+layout_mode = 2
+text = "Archipelago YouTube Tutorial"
+uri = "https://youtu.be/Zl-Z8Y7YIqU"
+
+[node name="APMapSetup" type="LinkButton" parent="TabContainer/Links/ScrollContainer/VBoxContainer" unique_id=757436814]
+layout_mode = 2
+text = "Archipelago Map Setup Guide"
+script = ExtResource("18_hibaj")
+page_name = "Archipelago Map Setup"
+metadata/_custom_type_script = "uid://brxeotmrauqde"
 
 [node name="PopupContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1

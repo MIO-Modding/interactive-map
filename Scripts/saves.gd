@@ -413,8 +413,7 @@ func _on_delete_state_button_toggled(toggled_on: bool) -> void:
 
 
 func _on_difference_pressed() -> void:
-	$"../Info".add_page_node($"../Info".make_new_page_from_file("States VS Save Files"))
-	$"../Info".select_last_page()
+	$"../Info".add_page_node_and_select($"../Info".make_new_page_from_file("States VS Save Files"))
 
 
 func _on_mode_option_item_selected(index: int) -> void:

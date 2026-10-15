@@ -1,4 +1,4 @@
-extends Control
+class_name InfoManager extends Control
 
 
 func _ready() -> void:
@@ -57,14 +57,19 @@ func add_page_node(page: InfoPage) -> void:
 	page.update()
 
 
-func load_page(page_name: String) -> String:
+func add_page_node_and_select(page: InfoPage) -> void:
+	add_page_node(page)
+	select_last_page()
+
+
+static func load_page(page_name: String) -> String:
 	var path: String = "res://Speeches/InfoPages/%s.md" % page_name.to_snake_case()
 	if FileAccess.file_exists(path):
 		return FileAccess.open(path, FileAccess.READ).get_as_text()
 	return ""
 
 
-func make_new_page_from_file(page_name: String) -> InfoPage:
+static func make_new_page_from_file(page_name: String) -> InfoPage:
 	var page := InfoPage.new()
 	page.name = page_name
 	page.text = load_page(page_name)
