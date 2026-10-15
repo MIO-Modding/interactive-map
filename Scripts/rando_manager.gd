@@ -44,6 +44,7 @@ var archipelago_folder: String:
 func _ready() -> void:
 	get_parent().get_node("Saves").validate_folders(YAML_FILE_PATH.trim_suffix("%s.yaml"))
 	get_viewport().size_changed.connect(update_alignment)
+	update_alignment()
 	
 	for i in Globals.STARTING_LOC_LIST:
 		$SplitContainer/Options/Control/GridContainer/Start.add_item(i)

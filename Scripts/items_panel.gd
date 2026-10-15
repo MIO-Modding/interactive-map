@@ -30,6 +30,8 @@ func _ready() -> void:
 	Archipelago.connected.connect(func(c: ConnectionInfo, _j: Dictionary): await get_tree().process_frame; c.obtained_item.connect(update_sort.unbind(1)))
 	get_viewport().size_changed.connect(update_grid_columns)
 	get_viewport().size_changed.connect(set_scroll_size)
+	update_grid_columns()
+	set_scroll_size()
 	$VBoxContainer/Operations/ScrollContainer/VBoxContainer.resized.connect(set_scroll_size)
 
 

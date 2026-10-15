@@ -12,6 +12,7 @@ var pos_last_frame: Vector2
 func _ready() -> void:
 	pos_last_frame = get_viewport().get_mouse_position()
 	get_viewport().size_changed.connect(set_mouse_label)
+	set_mouse_label()
 	draw_node.draw.connect(update_shape_visualization)
 
 

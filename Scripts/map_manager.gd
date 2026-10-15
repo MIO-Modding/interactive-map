@@ -29,6 +29,7 @@ const MAP_IMAGE_X_POSITIONS: Dictionary[String, Dictionary] = {
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(update_sizing)
+	update_sizing()
 
 
 func update_sizing() -> void:
