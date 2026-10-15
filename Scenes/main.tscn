@@ -17,6 +17,8 @@
 [ext_resource type="Script" uid="uid://ccfams21gd6ni" path="res://Scripts/bingo.gd" id="14_jkdf5"]
 [ext_resource type="Texture2D" uid="uid://cpaf75dggyui2" path="res://Sprites/ui/file_icon.svg" id="14_k12tt"]
 [ext_resource type="PackedScene" uid="uid://yfaci5qkopjk" path="res://Scenes/bingo_board_panel.tscn" id="15_wsu2k"]
+[ext_resource type="Script" uid="uid://dyyfgwmi4yrpp" path="res://Scripts/welcome_popup.gd" id="18_b3802"]
+[ext_resource type="Script" uid="uid://j5ty7u3yqeeu" path="res://Scripts/check_option_button.gd" id="19_fevyy"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
 font_color = Color(1, 0, 0, 1)
@@ -41,7 +43,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 11
+current_tab = 6
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -476,7 +478,6 @@ layout_mode = 2
 text = "Close"
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
-visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 6
@@ -493,7 +494,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -1259,6 +1260,7 @@ text = "AP Players Folder"
 icon = ExtResource("14_k12tt")
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
+visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
@@ -1303,17 +1305,11 @@ layout_mode = 2
 [node name="SetPreset" type="OptionButton" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer" unique_id=509146646]
 layout_mode = 2
 selected = 0
-item_count = 5
+item_count = 2
 popup/item_0/text = "All"
 popup/item_0/id = 0
 popup/item_1/text = "None"
 popup/item_1/id = 1
-popup/item_2/text = "Basic"
-popup/item_2/id = 2
-popup/item_3/text = "Archipelago"
-popup/item_3/id = 3
-popup/item_4/text = "Sheets"
-popup/item_4/id = 4
 
 [node name="GraphicsFoldable" type="FoldableContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer" unique_id=186739576]
 layout_mode = 2
@@ -1697,6 +1693,54 @@ grow_vertical = 0
 focus_mode = 1
 text = "Skip (I know what I'm doing)"
 
+[node name="WelcomePopup" type="PanelContainer" parent="." unique_id=99247246]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -209.5
+offset_top = -60.0
+offset_right = 209.5
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("18_b3802")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WelcomePopup" unique_id=1490313338]
+layout_mode = 2
+
+[node name="Welcome" type="Label" parent="WelcomePopup/VBoxContainer" unique_id=1385013125]
+layout_mode = 2
+text = "Welcome to the MIO Interactive Map!
+Please select below how you plan to use this program."
+horizontal_alignment = 1
+
+[node name="Options" type="OptionButton" parent="WelcomePopup/VBoxContainer" unique_id=56032542]
+layout_mode = 2
+allow_reselect = true
+script = ExtResource("19_fevyy")
+metadata/_custom_type_script = "uid://j5ty7u3yqeeu"
+
+[node name="Description" type="Label" parent="WelcomePopup/VBoxContainer" unique_id=873298438]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="WelcomePopup/VBoxContainer" unique_id=1996745433]
+layout_mode = 2
+
+[node name="ShownTabs" type="Label" parent="WelcomePopup/VBoxContainer" unique_id=1111020435]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Confirm" type="Button" parent="WelcomePopup/VBoxContainer" unique_id=896599042]
+layout_mode = 2
+text = "Confirm"
+
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HighlightToggle" to="." method="_on_highlight_toggle_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/HighlightReachable" to="." method="_on_highlight_reachable_toggled"]
 [connection signal="toggled" from="TabContainer/PlayerState/ControlPanel/ScrollContainer/VBoxContainer/ArchipelagoSettings/VBoxContainer/PersistantItems" to="." method="_on_persistent_items_toggled"]
@@ -1760,3 +1804,5 @@ text = "Skip (I know what I'm doing)"
 [connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Versions" to="TabContainer/Settings" method="_on_versions_item_selected"]
 [connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer/RevertAll" to="TabContainer/Settings" method="_on_revert_all_pressed"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]
+[connection signal="item_selected" from="WelcomePopup/VBoxContainer/Options" to="WelcomePopup" method="_on_options_item_selected"]
+[connection signal="pressed" from="WelcomePopup/VBoxContainer/Confirm" to="WelcomePopup" method="_on_confirm_pressed"]

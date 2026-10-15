@@ -204,6 +204,8 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"UPDATES>SEEN_PATCH_NOTES": "0.0.0",
 	"UPDATES>MANUAL_PATCH_NOTES": "0.0.0",
 	"UPDATES>AP_PATCH_NOTES": "0.0.0",
+	
+	"MISC>WELCOMED": false,
 }
 
 ## The save keys to preference nodes

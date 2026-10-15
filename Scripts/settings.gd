@@ -1,16 +1,20 @@
-extends Control
+class_name Settings extends Control
 
 
-const PRESETS: Array[Array] = [
-	["PlayerState", "Map", "Info", "Saves", "Links"],
-	["PlayerState", "Map", "Info", "ArchipelagoClient", "Saves", "Rando", "PopupHistory", "Links"],
-	["RoomRequirements", "Items", "TransitionRequirements", "LocationRequirements", "NonLocationComponents", "Links"],
+var presets: Array[TabsPreset] = [
+	TabsPreset.new("Map Only", "For those who only want to look at the map", ["Map", "Info"]),
+	TabsPreset.new("Basic", "The tabs you would most likely need", ["PlayerState", "Map", "Info", "Saves", "Links"]),
+	TabsPreset.new("Archipelago", "Tabs for using archipelago", ["PlayerState", "Map", "Info", "ArchipelagoClient", "Saves", "Rando", "PopupHistory", "Links"]),
+	TabsPreset.new("Sheets", "For reading the dev sheets", ["RoomRequirements", "Items", "TransitionRequirements", "LocationRequirements", "NonLocationComponents", "Links"]),
 ]
 
 @onready var versions_option: OptionButton = $ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Versions
 
 
 func _ready() -> void:
+	for preset: TabsPreset in presets:
+		$ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer/SetPreset.add_item(preset.preset_name)
+	
 	for tab: Control in get_parent().get_children():
 		var toggle := CheckButton.new()
 		toggle.text = str(tab.name)
@@ -22,7 +26,7 @@ func _ready() -> void:
 		$ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer.add_child(toggle)
 	
 	var temp: Array[String]
-	temp.assign(PRESETS[0])
+	temp.assign(presets[0].tabs)
 	choose_tab_set(temp)
 	await Globals.main.finished_requesting
 	for type in RevertBox.get_all_setting_sections():
@@ -123,7 +127,7 @@ func _on_set_preset_item_selected(index: int) -> void:
 			toggle_all_shown_tabs(false)
 		_:
 			var list: Array[String]
-			list.assign(PRESETS[index - 2])
+			list.assign(presets[index - 2].tabs)
 			choose_tab_set(list)
 	Globals.main.save_all_preferences()
 
@@ -162,3 +166,15 @@ func _on_load_pressed() -> void:
 func _on_versions_item_selected(index: int) -> void:
 	var app_res := Globals.main.get_application_res("Mio Archipelago")
 	$ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Load.disabled = not versions_option.get_item_text(index) in app_res.release_tags
+
+
+class TabsPreset extends Resource:
+	var preset_name: String
+	var description: String
+	var tabs: Array[String]
+	
+	
+	func _init(name_val: String, desc_value: String, tabs_value: Array[String]) -> void:
+		preset_name = name_val
+		description = desc_value
+		tabs = tabs_value
