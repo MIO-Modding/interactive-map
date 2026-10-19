@@ -124,6 +124,7 @@ var applications: Array[Application] = [
 	Application.new("Interactive Map", "MIO-Modding/interactive-map", [], "SEEN_PATCH_NOTES"),
 	Application.new("Manual Randomizer", "MIO-Modding/manual-randomizer", [], "MANUAL_PATCH_NOTES"),
 	Application.new("Mio Archipelago", "ShackledMars261/mio-archipelago", [], "AP_PATCH_NOTES"),
+	Application.new("Interactive Map Mod", "MIO-Modding/interactive-map-mod", [], "MOD_PATCH_NOTES")
 ]
 
 var all_cores: Array[String] = []
@@ -204,6 +205,7 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"UPDATES>SEEN_PATCH_NOTES": "0.0.0",
 	"UPDATES>MANUAL_PATCH_NOTES": "0.0.0",
 	"UPDATES>AP_PATCH_NOTES": "0.0.0",
+	"UPDATES>MOD_PATCH_NOTES": "0.0.0",
 	
 	"MISC>WELCOMED": false,
 }
@@ -257,6 +259,9 @@ var non_node_preferences: Dictionary[String, Variant] = {
 
 
 func _ready() -> void:
+	for app: Application in applications:
+		if not non_node_preferences.has(app.patch_notes_preference_entry):
+			non_node_preferences[app.patch_notes_preference_entry] = "0.0.0"
 	add_scrollbar_backgrounds()
 	if OS.has_feature("web_ios") or OS.has_feature("web_android"):
 		get_tree().root.content_scale_factor = 2
