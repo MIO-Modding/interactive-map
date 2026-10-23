@@ -51,7 +51,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 5
+current_tab = 6
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -98,6 +98,7 @@ metadata/_tab_index = 4
 layout_mode = 2
 
 [node name="PlayerState" type="Control" parent="TabContainer" unique_id=1257735600]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -489,7 +490,6 @@ layout_mode = 2
 text = "Close"
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
-visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 6
@@ -506,7 +506,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -569,6 +569,21 @@ text = "Locations"
 [node name="MapIcons" type="CheckButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=941201915]
 layout_mode = 2
 text = "Map Icons"
+
+[node name="Mazes" type="FoldableContainer" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1824082555]
+layout_mode = 2
+title = "Tubes"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Mazes" unique_id=1080820948]
+layout_mode = 2
+
+[node name="TubesBack" type="CheckButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Mazes/VBoxContainer" unique_id=436123073]
+layout_mode = 2
+text = "Background Tubes"
+
+[node name="TubesFront" type="CheckButton" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Mazes/VBoxContainer" unique_id=1019691310]
+layout_mode = 2
+text = "Regular Tubes"
 
 [node name="Label" type="Label" parent="TabContainer/Map/MapSettings/Foldable/VBoxContainer" unique_id=1245158274]
 layout_mode = 2
@@ -1735,7 +1750,7 @@ horizontal_alignment = 1
 
 [node name="ProgressBar" type="ProgressBar" parent="LoadingScreen/VBoxContainer" unique_id=1061443994]
 layout_mode = 2
-max_value = 12.0
+max_value = 14.0
 step = 1.0
 show_percentage = false
 
@@ -1829,6 +1844,8 @@ text = "Confirm"
 [connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Transitions" to="TabContainer/Map" method="_on_transitions_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Locations" to="TabContainer/Map" method="_on_locations_toggled"]
 [connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/MapIcons" to="TabContainer/Map" method="_on_map_icons_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Mazes/VBoxContainer/TubesBack" to="TabContainer/Map" method="_on_tubes_back_toggled"]
+[connection signal="toggled" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Mazes/VBoxContainer/TubesFront" to="TabContainer/Map" method="_on_tubes_front_toggled"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/MapImageType" to="TabContainer/Map" method="_on_map_image_type_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/Rotation" to="TabContainer/Map" method="_on_rotation_item_selected"]
 [connection signal="item_selected" from="TabContainer/Map/MapSettings/Foldable/VBoxContainer/IconStyle" to="TabContainer/Map" method="_on_icon_style_item_selected"]

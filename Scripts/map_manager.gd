@@ -188,6 +188,35 @@ func hide_location_point(loc_point: Polygon2D) -> void:
 	loc_point.get_meta("line").hide()
 
 
+func update_maze(maze: String = "") -> void:
+	if maze.is_empty():
+		for maze_name in MazeVertex.all_mazes:
+			update_maze(maze_name)
+		return
+	if not maze in MazeVertex.all_mazes: return
+	var maze_parent: Node2D
+	if MazeVertex.all_mazes[maze][0].background:
+		maze_parent = $SubViewportContainer/SubViewport/Node2D/Mazes/TubesBack
+	else:
+		maze_parent = $SubViewportContainer/SubViewport/Node2D/Mazes/TubesFront
+	if not maze_parent.has_node(maze):
+		var new_node := Node2D.new()
+		new_node.name = maze
+		maze_parent.add_child(new_node)
+	var maze_node: Node2D = maze_parent.get_node(maze)
+	@warning_ignore("static_called_on_instance")
+	Globals.free_all_children(maze_node)
+	var ignore_first := true
+	for vertex: MazeVertex in MazeVertex.all_mazes[maze]:
+		if ignore_first:
+			ignore_first = false
+			continue
+		if vertex.type == MazeVertex.VertexType.ENTRANCE: continue
+		var segment_node := MazeVertex.MazeSegmentNode.new()
+		segment_node.to_vertex = vertex
+		maze_node.add_child(segment_node)
+
+
 func _on_plus_pressed() -> void:
 	map_node.get_node("Camera2D").zoom *= 1.1
 
@@ -299,3 +328,11 @@ func _on_hinted_filter_item_selected(_index: int) -> void:
 
 func _on_map_icons_toggled(toggled_on: bool) -> void:
 	map_node.get_node("Icons").visible = toggled_on
+
+
+func _on_tubes_back_toggled(toggled_on: bool) -> void:
+	map_node.get_node("Mazes/TubesBack").visible = toggled_on
+
+
+func _on_tubes_front_toggled(toggled_on: bool) -> void:
+	map_node.get_node("Mazes/TubesFront").visible = toggled_on

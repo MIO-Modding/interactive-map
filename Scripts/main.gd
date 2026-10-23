@@ -23,6 +23,7 @@ const DATA_LINKS: Dictionary[String, String] = {
 	"location requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=0&single=true&output=csv",
 	"boss/combat requirements": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=760960441&single=true&output=csv",
 	"non-location components": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=872985578&single=true&output=csv",
+	"tubes": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYd9mu0z_IXnGbZ0bUtAVHz3ZNRZymIfcYkz9HWXWNhd_ChxBTCdAVDcpHI3YMCtXrFNfkuvot1rbe/pub?gid=1391193017&single=true&output=csv",
 }
 
 ## The columns used for each data set
@@ -33,6 +34,7 @@ const KIND_MAXES: Dictionary[String, int] = {
 	"location requirements": 13,
 	"boss/combat requirements": 5,
 	"non-location components": 15,
+	"tubes": 9,
 }
 
 ## The transitions that are wrapped around the map for each rotation
@@ -150,6 +152,8 @@ var location_requirements_sheet: Array[Array]
 var combat_requirements_sheet: Array[Array]
 ## The values of the non-location components sheet, as a 2D array of strings.
 var non_location_components_sheet: Array[Array]
+## The values of the tubes sheet, as a 2D array of strings.
+var tubes_sheet: Array[Array]
 
 var requester_busy: bool = true
 
@@ -220,6 +224,8 @@ var non_node_preferences: Dictionary[String, Variant] = {
 	"MAP_SETTINGS>MAP_ROTATION": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Rotation,
 	"MAP_SETTINGS>ICON_STYLE": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/IconStyle,
 	"MAP_SETTINGS>MAP_ICONS": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/MapIcons,
+	"MAP_SETTINGS>MAZE_TUBES_BACK": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Mazes/VBoxContainer/TubesBack,
+	"MAP_SETTINGS>MAZE_TUBES_FRONT": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Mazes/VBoxContainer/TubesFront,
 	
 	"FILTERS>AREA_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/AreaFilter,
 	"FILTERS>TYPE_FILTER": $TabContainer/Map/MapSettings/Foldable/VBoxContainer/Filters/VBoxContainer/TypeFilter,
@@ -588,7 +594,7 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 				if skip_first:
 					skip_first = false
 					continue
-					
+				
 				var panel: LocationPanel = preload("res://Scenes/location_panel.tscn").instantiate()
 				
 				panel.region_name = row[columns["Region Name"]]
@@ -628,6 +634,31 @@ func on_finished_request(_result: int, _response_code: int, _headers: PackedStri
 					})
 			
 			update_map()
+		"tubes":
+			tubes_sheet = tubes_sheet.filter(func(e): return not e[0].is_empty())
+			var skip_first := true
+			var columns := parse_header_row(tubes_sheet[0])
+			
+			for row in tubes_sheet:
+				if skip_first:
+					skip_first = false
+					continue
+				
+				var vertex := MazeVertex.new()
+				vertex.maze = row[columns["Tube"]]
+				vertex.vertex_id = row[columns["Segment"]]
+				vertex.from_vertex_id = row[columns["From"]]
+				vertex.region_name = row[columns["Region Name"]]
+				vertex.room_id = row[columns["Room ID"]]
+				vertex.type = MazeVertex.VertexType[row[columns["Type"]].to_snake_case().to_upper()]
+				vertex.coords = str_to_var("Vector2i" + row[columns["Vertex Position"]])
+				vertex.background = row[columns["Behind"]] == "TRUE"
+				vertex.notes = row[columns["Remarks"]]
+				if not vertex.maze in MazeVertex.all_mazes:
+					MazeVertex.all_mazes[vertex.maze] = []
+				MazeVertex.all_mazes[vertex.maze].append(vertex)
+			
+			$TabContainer/Map.update_maze()
 
 
 func clear_all_data() -> void:

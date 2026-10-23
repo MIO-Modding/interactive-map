@@ -302,3 +302,11 @@ visible = false
 position = Vector2(-195, -304.8)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("28_xiv05")
+
+[node name="Mazes" type="Node2D" parent="." unique_id=81498515]
+
+[node name="TubesBack" type="Node2D" parent="Mazes" unique_id=206524376]
+visible = false
+
+[node name="TubesFront" type="Node2D" parent="Mazes" unique_id=1524058267]
+visible = false
