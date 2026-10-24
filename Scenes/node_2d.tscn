@@ -307,6 +307,7 @@ texture = ExtResource("28_xiv05")
 
 [node name="Colliders" type="Node2D" parent="." unique_id=1161003474]
 visible = false
+z_index = -10
 texture_filter = 1
 
 [node name="Top" type="Sprite2D" parent="Colliders" unique_id=1567870468]
