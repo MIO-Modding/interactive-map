@@ -26,7 +26,7 @@ var archipelago_folder: String:
 		$SplitContainer/Play/Control/DownloadAP.visible = v.is_empty() and not (OS.has_feature("web") or OS.has_feature("linux"))
 
 @onready var option_nodes: Dictionary[String, Control] = {
-	"logic_level": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Logic,
+	"logic_difficulty": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Logic,
 	"randomize_slash": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Slash,
 	"randomize_starting_items": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Slash,
 	"goal": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Ending,
@@ -104,6 +104,8 @@ func get_current_options() -> Dictionary[String, String]:
 					result[i] = str(option_nodes[i].button_pressed)
 			"CheckButton":
 				result[i] = str(option_nodes[i].button_pressed)
+			"SpinBox":
+				result[i] = str(roundi(option_nodes[i].value))
 	result["exclude_locations"] = ExcludeLocationsCheckBox.convert_to_entry(exclude_locations)
 	result["start_inventory"] = StartInventoryCheckBox.convert_to_dict_entry(start_inventory)
 	return result
