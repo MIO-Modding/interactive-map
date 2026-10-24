@@ -37,12 +37,16 @@ text = "Logic Level:"
 [node name="Logic" type="OptionButton" parent="." unique_id=983998849]
 layout_mode = 2
 selected = 0
-item_count = 2
-popup/item_0/text = "No Logic"
+item_count = 4
+popup/item_0/text = "Intended"
 popup/item_0/id = 0
-popup/item_1/text = "Intended Logic"
+popup/item_0/disabled = true
+popup/item_1/text = "Skips"
 popup/item_1/id = 1
-popup/item_1/disabled = true
+popup/item_2/text = "Glitches"
+popup/item_2/id = 2
+popup/item_3/text = "No Logic"
+popup/item_3/id = 3
 
 [node name="SlashLabel" type="Label" parent="." unique_id=1470502862]
 layout_mode = 2

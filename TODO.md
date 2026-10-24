@@ -5,3 +5,4 @@ A todo list:
 - Add getting save files from nested folders
 - ~~Make it look more mio-like~~
 - Implement the logic system changes
+- ADD TOOLTIPS 
