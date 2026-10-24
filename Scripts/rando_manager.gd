@@ -26,18 +26,18 @@ var archipelago_folder: String:
 		$SplitContainer/Play/Control/DownloadAP.visible = v.is_empty() and not (OS.has_feature("web") or OS.has_feature("linux"))
 
 @onready var option_nodes: Dictionary[String, Control] = {
-	"logic_level": $SplitContainer/Options/Control/GridContainer/Logic,
-	"randomize_slash": $SplitContainer/Options/Control/GridContainer/Slash,
-	"randomize_starting_items": $SplitContainer/Options/Control/GridContainer/Slash,
-	"goal": $SplitContainer/Options/Control/GridContainer/Ending,
-	"death_link": $SplitContainer/Options/Control/GridContainer/DeathLink,
+	"logic_level": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Logic,
+	"randomize_slash": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Slash,
+	"randomize_starting_items": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Slash,
+	"goal": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Ending,
+	"death_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/DeathLink,
 	"death_link_amnesty": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Amnesty,
 	"death_link_grace": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Grace,
 	"knockback_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/KnockbackLink,
 	"damage_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/DamageLink,
-	"exclude_locations_nacre": $SplitContainer/Options/Control/GridContainer/CrystalNacre,
-	"start_inventory_overseers": $SplitContainer/Options/Control/GridContainer/Overseers,
-	"starting_room": $SplitContainer/Options/Control/GridContainer/Start,
+	"exclude_locations_nacre": $SplitContainer/Options/Control/ScrollContainer/GridContainer/CrystalNacre,
+	"start_inventory_overseers": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Overseers,
+	"starting_room": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Start,
 }
 @onready var ap_nodes: Array[Control] = [
 	$SplitContainer/Play/Control/APButtons, 
@@ -52,8 +52,8 @@ func _ready() -> void:
 	update_alignment()
 	
 	for i in Globals.STARTING_LOC_LIST:
-		$SplitContainer/Options/Control/GridContainer/Start.add_item(i)
-	$SplitContainer/Options/Control/GridContainer/Start.select(0)
+		$SplitContainer/Options/Control/ScrollContainer/GridContainer/Start.add_item(i)
+	$SplitContainer/Options/Control/ScrollContainer/GridContainer/Start.select(0)
 	
 	archipelago_folder = find_archipelago_dir()
 
@@ -64,9 +64,9 @@ func update_alignment() -> void:
 
 
 func construct_yaml() -> String:
-	var game_name: String = "Manual_MIO_Samwell" if $SplitContainer/Options/Control/GridContainer/Manual.button_pressed else "Memories in Orbit"
+	var game_name: String = "Manual_MIO_Samwell" if $SplitContainer/Options/Control/ScrollContainer/GridContainer/Manual.button_pressed else "Memories in Orbit"
 	return YAML_FILE_LAYOUT % [
-		$SplitContainer/Options/Control/GridContainer/Name.text,
+		$SplitContainer/Options/Control/ScrollContainer/GridContainer/Name.text,
 		game_name, game_name,
 		join_dictionary(get_current_options(), ": ", "\n  ", "\n  ")
 	]
@@ -347,7 +347,7 @@ func run_archipelago_exe(process_name: String, open_console := false) -> void:
 
 
 func _on_download_button_pressed() -> void:
-	var text: String = $SplitContainer/Options/Control/GridContainer/Name.text
+	var text: String = $SplitContainer/Options/Control/ScrollContainer/GridContainer/Name.text
 	save_yaml(construct_yaml(), text)
 	
 	if OS.has_feature("web"):
@@ -371,7 +371,7 @@ func _on_ap_open_folder_pressed() -> void:
 
 func _on_download_to_archipelago_button_pressed() -> void:
 	if not archipelago_folder.is_empty():
-		var text: String = $SplitContainer/Options/Control/GridContainer/Name.text
+		var text: String = $SplitContainer/Options/Control/ScrollContainer/GridContainer/Name.text
 		save_yaml(construct_yaml(), text, archipelago_folder + "\\Players\\%s.yaml")
 
 
