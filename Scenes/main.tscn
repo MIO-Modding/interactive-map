@@ -11,9 +11,8 @@
 [ext_resource type="Script" uid="uid://dwe8brs2p3rup" path="res://Scripts/info_page.gd" id="6_21xkr"]
 [ext_resource type="Script" uid="uid://d2x5pifx5kcex" path="res://Scripts/saves.gd" id="8_344ge"]
 [ext_resource type="Script" uid="uid://c281t12mtvbdb" path="res://Scripts/rando_manager.gd" id="10_hptm8"]
-[ext_resource type="Script" uid="uid://t08vd4w5yt3s" path="res://Scripts/exclude_locations_checkbox.gd" id="11_6iyac"]
 [ext_resource type="Script" uid="uid://b6dcedlxkrppa" path="res://Scripts/settings.gd" id="11_d1ilt"]
-[ext_resource type="Script" uid="uid://cda2554826lcj" path="res://Scripts/start_inventory_checkbox.gd" id="12_fdnlq"]
+[ext_resource type="PackedScene" uid="uid://dhc3cuykooc3f" path="res://Scenes/options.tscn" id="12_fevyy"]
 [ext_resource type="Script" uid="uid://ccfams21gd6ni" path="res://Scripts/bingo.gd" id="14_jkdf5"]
 [ext_resource type="Texture2D" uid="uid://cpaf75dggyui2" path="res://Sprites/ui/file_icon.svg" id="14_k12tt"]
 [ext_resource type="PackedScene" uid="uid://yfaci5qkopjk" path="res://Scenes/bingo_board_panel.tscn" id="15_wsu2k"]
@@ -51,7 +50,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 6
+current_tab = 10
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -490,6 +489,7 @@ layout_mode = 2
 text = "Close"
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
+visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 6
@@ -506,7 +506,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -1040,7 +1040,6 @@ popup/item_2/text = "Set Index"
 popup/item_2/id = 2
 
 [node name="Rando" type="Control" parent="TabContainer" unique_id=1884829303]
-visible = false
 layout_mode = 2
 script = ExtResource("10_hptm8")
 metadata/_tab_index = 10
@@ -1075,100 +1074,21 @@ theme_override_font_sizes/font_size = 30
 text = "Options"
 horizontal_alignment = 1
 
-[node name="GridContainer" type="GridContainer" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=175565060]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=216636522]
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -20.0
-offset_top = 42.0
-offset_right = 20.0
-offset_bottom = 82.0
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = 37.0
+offset_right = 200.0
+offset_bottom = -81.0
 grow_horizontal = 2
-columns = 2
+grow_vertical = 2
 
-[node name="NameLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1321032783]
-layout_mode = 2
-text = "Player Name:"
-
-[node name="Name" type="LineEdit" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1661221384]
-layout_mode = 2
-text = "mio_player"
-
-[node name="ManualLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=801544892]
-layout_mode = 2
-text = "Manual:"
-
-[node name="Manual" type="CheckButton" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=145756960]
-layout_mode = 2
-
-[node name="LogicLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1110468907]
-layout_mode = 2
-text = "Logic Level:"
-
-[node name="Logic" type="OptionButton" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=2039714319]
-layout_mode = 2
-selected = 0
-item_count = 2
-popup/item_0/text = "No Logic"
-popup/item_0/id = 0
-popup/item_1/text = "Intended Logic"
-popup/item_1/id = 1
-popup/item_1/disabled = true
-
-[node name="SlashLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=504169975]
-layout_mode = 2
-text = "Randomize Slash:"
-
-[node name="Slash" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=435705119]
-layout_mode = 2
-
-[node name="EndingLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=24932574]
-layout_mode = 2
-text = "Ending:"
-
-[node name="Ending" type="OptionButton" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=806537850]
-layout_mode = 2
-selected = 0
-item_count = 2
-popup/item_0/text = "Ati Ending"
-popup/item_0/id = 0
-popup/item_1/text = "Shii Ending"
-popup/item_1/id = 1
-
-[node name="DeathLinkLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1040450994]
-layout_mode = 2
-text = "DeathLink:"
-
-[node name="DeathLink" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=181033379]
-layout_mode = 2
-
-[node name="CrystalNacreLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1234321250]
-layout_mode = 2
-text = "Exclude Crystallized Nacre:"
-
-[node name="CrystalNacre" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=1659049427]
-layout_mode = 2
-script = ExtResource("11_6iyac")
-exclude_type = "Nacre"
-
-[node name="OverseersLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=287914872]
-visible = false
-layout_mode = 2
-text = "Exclude Overseers:"
-
-[node name="Overseers" type="CheckBox" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=892187819]
-visible = false
-layout_mode = 2
-script = ExtResource("12_fdnlq")
-start_type = "OVERSEER"
-exclude_type = "Overseer"
-
-[node name="StartLabel" type="Label" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=735256948]
-layout_mode = 2
-text = "Starting Location:"
-
-[node name="Start" type="OptionButton" parent="TabContainer/Rando/SplitContainer/Options/Control/GridContainer" unique_id=767800838]
+[node name="GridContainer" parent="TabContainer/Rando/SplitContainer/Options/Control/ScrollContainer" unique_id=304211385 instance=ExtResource("12_fevyy")]
 layout_mode = 2
 
 [node name="DownloadButton" type="Button" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=1599237516]

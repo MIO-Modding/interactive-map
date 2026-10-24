@@ -28,8 +28,13 @@ var archipelago_folder: String:
 @onready var option_nodes: Dictionary[String, Control] = {
 	"logic_level": $SplitContainer/Options/Control/GridContainer/Logic,
 	"randomize_slash": $SplitContainer/Options/Control/GridContainer/Slash,
+	"randomize_starting_items": $SplitContainer/Options/Control/GridContainer/Slash,
 	"goal": $SplitContainer/Options/Control/GridContainer/Ending,
 	"death_link": $SplitContainer/Options/Control/GridContainer/DeathLink,
+	"death_link_amnesty": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Amnesty,
+	"death_link_grace": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Grace,
+	"knockback_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/KnockbackLink,
+	"damage_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/DamageLink,
 	"exclude_locations_nacre": $SplitContainer/Options/Control/GridContainer/CrystalNacre,
 	"start_inventory_overseers": $SplitContainer/Options/Control/GridContainer/Overseers,
 	"starting_room": $SplitContainer/Options/Control/GridContainer/Start,

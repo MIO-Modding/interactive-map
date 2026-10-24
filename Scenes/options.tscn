@@ -1,0 +1,154 @@
+[gd_scene format=3 uid="uid://dhc3cuykooc3f"]
+
+[ext_resource type="Script" uid="uid://t08vd4w5yt3s" path="res://Scripts/exclude_locations_checkbox.gd" id="1_4tmxy"]
+[ext_resource type="Script" uid="uid://cda2554826lcj" path="res://Scripts/start_inventory_checkbox.gd" id="2_qyyw6"]
+
+[node name="GridContainer" type="GridContainer" unique_id=304211385]
+offset_right = 673.0
+offset_bottom = 366.0
+size_flags_horizontal = 3
+columns = 2
+
+[node name="NameLabel" type="Label" parent="." unique_id=1314941423]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Player Name:"
+
+[node name="Name" type="LineEdit" parent="." unique_id=590937589]
+layout_mode = 2
+text = "mio_player"
+
+[node name="ManualLabel" type="Label" parent="." unique_id=282017817]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Manual:"
+
+[node name="Manual" type="CheckBox" parent="." unique_id=997589650]
+layout_mode = 2
+
+[node name="LogicLabel" type="Label" parent="." unique_id=1662282706]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Logic Level:"
+
+[node name="Logic" type="OptionButton" parent="." unique_id=983998849]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "No Logic"
+popup/item_0/id = 0
+popup/item_1/text = "Intended Logic"
+popup/item_1/id = 1
+popup/item_1/disabled = true
+
+[node name="SlashLabel" type="Label" parent="." unique_id=1470502862]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Randomize Starting Items:"
+
+[node name="Slash" type="CheckBox" parent="." unique_id=2003211247]
+layout_mode = 2
+
+[node name="EndingLabel" type="Label" parent="." unique_id=725309637]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Ending:"
+
+[node name="Ending" type="OptionButton" parent="." unique_id=159491713]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Ati Ending"
+popup/item_0/id = 0
+popup/item_1/text = "Shii Ending"
+popup/item_1/id = 1
+
+[node name="DeathLinkLabel" type="Label" parent="." unique_id=230935742]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "DeathLink:"
+
+[node name="DeathLink" type="CheckBox" parent="." unique_id=1736494287]
+layout_mode = 2
+
+[node name="AmnestyLabel" type="Label" parent="." unique_id=576283073]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "DeathLink Amnesty:"
+
+[node name="Amnesty" type="SpinBox" parent="." unique_id=1851463484]
+layout_mode = 2
+min_value = 1.0
+max_value = 20.0
+value = 1.0
+
+[node name="GraceLabel" type="Label" parent="." unique_id=81270399]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "DeathLink Grace:"
+
+[node name="Grace" type="SpinBox" parent="." unique_id=2076019662]
+layout_mode = 2
+min_value = 1.0
+max_value = 20.0
+value = 1.0
+
+[node name="KnockbackLinkLabel" type="Label" parent="." unique_id=119508101]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "KnockbackLink:"
+
+[node name="KnockbackLink" type="CheckBox" parent="." unique_id=1497378318]
+layout_mode = 2
+
+[node name="DamageLinkLabel" type="Label" parent="." unique_id=1671187796]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "DamageLink:"
+
+[node name="DamageLink" type="CheckBox" parent="." unique_id=1293570616]
+layout_mode = 2
+
+[node name="CrystalNacreLabel" type="Label" parent="." unique_id=1103301055]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Exclude Crystallized Nacre:"
+
+[node name="CrystalNacre" type="CheckBox" parent="." unique_id=1449515791]
+layout_mode = 2
+script = ExtResource("1_4tmxy")
+exclude_type = "Nacre"
+
+[node name="OverseersLabel" type="Label" parent="." unique_id=715723749]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Exclude Overseers:"
+
+[node name="Overseers" type="CheckBox" parent="." unique_id=931872527]
+visible = false
+layout_mode = 2
+script = ExtResource("2_qyyw6")
+start_type = "OVERSEER"
+exclude_type = "Overseer"
+
+[node name="StartLabel" type="Label" parent="." unique_id=86226182]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Starting Location:"
+
+[node name="Start" type="OptionButton" parent="." unique_id=2144516340]
+layout_mode = 2
