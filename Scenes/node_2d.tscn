@@ -29,6 +29,8 @@
 [ext_resource type="Texture2D" uid="uid://dk1ao2qgjtgil" path="res://Sprites/map_mesh/library.png" id="26_ud1os"]
 [ext_resource type="Texture2D" uid="uid://dyfupou1ldgn6" path="res://Sprites/map_mesh/canopy.png" id="27_fpmp2"]
 [ext_resource type="Texture2D" uid="uid://cvpj1r0bew8ih" path="res://Sprites/map_mesh/feral_undergrowth.png" id="28_xiv05"]
+[ext_resource type="Texture2D" uid="uid://d4ex55fvyp7ue" path="res://Sprites/map_colliders/top.png" id="31_x5e5l"]
+[ext_resource type="Texture2D" uid="uid://1wh5j1n87v7j" path="res://Sprites/map_colliders/bottom.png" id="32_bwylj"]
 
 [sub_resource type="Theme" id="Theme_1dvcg"]
 default_font = ExtResource("2_uybdb")
@@ -302,6 +304,28 @@ visible = false
 position = Vector2(-195, -304.8)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("28_xiv05")
+
+[node name="Colliders" type="Node2D" parent="." unique_id=1161003474]
+visible = false
+texture_filter = 1
+
+[node name="Top" type="Sprite2D" parent="Colliders" unique_id=1567870468]
+position = Vector2(-294.5, -395.5)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("31_x5e5l")
+
+[node name="Bottom" type="Node2D" parent="Colliders" unique_id=18238704]
+
+[node name="Bottom1" type="Sprite2D" parent="Colliders/Bottom" unique_id=1037624005]
+position = Vector2(-287.6, -121)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("32_bwylj")
+
+[node name="Bottom2" type="Sprite2D" parent="Colliders/Bottom" unique_id=84066333]
+visible = false
+position = Vector2(-287.6, -121)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("32_bwylj")
 
 [node name="Mazes" type="Node2D" parent="." unique_id=81498515]
 

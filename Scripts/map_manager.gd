@@ -291,6 +291,9 @@ func _on_rotation_item_selected(index: int) -> void:
 	map_node.get_node("Skeleton/Bottom/Bottom1").position.x = map_node.get_node("Skeleton/Top").position.x - index * (1452 / 5.0)
 	map_node.get_node("Skeleton/Bottom/Bottom2").position.x = map_node.get_node("Skeleton/Top").position.x + (3 - index) * (1452 / 5.0)
 	map_node.get_node("Skeleton/Bottom/Bottom2").visible = wheel_rotation != "0"
+	map_node.get_node("Colliders/Bottom/Bottom1").position.x = map_node.get_node("Skeleton/Bottom/Bottom1").position.x + 5.4
+	map_node.get_node("Colliders/Bottom/Bottom2").position.x = map_node.get_node("Skeleton/Bottom/Bottom2").position.x + 5.4
+	map_node.get_node("Colliders/Bottom/Bottom2").visible = map_node.get_node("Skeleton/Bottom/Bottom2").visible
 	
 	Globals.main.wheel_rotation = wheel_rotation
 
@@ -300,16 +303,11 @@ func _on_type_filter_item_selected(_index: int) -> void:
 
 
 func _on_map_image_type_item_selected(index: int) -> void:
-	match index:
-		0:
-			map_node.get_node("Textures").hide()
-			map_node.get_node("Skeleton").hide()
-		1:
-			map_node.get_node("Textures").hide()
-			map_node.get_node("Skeleton").show()
-		2:
-			map_node.get_node("Textures").show()
-			map_node.get_node("Skeleton").hide()
+	var list: Array[String] = ["Textures", "Skeleton", "Colliders"]
+	for i in list:
+		map_node.get_node(i).hide()
+	if index > 0:
+		map_node.get_node(list[index - 1]).show()
 
 
 func _on_icon_style_item_selected(index: int) -> void:
