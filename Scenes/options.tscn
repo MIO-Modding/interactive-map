@@ -40,7 +40,6 @@ selected = 0
 item_count = 4
 popup/item_0/text = "Intended"
 popup/item_0/id = 0
-popup/item_0/disabled = true
 popup/item_1/text = "Skips"
 popup/item_1/id = 1
 popup/item_2/text = "Glitches"
