@@ -125,9 +125,11 @@ func _on_set_preset_item_selected(index: int) -> void:
 			toggle_all_shown_tabs(true)
 		1:
 			toggle_all_shown_tabs(false)
+		2:
+			pass
 		_:
 			var list: Array[String]
-			list.assign(presets[index - 2].tabs)
+			list.assign(presets[index - 3].tabs)
 			choose_tab_set(list)
 	Globals.main.save_all_preferences()
 
