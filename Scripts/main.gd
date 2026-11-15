@@ -1564,6 +1564,14 @@ func add_scrollbar_backgrounds() -> void:
 		i.get_v_scroll_bar().add_theme_stylebox_override("scroll", stylebox)
 
 
+func export_gate_warp_data() -> void:
+	var file := FileAccess.open("user://Data/warps.dat", FileAccess.WRITE)
+	for loc: LocationPanel in $TabContainer/NonLocationComponents/VBoxContainer.get_children():
+		if loc.type == "Network Gate":
+			file.store_line(":".join([loc.save_flag.trim_prefix("CHECKPOINT:"), loc.vanilla_item.trim_suffix(" Network Gate"), str(loc.coords)]))
+	file.close()
+
+
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
 	highlight_rows_in_logic = toggled_on
 	update_transitions.emit()
