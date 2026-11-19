@@ -1572,6 +1572,13 @@ func export_gate_warp_data() -> void:
 	file.close()
 
 
+func export_open_world_data(data: Array[String]) -> void:
+	var file := FileAccess.open("user://Data/shortcuts.dat", FileAccess.WRITE)
+	for entry: String in data:
+		file.store_line(entry)
+	file.close()
+
+
 func _on_highlight_toggle_toggled(toggled_on: bool) -> void:
 	highlight_rows_in_logic = toggled_on
 	update_transitions.emit()

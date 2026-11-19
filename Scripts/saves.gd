@@ -270,7 +270,7 @@ func save_raw_save(data: String, file_name := ""):
 	new_file.store_string(data)
 
 
-func load_save(file_name: String) -> Main.PlayerState:
+func load_save(file_name: String, save_shortcuts: bool = false) -> Main.PlayerState:
 	if mio_saves_path.is_empty():
 		return null
 	
@@ -288,6 +288,8 @@ func load_save(file_name: String) -> Main.PlayerState:
 	var leftover_items: Array[Item]
 	leftover_items.assign(%ItemPool.get_children())
 	
+	var shortcuts_unlocked: Array[String]
+	
 	for data_entry: String in data["Saved_entries"]:
 		
 		if not data_entry.contains("key") or data_entry.contains("pairs.0.") or data_entry.contains("pairs.1."):
@@ -295,13 +297,15 @@ func load_save(file_name: String) -> Main.PlayerState:
 		var save_entry: String = data_entry.get_slice(".key = String(\"", 1).trim_suffix("\")")
 		
 		var bad_entry := false
-		for i in ["ARENA", "DIALOG", "BOSS_MEET", "BOSS_TRY", "BREAKABLE", "DISCOVERED_ZONE", "DOOR", "FLASHBACK",
-				"FLOOR_ELEVATOR", "GAME", "ITEM_DISCOVERED", "ITEM_NOTIF", "TITLE_CARD", "SQUAD", "STATS"]:
-			if save_entry in old_core_dialog:
-				break
-			if save_entry.begins_with(i):
-				bad_entry = true
-				break
+		if not save_entry in old_core_dialog:
+			for i in ["ARENA", "DIALOG", "BOSS_MEET", "BOSS_TRY", "BREAKABLE", "DISCOVERED_ZONE", "DOOR", "FLASHBACK",
+					"FLOOR_ELEVATOR", "GAME", "ITEM_DISCOVERED", "ITEM_NOTIF", "TITLE_CARD", "SQUAD", "STATS"]:
+				if save_entry.begins_with(i):
+					bad_entry = true
+					if save_shortcuts:
+						if i in ["DOOR", "BREAKABLE"]:
+							shortcuts_unlocked.append(save_entry)
+					break
 		if bad_entry:
 			continue
 		
@@ -314,6 +318,9 @@ func load_save(file_name: String) -> Main.PlayerState:
 		if item == null:
 			continue
 		state.prog_items.append(item.item_name)
+	
+	if save_shortcuts:
+		Globals.main.export_open_world_data(shortcuts_unlocked)
 	
 	return state
 

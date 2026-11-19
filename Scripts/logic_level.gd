@@ -213,16 +213,16 @@ static func parse_logic(logic_string: String, node: Node, from_level: LogicLevel
 			for i in converted.split(" && "):
 				if i.contains("@"):
 					hases.append(logic_list[i.substr(i.find("@")).to_int()])
-					continue
-				hases.append(state.has_call(i, from_level))
+				else:
+					hases.append(state.has_call(i, from_level))
 			current_logic = state.and_call(hases)
 		elif converted.contains("||"):
 			var hases: Array[Callable] = []
 			for i in converted.split(" || "):
 				if i.contains("@"):
 					hases.append(logic_list[i.substr(i.find("@")).to_int()])
-					continue
-				hases.append(state.has_call(i, from_level))
+				else:
+					hases.append(state.has_call(i, from_level))
 			current_logic = state.or_call(hases)
 		else:
 			break
