@@ -155,7 +155,7 @@ static func computerize_logic_string(logic_string: String) -> String:
 	#if op != logic_string:
 		#print(logic_string)
 		#print(get_logic_string_components(logic_string))
-		#print(optimize_logic_string(logic_string))
+		#print(op)
 	return logic_string
 
 

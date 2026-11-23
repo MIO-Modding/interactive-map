@@ -683,6 +683,7 @@ func clear_all_data() -> void:
 		location_requirements_sheet,
 		non_location_components_sheet,
 		transition_requirements_sheet,
+		tubes_sheet,
 		overseer_connections,
 		room_order,
 		all_cores,
