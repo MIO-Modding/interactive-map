@@ -123,12 +123,14 @@ text = "DamageLink:"
 layout_mode = 2
 
 [node name="CrystalNacreLabel" type="Label" parent="." unique_id=1103301055]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
 text = "Exclude Crystallized Nacre:"
 
 [node name="CrystalNacre" type="CheckBox" parent="." unique_id=1449515791]
+visible = false
 layout_mode = 2
 script = ExtResource("1_4tmxy")
 exclude_type = "Nacre"
