@@ -763,6 +763,8 @@ func request_all_releases() -> void:
 
 ## Sets [param target_list] with the info from github
 func on_releases_recieved(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray, target_list: Array[String]) -> void:
+	if body.is_empty():
+		return
 	var text := body.get_string_from_utf8()
 	var list: Array = JSON.parse_string(text)
 	list = list.map(func(e): return e["html_url"].get_slice("/tag/", 1))

@@ -26,34 +26,34 @@ var archipelago_folder: String:
 		$SplitContainer/Play/Control/DownloadAP.visible = v.is_empty() and not (OS.has_feature("web") or OS.has_feature("linux"))
 
 @onready var option_nodes: Dictionary[String, Control] = {
-	"logic_difficulty": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Logic,
-	#boss_difficulty
-	#boss_kill_checks
-	"randomize_slash": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Slash,
-	"randomize_starting_items": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Slash,
-	#slashless_combat
-	"starting_room": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Start,
-	#fast_travel_unlock
+	"logic_difficulty": %OptionsGrid/Logic,
+	"boss_difficulty": %OptionsGrid/Boss,
+	"boss_kill_checks": %OptionsGrid/BossKillChecks,
+	"randomize_slash": %OptionsGrid/Slash,
+	"randomize_starting_items": %OptionsGrid/Slash,
+	"slashless_combat": %OptionsGrid/SlashlessCombat,
+	"starting_room": %OptionsGrid/Start,
+	"fast_travel_unlock": %OptionsGrid/FastTravelUnlock,
 	
-	#movement_level
-	#airstall_level
-	#enemy_pogo_level
-	#hazard_skips
-	#flower_warps
+	"goal": %OptionsGrid/Ending,
 	
-	"death_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/DeathLink,
-	"death_link_amnesty": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Amnesty,
-	"death_link_grace": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Grace,
-	"knockback_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/KnockbackLink,
-	"damage_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/DamageLink,
+	"movement_level": %OptionsGrid/Movement,
+	"airstall_level": %OptionsGrid/Airstalling,
+	"enemy_pogo_level": %OptionsGrid/EnemyPogos,
+	"hazard_skips": %OptionsGrid/HazardStridering,
+	"flower_warps": %OptionsGrid/FlowerWarps,
 	
-	#modsanity
-	#mix_positive_negative
-	#negative_modifier_count
-	#total_positive_modifier_cost
-	#total_negative_modifier_cost
+	"death_link": %OptionsGrid/DeathLink,
+	"death_link_amnesty": %OptionsGrid/Amnesty,
+	"death_link_grace": %OptionsGrid/Grace,
+	"knockback_link": %OptionsGrid/KnockbackLink,
+	"damage_link": %OptionsGrid/DamageLink,
 	
-	"goal": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Ending,
+	"modsanity": %OptionsGrid/Modsanity,
+	"mix_positive_negative": %OptionsGrid/MixPositiveNegative,
+	"negative_modifier_count": %OptionsGrid/NegativeMods,
+	"total_positive_modifier_cost": %OptionsGrid/PositiveCost,
+	"total_negative_modifier_cost": %OptionsGrid/NegativeCost,
 }
 @onready var ap_nodes: Array[Control] = [
 	$SplitContainer/Play/Control/APButtons, 
@@ -68,8 +68,8 @@ func _ready() -> void:
 	update_alignment()
 	
 	for i in Globals.STARTING_LOC_LIST:
-		$SplitContainer/Options/Control/ScrollContainer/GridContainer/Start.add_item(i)
-	$SplitContainer/Options/Control/ScrollContainer/GridContainer/Start.select(0)
+		%OptionsGrid/Start.add_item(i)
+	%OptionsGrid/Start.select(0)
 	
 	archipelago_folder = find_archipelago_dir()
 
@@ -80,9 +80,9 @@ func update_alignment() -> void:
 
 
 func construct_yaml() -> String:
-	var game_name: String = "Manual_MIO_Samwell" if $SplitContainer/Options/Control/ScrollContainer/GridContainer/Manual.button_pressed else "Memories in Orbit"
+	var game_name: String = "Manual_MIO_Samwell" if %OptionsGrid/Manual.button_pressed else "Memories in Orbit"
 	return YAML_FILE_LAYOUT % [
-		$SplitContainer/Options/Control/ScrollContainer/GridContainer/Name.text,
+		%OptionsGrid/Name.text,
 		game_name, game_name,
 		join_dictionary(get_current_options(), ": ", "\n  ", "\n  ")
 	]
@@ -365,7 +365,7 @@ func run_archipelago_exe(process_name: String, open_console := false) -> void:
 
 
 func _on_download_button_pressed() -> void:
-	var text: String = $SplitContainer/Options/Control/ScrollContainer/GridContainer/Name.text
+	var text: String = %OptionsGrid/Name.text
 	save_yaml(construct_yaml(), text)
 	
 	if OS.has_feature("web"):
@@ -389,7 +389,7 @@ func _on_ap_open_folder_pressed() -> void:
 
 func _on_download_to_archipelago_button_pressed() -> void:
 	if not archipelago_folder.is_empty():
-		var text: String = $SplitContainer/Options/Control/ScrollContainer/GridContainer/Name.text
+		var text: String = %OptionsGrid/Name.text
 		save_yaml(construct_yaml(), text, archipelago_folder + "\\Players\\%s.yaml")
 
 

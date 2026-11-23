@@ -1077,18 +1077,17 @@ horizontal_alignment = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=216636522]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 1
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -200.0
-offset_top = 37.0
-offset_right = 200.0
-offset_bottom = -81.0
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -272.5
+offset_bottom = 227.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GridContainer" parent="TabContainer/Rando/SplitContainer/Options/Control/ScrollContainer" unique_id=304211385 instance=ExtResource("12_fevyy")]
+[node name="OptionsGrid" parent="TabContainer/Rando/SplitContainer/Options/Control/ScrollContainer" unique_id=304211385 instance=ExtResource("12_fevyy")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="DownloadButton" type="Button" parent="TabContainer/Rando/SplitContainer/Options/Control" unique_id=1599237516]

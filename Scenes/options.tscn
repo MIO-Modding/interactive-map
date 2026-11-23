@@ -40,12 +40,42 @@ selected = 0
 item_count = 4
 popup/item_0/text = "Intended"
 popup/item_0/id = 0
-popup/item_1/text = "Skips"
+popup/item_1/text = "Simple Skips"
 popup/item_1/id = 1
-popup/item_2/text = "Glitches"
+popup/item_2/text = "Advanced Skips"
 popup/item_2/id = 2
 popup/item_3/text = "No Logic"
 popup/item_3/id = 3
+popup/item_3/disabled = true
+
+[node name="BossLabel" type="Label" parent="." unique_id=1824096459]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Boss Difficulty:"
+
+[node name="Boss" type="OptionButton" parent="." unique_id=1095959376]
+layout_mode = 2
+selected = 0
+item_count = 4
+popup/item_0/text = "Intended"
+popup/item_0/id = 0
+popup/item_1/text = "Difficult"
+popup/item_1/id = 1
+popup/item_2/text = "Possible"
+popup/item_2/id = 2
+popup/item_3/text = "No Logic"
+popup/item_3/id = 3
+popup/item_3/disabled = true
+
+[node name="BossKillChecksLabel" type="Label" parent="." unique_id=522057750]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Enable Boss Kill Checks:"
+
+[node name="BossKillChecks" type="CheckBox" parent="." unique_id=476005752]
+layout_mode = 2
 
 [node name="SlashLabel" type="Label" parent="." unique_id=1470502862]
 layout_mode = 2
@@ -54,6 +84,33 @@ size_flags_stretch_ratio = 4.0
 text = "Randomize Starting Items:"
 
 [node name="Slash" type="CheckBox" parent="." unique_id=2003211247]
+layout_mode = 2
+
+[node name="SlashlessCombatLabel" type="Label" parent="." unique_id=696619388]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Allow Slashless Combat:"
+
+[node name="SlashlessCombat" type="CheckBox" parent="." unique_id=455858572]
+layout_mode = 2
+
+[node name="StartLabel" type="Label" parent="." unique_id=86226182]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Starting Location:"
+
+[node name="Start" type="OptionButton" parent="." unique_id=2144516340]
+layout_mode = 2
+
+[node name="FastTravelUnlockLabel" type="Label" parent="." unique_id=1774108864]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Fast Travel Unlock:"
+
+[node name="FastTravelUnlock" type="CheckBox" parent="." unique_id=1012619529]
 layout_mode = 2
 
 [node name="EndingLabel" type="Label" parent="." unique_id=725309637]
@@ -70,6 +127,91 @@ popup/item_0/text = "Ati Ending"
 popup/item_0/id = 0
 popup/item_1/text = "Shii Ending"
 popup/item_1/id = 1
+
+[node name="HSeparator" type="HSeparator" parent="." unique_id=2146431109]
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="." unique_id=483120543]
+layout_mode = 2
+
+[node name="MovementLabel" type="Label" parent="." unique_id=1773637713]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Movement Tech:"
+
+[node name="Movement" type="OptionButton" parent="." unique_id=1390111575]
+layout_mode = 2
+selected = 0
+item_count = 4
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "General"
+popup/item_1/id = 1
+popup/item_2/text = "Situational"
+popup/item_2/id = 2
+popup/item_3/text = "Tedious"
+popup/item_3/id = 3
+
+[node name="AirstallingLabel" type="Label" parent="." unique_id=1110744671]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Airstalling:"
+
+[node name="Airstalling" type="OptionButton" parent="." unique_id=358590822]
+layout_mode = 2
+selected = 0
+item_count = 4
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Airstalling"
+popup/item_1/id = 1
+popup/item_2/text = "Crystall Stall"
+popup/item_2/id = 2
+popup/item_3/text = "Wall Climb"
+popup/item_3/id = 3
+
+[node name="EnemyPogosLabel" type="Label" parent="." unique_id=813306919]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Enemy Pogos:"
+
+[node name="EnemyPogos" type="OptionButton" parent="." unique_id=2004222397]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Pogo"
+popup/item_1/id = 1
+popup/item_2/text = "Lure"
+popup/item_2/id = 2
+
+[node name="HazardStrideringLabel" type="Label" parent="." unique_id=253370204]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Hazard Respawn and Stridering:"
+
+[node name="HazardStridering" type="CheckBox" parent="." unique_id=1056192389]
+layout_mode = 2
+
+[node name="FlowerWarpsLabel" type="Label" parent="." unique_id=437531329]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Flower Warps:"
+
+[node name="FlowerWarps" type="CheckBox" parent="." unique_id=629870746]
+layout_mode = 2
+
+[node name="HSeparator3" type="HSeparator" parent="." unique_id=1904150377]
+layout_mode = 2
+
+[node name="HSeparator4" type="HSeparator" parent="." unique_id=2064343651]
+layout_mode = 2
 
 [node name="DeathLinkLabel" type="Label" parent="." unique_id=230935742]
 layout_mode = 2
@@ -149,11 +291,59 @@ script = ExtResource("2_qyyw6")
 start_type = "OVERSEER"
 exclude_type = "Overseer"
 
-[node name="StartLabel" type="Label" parent="." unique_id=86226182]
+[node name="HSeparator5" type="HSeparator" parent="." unique_id=716776830]
+layout_mode = 2
+
+[node name="HSeparator6" type="HSeparator" parent="." unique_id=2139341077]
+layout_mode = 2
+
+[node name="ModsanityLabel" type="Label" parent="." unique_id=1297107355]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
-text = "Starting Location:"
+text = "Modsanity:"
 
-[node name="Start" type="OptionButton" parent="." unique_id=2144516340]
+[node name="Modsanity" type="CheckBox" parent="." unique_id=1557783920]
 layout_mode = 2
+
+[node name="MixPositiveNegativeLabel" type="Label" parent="." unique_id=785657648]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Mix Positive and Negative Modifiers:"
+
+[node name="MixPositiveNegative" type="CheckBox" parent="." unique_id=2116491160]
+layout_mode = 2
+
+[node name="NegativeModsLabel" type="Label" parent="." unique_id=1447433058]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Negative Modifier Count:"
+
+[node name="NegativeMods" type="SpinBox" parent="." unique_id=797923071]
+layout_mode = 2
+max_value = 42.0
+value = 7.0
+
+[node name="PositiveCostLabel" type="Label" parent="." unique_id=34021697]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Total Positive Modifier Cost:"
+
+[node name="PositiveCost" type="SpinBox" parent="." unique_id=304434786]
+layout_mode = 2
+max_value = 2000.0
+value = 730.0
+
+[node name="NegativeCostLabel" type="Label" parent="." unique_id=2106083117]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Total Negative Modifier Cost:"
+
+[node name="NegativeCost" type="SpinBox" parent="." unique_id=296414868]
+layout_mode = 2
+max_value = 2000.0
+value = 115.0
