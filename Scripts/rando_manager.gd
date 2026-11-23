@@ -27,17 +27,33 @@ var archipelago_folder: String:
 
 @onready var option_nodes: Dictionary[String, Control] = {
 	"logic_difficulty": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Logic,
+	#boss_difficulty
+	#boss_kill_checks
 	"randomize_slash": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Slash,
 	"randomize_starting_items": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Slash,
-	"goal": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Ending,
+	#slashless_combat
+	"starting_room": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Start,
+	#fast_travel_unlock
+	
+	#movement_level
+	#airstall_level
+	#enemy_pogo_level
+	#hazard_skips
+	#flower_warps
+	
 	"death_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/DeathLink,
 	"death_link_amnesty": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Amnesty,
 	"death_link_grace": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Grace,
 	"knockback_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/KnockbackLink,
 	"damage_link": $SplitContainer/Options/Control/ScrollContainer/GridContainer/DamageLink,
-	"exclude_locations_nacre": $SplitContainer/Options/Control/ScrollContainer/GridContainer/CrystalNacre,
-	"start_inventory_overseers": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Overseers,
-	"starting_room": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Start,
+	
+	#modsanity
+	#mix_positive_negative
+	#negative_modifier_count
+	#total_positive_modifier_cost
+	#total_negative_modifier_cost
+	
+	"goal": $SplitContainer/Options/Control/ScrollContainer/GridContainer/Ending,
 }
 @onready var ap_nodes: Array[Control] = [
 	$SplitContainer/Play/Control/APButtons, 

@@ -50,7 +50,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 11
+current_tab = 10
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -1040,7 +1040,6 @@ popup/item_2/text = "Set Index"
 popup/item_2/id = 2
 
 [node name="Rando" type="Control" parent="TabContainer" unique_id=1884829303]
-visible = false
 layout_mode = 2
 script = ExtResource("10_hptm8")
 metadata/_tab_index = 10
@@ -1219,6 +1218,7 @@ text = "AP Players Folder"
 icon = ExtResource("14_k12tt")
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
+visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
