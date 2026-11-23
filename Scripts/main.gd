@@ -122,6 +122,7 @@ const MEL_LEVELS: Array[String] = [
 ]
 
 
+## All of the [Main.Application]s
 var applications: Array[Application] = [
 	Application.new("Interactive Map", "MIO-Modding/interactive-map", [], "SEEN_PATCH_NOTES"),
 	Application.new("Manual Randomizer", "MIO-Modding/manual-randomizer", [], "MANUAL_PATCH_NOTES"),
@@ -129,7 +130,9 @@ var applications: Array[Application] = [
 	Application.new("Interactive Map Mod", "MIO-Modding/interactive-map-mod", [], "MOD_PATCH_NOTES")
 ]
 
+## All old cores
 var all_cores: Array[String] = []
+## All event items
 var all_event_items: Array[String] = []
 var include_unchecked_events := false
 
@@ -155,6 +158,7 @@ var non_location_components_sheet: Array[Array]
 ## The values of the tubes sheet, as a 2D array of strings.
 var tubes_sheet: Array[Array]
 
+## If the main [HTTPRequest] is busy
 var requester_busy: bool = true
 
 ## Wether to highlight rows of sheets that their logic can be completed
@@ -204,7 +208,9 @@ var wheel_rotation := "0":
 		wheel_rotation = v
 		rotation_changed.emit()
 
+## The default preference values
 var default_preferences: Dictionary[String, Variant] = {}
+## Preferences that do not have an associated node
 var non_node_preferences: Dictionary[String, Variant] = {
 	"UPDATES>SEEN_PATCH_NOTES": "0.0.0",
 	"UPDATES>MANUAL_PATCH_NOTES": "0.0.0",
