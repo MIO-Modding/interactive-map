@@ -61,9 +61,9 @@ func set_mouse_label() -> void:
 
 func get_mouse_pos_string() -> String:
 	if Input.is_action_pressed("f"):
-		return str(get_global_mouse_position() * 5)
+		return str(get_global_mouse_position() * 5 * Vector2(1, -1))
 	else:
-		return str(Vector2i(get_global_mouse_position() * 5))
+		return str(Vector2i(get_global_mouse_position() * 5 * Vector2(1, -1)))
 
 
 func update_shape_visualization() -> void:
