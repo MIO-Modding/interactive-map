@@ -195,35 +195,26 @@ static func parse_logic(logic_string: String, node: Node, from_level: LogicLevel
 		await node.tree_entered
 	var state: Main.PlayerState = Globals.main.player_state
 	
+	if logic_string.contains("@"):
+		string_invalid(logic_string, node)
+	
 	while edited_string.contains("{"):
 		var right_brace_pos: int = edited_string.find("}")
 		var left_brace_pos: int = edited_string.left(right_brace_pos + 1).rfind("{")
 		var section = edited_string.substr(left_brace_pos + 2, right_brace_pos - left_brace_pos - 3)
 		var converted = convert_item_text(section, node)
 		var current_logic: Callable
-		if converted.contains("&&") and converted.contains("||"):
-			var at: String
-			if node is LocationPanel:
-				at = Main.PlayerState.serialize_location(node)
-			elif node is TransitionPanel:
-				at = node.from + " -> " + node.to
-			printerr("Invalid logic: %s @ %s" % [logic_string, at])
-		if converted.contains("&&"):
-			var hases: Array[Callable] = []
-			for i in converted.split(" && "):
-				if i.contains("@"):
-					hases.append(logic_list[i.substr(i.find("@")).to_int()])
-				else:
-					hases.append(state.has_call(i, from_level))
-			current_logic = state.and_call(hases)
-		elif converted.contains("||"):
-			var hases: Array[Callable] = []
-			for i in converted.split(" || "):
-				if i.contains("@"):
-					hases.append(logic_list[i.substr(i.find("@")).to_int()])
-				else:
-					hases.append(state.has_call(i, from_level))
-			current_logic = state.or_call(hases)
+		
+		var is_and := converted.contains("&&")
+		var is_or := converted.contains("||")
+		
+		if is_and:
+			if is_or:
+				string_invalid(logic_string, node)
+			else:
+				current_logic = state.and_call(get_logic_parts(true, converted, logic_list, state, from_level))
+		elif is_or:
+			current_logic = state.or_call(get_logic_parts(false, converted, logic_list, state, from_level))
 		else:
 			break
 		
@@ -232,37 +223,40 @@ static func parse_logic(logic_string: String, node: Node, from_level: LogicLevel
 	
 	var last_converted = convert_item_text(edited_string, node)
 	var last_logic: Callable
-	if last_converted.contains("&&") and last_converted.contains("||"):
-		var at: String
-		if node is LocationPanel:
-			at = Main.PlayerState.serialize_location(node)
-		elif node is TransitionPanel:
-			at = node.from + " -> " + node.to
-		printerr("Invalid logic: %s @ %s" % [logic_string, at])
-	if last_converted.contains("&&"):
-		var hases: Array[Callable] = []
-		for i in last_converted.split(" && "):
-			if i.contains("@"):
-				hases.append(logic_list[i.substr(i.find("@")).to_int()])
-				continue
-			hases.append(state.has_call(i, from_level))
-		last_logic = state.and_call(hases)
-	elif last_converted.contains("||"):
-		var hases: Array[Callable] = []
-		for i in last_converted.split(" || "):
-			if i.contains("@"):
-				hases.append(logic_list[i.substr(i.find("@")).to_int()])
-				continue
-			hases.append(state.has_call(i, from_level))
-		last_logic = state.or_call(hases)
+	
+	var last_is_and := last_converted.contains("&&")
+	var last_is_or := last_converted.contains("||")
+	
+	if last_is_and:
+		if last_is_or:
+			string_invalid(logic_string, node)
+		else:
+			last_logic = state.and_call(get_logic_parts(true, last_converted, logic_list, state, from_level))
+	elif last_is_or:
+		last_logic = state.or_call(get_logic_parts(false, last_converted, logic_list, state, from_level))
 	else:
-		#if last_converted == "Acat Defeated":
-			#print(last_converted)
-			#print(from_level)
-			#print(state.has_call(last_converted, from_level).call())
 		last_logic = state.has_call(last_converted, from_level)
 	
 	return last_logic
+
+
+static func string_invalid(full: String, node: Node) -> void:
+	var at: String
+	if node is LocationPanel:
+		at = Main.PlayerState.serialize_location(node)
+	elif node is TransitionPanel:
+		at = node.from + " -> " + node.to
+	printerr("Invalid logic: %s @ %s" % [full, at])
+
+
+static func get_logic_parts(is_and: bool, section: String, logic_list: Array[Callable], state: Main.PlayerState, from_level: LogicLevels) -> Array[Callable]:
+	var result: Array[Callable] = []
+	for i in section.split(" && " if is_and else " || "):
+		if i.contains("@"):
+			result.append(logic_list[i.substr(i.find("@")).to_int()])
+		else:
+			result.append(state.has_call(i, from_level))
+	return result
 
 
 static func convert_item_text(text: String, node: Node) -> String:
