@@ -33,6 +33,9 @@ func _ready() -> void:
 		var box := RevertBox.new(type)
 		$ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer.add_child(box)
 	get_parent().current_tab = 6
+	
+	$VBoxContainer/Version.text = get_version_text()
+	
 	await Globals.main.finished_other_requests
 	
 	update_available_ap_data()
@@ -112,6 +115,32 @@ func recieve_ap_data(_result: int, response_code: int, _headers: PackedStringArr
 				file.store_csv_line(row)
 			file.close()
 	update_available_ap_data()
+
+
+static func get_version_text() -> String:
+	var sem_ver: Array[int]
+	var ver_str: String = ProjectSettings.get_setting("application/config/version")
+	sem_ver.assign(Array(ver_str.split(".")).map(func(e: String): return e.to_int()))
+	
+	var prefix: String
+	if sem_ver[0] <= 0:
+		if sem_ver[2] == 0:
+			if sem_ver[1] == 0:
+				prefix = "Initial"
+			else:
+				prefix = "Prerelease"
+		else:
+			prefix = "Preversion"
+	else:
+		if sem_ver[2] == 0:
+			if sem_ver[1] == 0:
+				prefix = "Release"
+			else:
+				prefix = "Update"
+		else:
+			prefix = "Version"
+	
+	return prefix + " " + ver_str
 
 
 func _on_file_loc_pressed() -> void:

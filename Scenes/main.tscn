@@ -50,7 +50,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 10
+current_tab = 11
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
 visible = false
@@ -68,7 +68,7 @@ metadata/_tab_index = 1
 
 [node name="GridContainer" type="GridContainer" parent="TabContainer/Items" unique_id=2107626272]
 layout_mode = 2
-columns = 8
+columns = 10
 
 [node name="TransitionRequirements" type="ScrollContainer" parent="TabContainer" unique_id=1589829430]
 visible = false
@@ -1040,6 +1040,7 @@ popup/item_2/text = "Set Index"
 popup/item_2/id = 2
 
 [node name="Rando" type="Control" parent="TabContainer" unique_id=1884829303]
+visible = false
 layout_mode = 2
 script = ExtResource("10_hptm8")
 metadata/_tab_index = 10
@@ -1231,10 +1232,30 @@ text = "AP Players Folder"
 icon = ExtResource("14_k12tt")
 
 [node name="Settings" type="Control" parent="TabContainer" unique_id=2031927539]
-visible = false
 layout_mode = 2
 script = ExtResource("11_d1ilt")
 metadata/_tab_index = 11
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings" unique_id=1101412194]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -129.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Version" type="Label" parent="TabContainer/Settings/VBoxContainer" unique_id=823623134]
+layout_mode = 2
+text = "Version 0.0.0"
+horizontal_alignment = 2
+
+[node name="Quit" type="Button" parent="TabContainer/Settings/VBoxContainer" unique_id=364558166]
+layout_mode = 2
+text = "Quit Application"
 
 [node name="FileLoc" type="Button" parent="TabContainer/Settings" unique_id=3260642]
 layout_mode = 1
@@ -1246,19 +1267,6 @@ offset_bottom = 38.0
 grow_horizontal = 0
 text = "Browse Files"
 icon = ExtResource("14_k12tt")
-
-[node name="Quit" type="Button" parent="TabContainer/Settings" unique_id=364558166]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -140.0
-offset_top = -27.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Quit Application"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings" unique_id=1865609048]
 layout_mode = 1
@@ -1819,8 +1827,8 @@ text = "Confirm"
 [connection signal="request_completed" from="TabContainer/Rando/SplitContainer/Play/Control/DownloadRequester" to="TabContainer/Rando" method="_on_download_requester_request_completed"]
 [connection signal="pressed" from="TabContainer/Rando/OpenFolder" to="TabContainer/Rando" method="_on_open_folder_pressed"]
 [connection signal="pressed" from="TabContainer/Rando/APOpenFolder" to="TabContainer/Rando" method="_on_ap_open_folder_pressed"]
+[connection signal="pressed" from="TabContainer/Settings/VBoxContainer/Quit" to="TabContainer/Settings" method="_on_quit_pressed"]
 [connection signal="pressed" from="TabContainer/Settings/FileLoc" to="TabContainer/Settings" method="_on_file_loc_pressed"]
-[connection signal="pressed" from="TabContainer/Settings/Quit" to="TabContainer/Settings" method="_on_quit_pressed"]
 [connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/ShownTabsFoldable/VBoxContainer/SetPreset" to="TabContainer/Settings" method="_on_set_preset_item_selected"]
 [connection signal="drag_ended" from="TabContainer/Settings/ScrollContainer/VBoxContainer/GraphicsFoldable/VBoxContainer/UiScale" to="TabContainer/Settings" method="_on_ui_scale_drag_ended"]
 [connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Load" to="TabContainer/Settings" method="_on_load_pressed"]

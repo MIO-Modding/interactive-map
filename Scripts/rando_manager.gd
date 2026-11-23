@@ -109,7 +109,7 @@ func get_current_options() -> Dictionary[String, String]:
 	for i in option_nodes:
 		match option_nodes[i].get_class():
 			"OptionButton":
-				result[i] = option_nodes[i].get_item_text(option_nodes[i].selected).to_lower()
+				result[i] = option_nodes[i].get_item_text(option_nodes[i].selected).to_lower().replace(" ", "_")
 			"CheckBox":
 				if option_nodes[i] is StartInventoryCheckBox:
 					exclude_locations.append_array(option_nodes[i].get_all_exclusions())
