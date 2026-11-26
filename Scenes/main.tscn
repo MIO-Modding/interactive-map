@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://yfaci5qkopjk" path="res://Scenes/bingo_board_panel.tscn" id="15_wsu2k"]
 [ext_resource type="Script" uid="uid://dyyfgwmi4yrpp" path="res://Scripts/welcome_popup.gd" id="18_b3802"]
 [ext_resource type="Script" uid="uid://brxeotmrauqde" path="res://Scripts/info_link_button.gd" id="18_hibaj"]
+[ext_resource type="Script" uid="uid://clntugf7i5sqp" path="res://Scripts/timeline_manager.gd" id="18_pdsj5"]
 [ext_resource type="Script" uid="uid://j5ty7u3yqeeu" path="res://Scripts/check_option_button.gd" id="19_fevyy"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1dvcg"]
@@ -50,7 +51,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 6
+current_tab = 15
 drag_to_rearrange_enabled = true
 
 [node name="RoomRequirements" type="ScrollContainer" parent="TabContainer" unique_id=829962176]
@@ -490,6 +491,7 @@ layout_mode = 2
 text = "Close"
 
 [node name="Map" type="Control" parent="TabContainer" unique_id=9687787]
+visible = false
 layout_mode = 2
 script = ExtResource("3_jjvhh")
 metadata/_tab_index = 6
@@ -506,7 +508,7 @@ metadata/_edit_lock_ = true
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Map/SubViewportContainer" unique_id=1386038727]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Node2D" parent="TabContainer/Map/SubViewportContainer/SubViewport" unique_id=82726750 instance=ExtResource("3_8gbba")]
 
@@ -1644,6 +1646,32 @@ script = ExtResource("18_hibaj")
 page_name = "Archipelago Map Setup"
 metadata/_custom_type_script = "uid://brxeotmrauqde"
 
+[node name="Timelines" type="Control" parent="TabContainer" unique_id=811456081]
+layout_mode = 2
+script = ExtResource("18_pdsj5")
+metadata/_tab_index = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Timelines" unique_id=740848588]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Timelines/VBoxContainer" unique_id=1861798928]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Timelines/VBoxContainer/ScrollContainer" unique_id=714148226]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="NewTimeline" type="Button" parent="TabContainer/Timelines/VBoxContainer" unique_id=1417063625]
+layout_mode = 2
+text = "Add New Timeline"
+
 [node name="PopupContainer" type="VBoxContainer" parent="." unique_id=319909072]
 layout_mode = 1
 anchors_preset = 3
@@ -1836,6 +1864,7 @@ text = "Confirm"
 [connection signal="item_selected" from="TabContainer/Settings/ScrollContainer/VBoxContainer/DataSettings/VBoxContainer/ArchipelagoData/VBoxContainer/HBoxContainer/Versions" to="TabContainer/Settings" method="_on_versions_item_selected"]
 [connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer/RevertAll" to="TabContainer/Settings" method="_on_revert_all_pressed"]
 [connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/RevertFoldable/VBoxContainer/DeleteAll" to="TabContainer/Settings" method="_on_delete_all_pressed"]
+[connection signal="pressed" from="TabContainer/Timelines/VBoxContainer/NewTimeline" to="TabContainer/Timelines" method="new_timeline"]
 [connection signal="pressed" from="LoadingScreen/SkipButton" to="." method="_on_skip_button_pressed"]
 [connection signal="item_selected" from="WelcomePopup/VBoxContainer/Options" to="WelcomePopup" method="_on_options_item_selected"]
 [connection signal="pressed" from="WelcomePopup/VBoxContainer/Confirm" to="WelcomePopup" method="_on_confirm_pressed"]
